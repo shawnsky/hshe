@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div th:fragment="header">
+    <div class="ui fixed inverted menu">
+        <div class="ui container">
+            <a href="/" class="header item">
+                <!-- <img class="logo" src="logo.png"> -->
+                HSHE Project
+            </a>
+
+            <a href="/topic" class="item">作业</a>
+            <a href="/problem" class="item">题目</a>
+            <a href="/rank" class="item">排名</a>
+            <a href="/submission" class="item">提交</a>
+            <div class="ui simple dropdown item">
+                帮助
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="#">Link Item</a>
+                    <a class="item" href="#">Link Item</a>
+                    <div class="divider"></div>
+                    <div class="header">Header Item</div>
+                    <div class="item">
+                        <i class="dropdown icon"></i>
+                        Sub Menu
+                        <div class="menu">
+                            <a class="item" href="#">Link Item</a>
+                            <a class="item" href="#">Link Item</a>
+                        </div>
+                    </div>
+                    <a class="item" href="#">Link Item</a>
+                </div>
+
+
+
+            </div>
+
+            <a href="#" class="item right">
+                <i class="user icon"></i>140705202</a>
+            <a href="#" class="item ">退出</a>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="footer">
+    <div class="ui  vertical footer segment">
+        <div class="ui center aligned container">
+
+            <div class="ui  section divider"></div>
+            <img src="/logo.png" class="ui centered mini image"/>
+            <div class="ui horizontal  small divided link list">
+                <a class="item" href="#">Site Map</a>
+                <a class="item" href="#">Contact Us</a>
+                <a class="item" href="#">Terms and Conditions</a>
+                <a class="item" href="#">Copyright © 2018 HSHE</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

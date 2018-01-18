@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Problems</title>
+  <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
+  <script src="/lib/jquery-3.2.1.min.js"></script>
+  <script src="/lib/semantic-ui/semantic.min.js"></script>
+</head>
+
+<body>
+
+<div th:include="template :: header"></div>
+
+
+  <div class="ui main container">
+    <h1 class="ui header">Semantic UI Fixed Template</h1>
+
+    <h1 class="ui header">所有题目</h1>
+
+    <div class="ui fluid icon input">
+      <input type="text" placeholder="搜索题目"/>
+      <i class="search icon"></i>
+    </div>
+
+
+
+    <table class="ui celled striped table">
+      <thead>
+        <tr>
+          <th class="two wide">题目编号</th>
+          <th class="ten wide">标题</th>
+          <th class="two wide">来源</th>
+          <th class="one wide">正确</th>
+          <th class="one wide">提交</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td> 1001 </td>
+          <td>
+            <a href="/problem/2001"> Hero In Maze</a>
+          </td>
+          <td> Shawn</td>
+          <td>32</td>
+          <td>132</td>
+        </tr>
+        <tr>
+          <td> 1001 </td>
+          <td> Hero In Maze</td>
+          <td> Shawn</td>
+          <td>32</td>
+          <td>132</td>
+        </tr>
+        <tr>
+          <td> 1001 </td>
+          <td> Hero In Maze</td>
+          <td> Shawn</td>
+          <td>32</td>
+          <td>132</td>
+        </tr>
+        <tr>
+          <td> 1001 </td>
+          <td> Hero In Maze</td>
+          <td> Shawn</td>
+          <td>32</td>
+          <td>132</td>
+        </tr>
+        <tr>
+          <td> 1001 </td>
+          <td> Hero In Maze</td>
+          <td> Shawn</td>
+          <td>32</td>
+          <td>132</td>
+        </tr>
+        <tr>
+          <td> 1001 </td>
+          <td> Hero In Maze</td>
+          <td> Shawn</td>
+          <td>32</td>
+          <td>132</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="ui pagination menu">
+      <a class="icon item">
+        <i class="left chevron icon"></i>
+      </a>
+      <a class="item">1</a>
+      <a class="item">2</a>
+      <a class="item">3</a>
+      <a class="item">4</a>
+      <a class="icon item">
+        <i class="right chevron icon"></i>
+      </a>
+    </div>
+
+  </div>
+
+<div th:include="template :: footer"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
+    <script src="/lib/jquery-3.2.1.min.js"></script>
+    <script src="/lib/semantic-ui/semantic.min.js"></script>
+
+    <style type="text/css">
+        body {
+            background-color: #DADADA;
+        }
+
+        body>.grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+
+        .column {
+            max-width: 450px;
+        }
+    </style>
+    <script>
+
+        $(document)
+            .ready(function () {
+                $('#failMsg').hide();
+                $('.ui.form')
+                    .form({
+                        fields: {
+                            id: {
+                                identifier: 'id',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: '请输入学号或工号'
+                                    },
+                                    {
+                                        type: 'length[8]',
+                                        prompt: '学号或工号至少8位数字'
+                                    }
+                                ]
+                            },
+                            password: {
+                                identifier: 'password',
+                                rules: [
+                                    {
+                                        type: 'empty',
+                                        prompt: '请输入密码'
+                                    },
+                                    {
+                                        type: 'length[6]',
+                                        prompt: '密码至少6位字符'
+                                    }
+                                ]
+                            }
+                        },
+                        onSuccess: function (e) {
+                            e.preventDefault();
+                            var $form = $('#loginForm');
+                            $.ajax({
+                                url: "/auth/login",
+                                type: "post",
+                                dataType: "json",
+                                data: $form.serialize(),
+                                cache: "false",
+                                success: function (data) {
+                                    if (data.code == "1") {
+                                        $('#failMsg').hide();
+                                        window.location.href = "/success.html";
+                                    } else {
+                                        $('#failMsg').show();
+                                        $('#failText').text(data.msg);
+                                    }
+                                }
+                            });
+                        }
+                    })
+                    // .api({
+                    //     action : '/auth/login',
+                    //     method : 'POST',
+                    //     serializeForm : true,
+                    //     data   : {
+
+                    //     },
+                    //     onSuccess: function(response) {
+                    //         if (response.code == "1") {
+                    //             $('#failMsg').hide();
+                    //             window.location.href = "/success.html";
+                    //         } else {
+                    //             $('#failMsg').show();
+                    //             $('#failText').text(data.msg);
+                    //         }
+                    //     }
+                    // })
+                    ;
+            })
+            ;
+    </script>
+
+</head>
+
+<body>
+
+    <div class="ui middle aligned center aligned grid">
+        <div class="column">
+            <h2 class="ui teal image header">
+                <!--<img src="assets/images/logo.png" class="image"/>-->
+                <div class="content">
+                    统一身份认证
+                </div>
+            </h2>
+            <form id="loginForm" class="ui large form">
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" name="id" placeholder="学号/工号" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input type="password" name="password" placeholder="密码" />
+                        </div>
+                    </div>
+
+                    <div class="inline fields">
+
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="role" value="student" checked="checked" />
+                                <label>我是学生</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="role" value="teacher" />
+                                <label>我是教师</label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div id="btn" class="ui fluid large teal submit button">登录</div>
+                </div>
+
+                <div class="ui error message"></div>
+
+            </form>
+
+            <div id="failMsg" class="ui negative message">
+                <div class="header">登录失败 </div>
+                <p id="failText"></p>
+            </div>
+
+
+            <div class="ui message">
+                没有帐号?
+                <a href="/register">注册</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>
