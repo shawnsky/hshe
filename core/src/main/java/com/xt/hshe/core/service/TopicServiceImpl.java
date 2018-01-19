@@ -1,8 +1,6 @@
 package com.xt.hshe.core.service;
 
-import com.xt.hshe.core.pojo.Topic;
-import com.xt.hshe.core.repository.TopicRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.xt.hshe.core.pojo.entity.Topic;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

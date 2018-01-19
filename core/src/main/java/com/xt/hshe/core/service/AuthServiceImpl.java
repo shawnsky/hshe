@@ -1,8 +1,6 @@
 package com.xt.hshe.core.service;
 
-import com.xt.hshe.core.pojo.Student;
-import com.xt.hshe.core.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.xt.hshe.core.pojo.entity.Student;
 import org.springframework.stereotype.Service;
 
 @Service("authService")

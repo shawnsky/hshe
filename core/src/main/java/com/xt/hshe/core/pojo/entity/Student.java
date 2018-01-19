@@ -1,4 +1,4 @@
-package com.xt.hshe.core.pojo;
+package com.xt.hshe.core.pojo.entity;
 
 import lombok.Getter;
 import lombok.Setter;

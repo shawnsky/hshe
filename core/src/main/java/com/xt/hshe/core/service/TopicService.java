@@ -1,6 +1,6 @@
 package com.xt.hshe.core.service;
 
-import com.xt.hshe.core.pojo.Topic;
+import com.xt.hshe.core.pojo.entity.Topic;
 
 import java.util.List;
 

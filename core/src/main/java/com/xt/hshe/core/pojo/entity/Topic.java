@@ -1,4 +1,4 @@
-package com.xt.hshe.core.pojo;
+package com.xt.hshe.core.pojo.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,21 +7,23 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "problem")
+@Table(name = "topic")
 @Getter
 @Setter
 @ToString
-public class Problem {
+public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String description;
-    @Column(name = "memory_limit")
-    private String memoryLimit;
-    @Column(name = "time_limit")
-    private String timeLimit;
+    @Column(name = "start_time")
+    private String startTime;
+    @Column(name = "end_time")
+    private String endTime;
     private String creator;
     @Column(name = "create_time")
     private String createTime;
+
+
 }

@@ -1,8 +1,6 @@
 package com.xt.hshe.core.service;
 
-import com.xt.hshe.core.pojo.Problem;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import com.xt.hshe.core.pojo.entity.Problem;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

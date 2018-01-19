@@ -1,14 +1,10 @@
 package com.xt.hshe.core.web.controller;
 
 import com.xt.hshe.core.pojo.HttpMsg;
-import com.xt.hshe.core.pojo.Problem;
+import com.xt.hshe.core.pojo.entity.Problem;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @RestController
 public class ProblemController extends BaseController{
