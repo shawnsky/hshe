@@ -1,6 +1,6 @@
 package com.xt.hshe.core.repository;
 
-import com.xt.hshe.core.pojo.Topic;
+import com.xt.hshe.core.pojo.entity.Topic;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

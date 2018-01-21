@@ -1,6 +1,6 @@
 package com.xt.hshe.core.repository;
 
-import com.xt.hshe.core.pojo.Student;
+import com.xt.hshe.core.pojo.entity.Student;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

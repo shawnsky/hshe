@@ -1,21 +1,20 @@
-package com.xt.hshe.core.pojo;
+package com.xt.hshe.core.pojo.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name = "testpoint")
+@Table(name = "classes")
 @Getter
 @Setter
 @ToString
-public class TestPoint {
+public class Classes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String index;
-    private String input;
-    private String output;
+    private String name;
+    @Column(name = "create_time")
+    private String createTime;
 }
