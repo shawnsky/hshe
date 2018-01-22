@@ -3,6 +3,7 @@ package com.xt.hshe.core.web.controller;
 
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.util.AES;
+import com.xt.hshe.core.util.Consts;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +29,14 @@ public class AuthController extends BaseController {
         String password = request.getParameter("password");
         Assert.hasText(password, "密码不能为空!");
         int result = authService.login(id, password);
-        if (result==-1)
-            return new HttpMsg<>(-1,"用户不存在~");
-        else if (result==0)
-            return new HttpMsg<>(0,"密码输入错误~");
+        if (result== Consts.Auth.NOT_EXIST)
+            return new HttpMsg<>(result,"用户不存在~");
+        else if (result== Consts.Auth.WRONG_PASSWORD)
+            return new HttpMsg<>(result,"密码输入错误~");
         else {
             String sSrc = role + "#" + id + "#" + System.currentTimeMillis();
             String tokenGenerated = AES.Encrypt(sSrc, redisTemplate.opsForValue().get("sKey"));
-            return new HttpMsg<>(1,"登陆成功~", tokenGenerated);
+            return new HttpMsg<>(result,"登陆成功~", tokenGenerated);
         }
 
 

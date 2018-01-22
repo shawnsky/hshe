@@ -1,11 +1,13 @@
 package com.xt.hshe.core.service;
 
 import com.xt.hshe.core.pojo.entity.Problem;
+import com.xt.hshe.core.pojo.vo.ProblemListItemVo;
+import com.xt.hshe.core.pojo.vo.ProblemVo;
 
 import java.util.List;
 
 public interface ProblemService {
-    List<Problem> findAllProblems();
-    List<Problem> findProblemsInTopic(Long topicId);
-    Problem find(Long problemId);
+    List<ProblemListItemVo> findAllProblemsVo();
+    List<ProblemListItemVo> findProblemsVoInTopic(Long topicId);
+    ProblemVo findVo(Long problemId);
 }

@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProblemController extends BaseController{
     @GetMapping("/p")
     public HttpMsg problems(){
-        return new HttpMsg<>(1,null, problemService.findAllProblems());
+        return new HttpMsg<>(1,null, problemService.findAllProblemsVo());
     }
-    @GetMapping("/p/{id}")
-    public HttpMsg problem(@PathVariable Long id){
-        Problem problem = problemService.find(id);
-        if (problem==null){
-            return new HttpMsg(0,"不存在的~");
-        }
-        return new HttpMsg<>(1,null, problemService.find(id));
-    }
+//    @GetMapping("/p/{id}")
+//    public HttpMsg problem(@PathVariable Long id){
+//        Problem problem = problemService.find(id);
+//        if (problem==null){
+//            return new HttpMsg(0,"不存在的~");
+//        }
+//        return new HttpMsg<>(1,null, problem);
+//    }
 }

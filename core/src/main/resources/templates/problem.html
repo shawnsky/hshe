@@ -9,6 +9,8 @@
   <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
   <script src="/lib/jquery-3.2.1.min.js"></script>
   <script src="/lib/semantic-ui/semantic.min.js"></script>
+  <script src="/lib/vue.js"></script>
+  <script src="/lib/axios.min.js"></script>
 </head>
 
 <body>
@@ -32,8 +34,7 @@
       <thead>
         <tr>
           <th class="two wide">题目编号</th>
-          <th class="ten wide">标题</th>
-          <th class="two wide">来源</th>
+          <th class="twelve wide">标题</th>
           <th class="one wide">正确</th>
           <th class="one wide">提交</th>
         </tr>
@@ -44,42 +45,36 @@
           <td>
             <a href="/problem/2001"> Hero In Maze</a>
           </td>
-          <td> Shawn</td>
           <td>32</td>
           <td>132</td>
         </tr>
         <tr>
           <td> 1001 </td>
           <td> Hero In Maze</td>
-          <td> Shawn</td>
           <td>32</td>
           <td>132</td>
         </tr>
         <tr>
           <td> 1001 </td>
           <td> Hero In Maze</td>
-          <td> Shawn</td>
           <td>32</td>
           <td>132</td>
         </tr>
         <tr>
           <td> 1001 </td>
           <td> Hero In Maze</td>
-          <td> Shawn</td>
           <td>32</td>
           <td>132</td>
         </tr>
         <tr>
           <td> 1001 </td>
           <td> Hero In Maze</td>
-          <td> Shawn</td>
           <td>32</td>
           <td>132</td>
         </tr>
         <tr>
           <td> 1001 </td>
           <td> Hero In Maze</td>
-          <td> Shawn</td>
           <td>32</td>
           <td>132</td>
         </tr>
@@ -103,6 +98,28 @@
   </div>
 
 <div th:include="template :: footer"></div>
+
+<script>
+  (function () {
+    var ld = {
+      list: []
+    };
+    var pathId = '${pathId}';
+    axios.get('/t/'+pathId)
+    .then(function (response) {
+      console.log(response.data);
+      ld.list = response.data.data;
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    var vm = new Vue({
+      el:'#elist',
+      data: ld
+    })
+  })();
+  
+</script>
 
 </body>
 

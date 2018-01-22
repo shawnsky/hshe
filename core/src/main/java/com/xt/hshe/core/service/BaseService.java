@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 public class BaseService {
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    protected StringRedisTemplate redisTemplate;
 
     @Autowired
     protected ClassesRepository classesRepository;
@@ -20,4 +20,9 @@ public class BaseService {
     protected TestPointRepository testPointRepository;
     @Autowired
     protected TopicRepository topicRepository;
+    @Autowired
+    protected SubmissionRepository submissionRepository;
+
+    @Autowired
+    protected ProblemService problemService;
 }
