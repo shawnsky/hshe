@@ -80,7 +80,8 @@
           <td>
             <a href="/topic/123">{{ item.title }}</a>
           </td>
-          <td><i class="icon checkmark"></i> 进行中</td>
+          <td v-if="item.topicStatus=1"><i class="icon checkmark"></i> 进行中</td>
+          <td v-if="item.topicStatus=0"><i class="icon close"></i> 已关闭</td>
           <td>{{item.creator}}</td>
         </tr>
         <!-- <tr>

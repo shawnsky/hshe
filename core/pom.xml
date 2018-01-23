@@ -69,10 +69,7 @@
 
 
 
-
-
-
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<plugins>
