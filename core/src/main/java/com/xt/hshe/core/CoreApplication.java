@@ -1,5 +1,6 @@
 package com.xt.hshe.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,5 +16,9 @@ public class CoreApplication {
 		SpringApplication.run(CoreApplication.class, args);
 	}
 
+	@Bean
+	public ObjectMapper objectMapper(){
+		return new ObjectMapper();
+	}
 
 }

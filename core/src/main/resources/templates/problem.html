@@ -105,7 +105,7 @@
       list: []
     };
     var pathId = "${pathId}";
-    axios.get('/t/'+pathId)
+    axios.get('/api/t/'+pathId)
     .then(function (response) {
       console.log(response.data);
       ld.list = response.data.data;

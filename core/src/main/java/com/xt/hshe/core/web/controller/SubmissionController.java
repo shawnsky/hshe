@@ -5,9 +5,11 @@ import com.xt.hshe.core.pojo.entity.Problem;
 import com.xt.hshe.core.pojo.entity.Submission;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class SubmissionController extends BaseController{
     @GetMapping("/s")
     public HttpMsg submissions(){

@@ -25,14 +25,14 @@ public class Test {
 
 //        String ss = "Vi2MOlBekOfJkcoQGvx2X4Sz9DXCtJhgYcoxXa/kW3A=";
 
-//        System.out.println(AES.Encrypt(str, key));
+        System.out.println(AES.Encrypt(str, key));
 //        System.out.println(AES.Decrypt(ss, key));
 //        String root = System.getProperty("user.dir");
 //        Runtime.getRuntime().exec("cd "+root);
 //        Runtime.getRuntime().exec("cd program");
 
 
-        System.out.println(System.currentTimeMillis());
+//        System.out.println(System.currentTimeMillis());
 
 
     }

@@ -134,18 +134,40 @@
 
   <div th:include="template :: footer"></div>
 
+  <div class="ui basic modal">
+    <div class="ui icon header">
+      <i class="user circle icon"></i>
+      <span id="modalmsg"></span>
+    </div>
+    <div class="content">
+      <p style="font-size:1.5em">不好意思，必须通过身份认证才可以继续使用本系统。即将自动跳转到登录页面...</p>
+    </div>
+    <div class="actions">
+      <div class="ui green ok inverted button" onclick="javascript:window.location.href='/login'">
+        <i class="checkmark icon"></i>
+          前往登录
+      </div>
+    </div>
+  </div>
+
 <script>
   (function () {
     var ld = {
       list: []
     };
-    axios.get('/t')
+    axios.get('/api/t')
     .then(function (response) {
       console.log(response.data);
       ld.list = response.data.data;
     })
     .catch(function (error) {
       console.log(error);
+      $('.ui.basic.modal').modal('show');
+      $('#modalmsg').text(error.response.data.msg)
+      $(":root").delay(3000).queue(function(){
+        $('.ui.basic.modal').modal('hide');
+        window.location.href="/login";
+      });
     });
     var vm = new Vue({
       el:'#elist',

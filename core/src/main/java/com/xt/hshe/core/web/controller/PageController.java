@@ -5,16 +5,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class PageController {
     @GetMapping("/")
-    public String index(HttpServletRequest request){
-        if (request.getHeader("token")==null)
-            return "redirect:/login";
+    public String index(){
         return "redirect:/topic";
     }
 
@@ -61,6 +61,12 @@ public class PageController {
     public String SubmissionDetail(@PathVariable String id, Model model){
         model.addAttribute("pathId",id);
         return "submit_detail";
+    }
+
+    @GetMapping("/cookie")
+    @ResponseBody
+    public Cookie[] cookie(HttpServletRequest request){
+        return request.getCookies();
     }
 
 

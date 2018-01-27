@@ -4,9 +4,11 @@ import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.pojo.entity.Problem;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class ProblemController extends BaseController{
     @GetMapping("/p")
     public HttpMsg problems(){

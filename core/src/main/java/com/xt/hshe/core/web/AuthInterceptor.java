@@ -1,20 +1,30 @@
 package com.xt.hshe.core.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.util.AES;
+import com.xt.hshe.core.util.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.concurrent.TimeUnit;
 
 public class AuthInterceptor implements HandlerInterceptor {
 
 
     @Autowired
-    private StringRedisTemplate template;
+    private ObjectMapper objectMapper;
+
+    @Value("${token.skey}")
+    private String sKey;
 
 
     @Override
@@ -22,66 +32,59 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String uri = request.getRequestURI();
         System.out.println(uri);
-        if (uri.matches("/error")) return true;
+        //页面模板请求都放行，API请求都拦截
+        if (uri.matches("/api/[a-zA-Z_0-9/]*")){
+            //注册登录的请求直接放行
+            if (uri.matches("/api/auth[a-zA-Z_0-9/]*")) {
+                return true;
+            }
+            String token = request.getHeader("Access-Token");
+            //没有token
+            if (token==null||"".equals(token)){
+//                response.setStatus(401);
+//                response.setContentType("text/html;charset=UTF-8");
+//                response.getWriter().print("<center>401 Unauthorized: No Token.</center><hr/><center>请登录系统 <a href=\"/login\">登录</a></center>");
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setContentType("application/json;charset=UTF-8");
+                try(PrintWriter writer = response.getWriter()){
+                    writer.print(objectMapper.writeValueAsString(new HttpMsg(Consts.ServerCode.FAILURE, "请登录系统")));
+                }
+                return false;
+            }
 
-        //根目录进Handler控制跳转
-        if (uri.equals("/")) return true;
+            String info = AES.Decrypt(token, sKey);//格式 student#140705202#1456789123456
+            //token 非法
+            String tokenRgx = "[studenachr]{7}+#[0-9]{8,9}#[0-9]{13}";//教师工号可以8-9位
+            if (info==null || !info.matches(tokenRgx)){
+//                response.setStatus(400);
+//                response.setContentType("text/html;charset=UTF-8");
+//                response.getWriter().print("<center>400 Unauthorized: llegal Token.</center><hr/><center>非法请求，请重新登录 <a href=\"/login\">登录</a></center>");
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setContentType("application/json;charset=UTF-8");
+                try(PrintWriter writer = response.getWriter()){
+                    writer.print(objectMapper.writeValueAsString(new HttpMsg(Consts.ServerCode.FAILURE, "非法请求，请重新登录")));
+                }
+                return false;
+            }
 
-        //注册登录的直接放行
-        String authRgx = "/auth[a-zA-Z_0-9/]*";
-        if (uri.matches(authRgx) || uri.equals("/login")) {
-            return true;
+            String[] infos = info.split("#");
+            //token 过期
+            long inTime = Long.parseLong(infos[2]);
+            long nowTime = System.currentTimeMillis();
+            if (TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)<nowTime-inTime){
+//                response.setStatus(401);
+//                response.setContentType("text/html;charset=UTF-8");
+//                response.getWriter().print("<center>401 Unauthorized: Token Expired.</center><hr/><center>登录过期，请重新登录 <a href=\"/login\">登录</a></center>");
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setContentType("application/json;charset=UTF-8");
+                try(PrintWriter writer = response.getWriter()){
+                    writer.print(objectMapper.writeValueAsString(new HttpMsg(Consts.ServerCode.FAILURE, "登录过期，请重新登录")));
+                }
+                return false;
+            }
+            //设置给AOP权限检查使用，避免再解析一次token
+            request.setAttribute("role", infos[0]);
         }
-
-
-        String token = request.getHeader("token");
-
-
-        //没有token
-        if (token==null||"".equals(token)){
-            response.setStatus(401);
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().print("<center>401 Unauthorized: No Token.</center><hr/><center>请登录系统 <a href=\"/login\">登录</a></center>");
-            return false;
-        }
-
-        String info = AES.Decrypt(token, template.opsForValue().get("sKey"));
-
-
-
-        //token 非法
-        String tokenRgx = "[studenachr]{7}+#[0-9]{8,9}#[0-9]{13}";//教师工号可以8-9位
-        if (info==null || !info.matches(tokenRgx)){
-            response.setStatus(401);
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().print("<center>401 Unauthorized: llegal Token.</center><hr/><center>非法请求，请重新登录 <a href=\"/login\">登录</a></center>");
-            return false;
-        }
-
-
-        String[] infos = info.split("#");
-
-
-        //token 过期
-        long inTime = Long.parseLong(infos[2]);
-        long nowTime = System.currentTimeMillis();
-        if (TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)<nowTime-inTime){
-            response.setStatus(401);
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().print("<center>401 Unauthorized: Token Expired.</center><hr/><center>登录过期，请重新登录 <a href=\"/login\">登录</a></center>");
-            return false;
-        }
-
-        //学生访问教师
-        //访问权限检查用切面做，更方便
-//        String teaRgx = "/teacher[a-zA-Z_0-9/]*";
-//        if ("student".equals(infos[0]) && uri.matches(teaRgx)){
-//            response.setStatus(403);
-//            response.setContentType("text/html;charset=UTF-8");
-//            response.getWriter().print("<center>403 Forbidden: Not authorized.</center><hr/><center>无权访问</center>");
-//            return false;
-//        }
-        request.setAttribute("role", infos[0]);
         return true;
     }
 
