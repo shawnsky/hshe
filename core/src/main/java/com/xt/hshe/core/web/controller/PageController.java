@@ -36,8 +36,7 @@ public class PageController {
         return "topic";
     }
     @GetMapping("/topic/{id}")
-    public String topicDetail(@PathVariable String id, Model model){
-        model.addAttribute("pathId",id);
+    public String topicDetail(){
         return "problem";
     }
 
@@ -47,8 +46,7 @@ public class PageController {
         return "problem";
     }
     @GetMapping("/problem/{id}")
-    public String problemDetail(@PathVariable String id, Model model){
-        model.addAttribute("pathId",id);
+    public String problemDetail(){
         return "problem_detail";
     }
 

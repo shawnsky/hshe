@@ -7,6 +7,7 @@ import com.xt.hshe.core.pojo.vo.TopicListItemVo;
 import com.xt.hshe.core.pojo.vo.TopicVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,9 @@ public class TopicServiceImpl extends BaseService implements TopicService{
     @Override
     public TopicVo findVo(Long topicId) {
         Topic topic = topicRepository.findOne(topicId);
+        if (topic==null) {
+            return null;
+        }
         TopicVo vo = new TopicVo();
         vo.setId(topicId);
         vo.setTitle(topic.getTitle());

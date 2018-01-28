@@ -17,5 +17,6 @@ public class GlobalExceptionHandler {
     public HttpMsg<String> errorHandler(HttpServletResponse response, Exception e){
         e.printStackTrace();
         return new HttpMsg<>(0,"系统异常-"+e.getClass().getName());
+
     }
 }

@@ -4,6 +4,7 @@ package com.xt.hshe.core.web.controller;
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.util.AES;
 import com.xt.hshe.core.util.Consts;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/auth")
 public class AuthController extends BaseController {
 
+    @Value("${token.skey}")
+    private String sKey;
 
 
     @PostMapping("/login")
@@ -35,7 +38,7 @@ public class AuthController extends BaseController {
             return new HttpMsg<>(result,"密码输入错误~");
         else {
             String sSrc = role + "#" + id + "#" + System.currentTimeMillis();
-            String tokenGenerated = AES.Encrypt(sSrc, redisTemplate.opsForValue().get("sKey"));
+            String tokenGenerated = AES.Encrypt(sSrc, sKey);
             return new HttpMsg<>(result,"登陆成功~", tokenGenerated);
         }
 

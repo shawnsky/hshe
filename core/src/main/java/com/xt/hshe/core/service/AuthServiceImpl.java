@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl extends BaseService implements AuthService {
 
 
-
     @Override
     public int login(String id, String password) {
         Student student = studentRepository.findOne(id);
