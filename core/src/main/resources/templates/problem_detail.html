@@ -2,126 +2,160 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Problems</title>
   <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
-    <script src="/lib/jquery-3.2.1.min.js"></script>
-    <script src="/lib/semantic-ui/semantic.min.js"></script>
-
+  <script src="/lib/jquery-3.2.1.min.js"></script>
+  <script src="/lib/semantic-ui/semantic.min.js"></script>
+  <script src="/lib/vue.js"></script>
+  <script src="/lib/axios.min.js"></script>
+  <script src="/js/util.js"></script>
 
 </head>
 
 <body>
- <div th:include="template :: header"></div>
+  <div th:include="template :: header"></div>
 
 
-  <div class="ui main container">
+  <div id="app" class="ui main container">
     <h1 class="ui header">UI</h1>
 
-    <div class="ui breadcrumb">
-      <i class="angle right icon"></i>
-      <a class="section">17软工信管《高级语言程序设计》实验10-文件</a>
-      <div class="divider"> / </div>
-      <div class="active section">Hero in Maze</div>
-    </div>
+    <div id="viewdata">
 
-    <h1 class="ui header">
-      Hero In Maze</h1>
+      <div class="ui breadcrumb">
+        <i class="angle right icon"></i>
+        <a class="section">17软工信管《高级语言程序设计》实验10-文件</a>
+        <div class="divider"> / </div>
+        <div class="active section">Hero in Maze</div>
+      </div>
+
+      <h1 class="ui header">
+        {{ object.title }}</h1>
 
 
-    <div class="ui grid">
+      <div class="ui grid">
 
-      <div class="ui twelve wide column">
-        <div>
-          <p style="line-height: 180%">赛马是一古老的游戏，早在公元前四世纪的中国，处在诸侯割据的状态，历史上称为“战国时期”。在魏国作官的孙膑，因为受到同僚庞涓的迫害，被齐国使臣救出后，到达齐国国都。 赛马是当时最受齐国贵族欢迎的娱乐项目。上至国王，下到大臣，常常以赛马取乐，并以重金赌输赢。田忌多次与国王及其他大臣赌输赢，屡赌屡输。一天他赛马又输了，回家后闷闷不乐。孙膑安慰他说：“下次有机会带我到马场看看，也许我能帮你。”
-            孙膑仔细观察后发现，田忌的马和其他人的马相差并不远，只是策略运用不当，以致失败。 比赛前田忌按照孙膑的主意，用上等马鞍将下等马装饰起来，冒充上等马，与齐王的上等马比赛。第二场比赛，还是按照孙膑的安排，田忌用自己的上等马与国王的中等马比赛，在一片喝彩中，只见田忌的马竟然冲到齐王的马前面，赢了第二场。关键的第三场，田忌的中等马和国王的下等马比赛，田忌的马又一次冲到国王的马前面，结果二比一，田忌赢了国王。
-            就是这么简单，现在渊子也来赛一赛马。假设每匹马都有恒定的速度，所以速度大的马一定比速度小的马先到终点（没有意外！！）。不允许出现平局。最后谁赢的场数多于一半(不包括一半)，谁就是赢家(可能没有赢家)。渊子有N(1≤N≤1000)匹马参加比赛。对手的马的数量与渊子马的数量一样，并且知道所有的马的速度。聪明的你来预测一下这场世纪之战的结果，看看渊子能否赢得比赛。
-          </p>
+        <div class="ui twelve wide column">
+          <div>
+            <p style="line-height: 180%">{{ object.description }}
+            </p>
+          </div>
+          <h4>样例输入</h4>
+          <div class="ui segment">
+            Given nums = [2, 7, 11, 15], target = 9,
+          </div>
+
+          <h4>样例输出</h4>
+          <div class="ui segment">
+            Given nums = [2, 7, 11, 15], target = 9,
+          </div>
         </div>
-        <h4>样例输入</h4>
-        <div class="ui segment">
-          Given nums = [2, 7, 11, 15], target = 9,
+
+        <div class="ui four wide column">
+          <table class="ui celled structured striped table">
+            <tbody>
+              <tr>
+                <td>
+                  <i class="microchip icon"></i> 内存限制 {{ object.memoryLimit }}M
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="wait icon"></i> 时间限制 {{ object.timeLimit }}s</td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="unhide icon"></i> 浏览 {{ object.viewerNum }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="check circle icon"></i> 正确 {{ object.acceptNum }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <i class="sticky note icon"></i> 提交 {{ object.submitNum }</td>
+              </tr>
+
+              <tr>
+                <td>
+                  <i class="percent icon"></i>通过率 67%</td>
+              </tr>
+
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        <h4>样例输出</h4>
-        <div class="ui segment">
-          Given nums = [2, 7, 11, 15], target = 9,
+
+      <h1>提交</h1>
+
+      <!-- <i class="code icon"></i> -->
+      <div class="ui selection dropdown">
+        <input type="hidden" name="language" />
+        <i class="dropdown icon"></i>
+        <div class="default text">选择语言</div>
+        <div class="menu">
+          <div class="item" data-value="0">C</div>
+          <div class="item" data-value="1">C++</div>
+          <div class="item" data-value="2">Java</div>
+          <div class="item" data-value="3">Python</div>
+          <div class="item" data-value="4">Ruby</div>
+          <div class="item" data-value="5">Go</div>
+          <div class="item" data-value="6">Perl</div>
         </div>
       </div>
 
-      <div class="ui four wide column">
-        <table class="ui celled structured striped table">
-          <tbody>
-            <tr>
-              <td>
-                <i class="microchip icon"></i> 内存限制 64m
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <i class="wait icon"></i> 时间限制 1s</td>
-            </tr>
-            <tr>
-              <td>
-                <i class="unhide icon"></i> 浏览 288</td>
-            </tr>
-            <tr>
-              <td>
-                <i class="check circle icon"></i> 正确 33</td>
-            </tr>
-            <tr>
-              <td>
-                <i class="sticky note icon"></i> 提交 51</td>
-            </tr>
+      
 
-            <tr>
-              <td>
-                <i class="percent icon"></i>通过率 67%</td>
-            </tr>
-
-          </tbody>
-        </table>
+      <div class="ui form">
+        <div class="field">
+          <label></label>
+          <textarea></textarea>
+        </div>
       </div>
+
+
+      <button class="ui primary button" style="margin-top:0.5em">提交 </button>
     </div>
-
-
-    <h1>提交</h1>
-
-    <!-- <i class="code icon"></i> -->
-    <div class="ui selection dropdown">
-      <input type="hidden" name="language"/>
-      <i class="dropdown icon"></i>
-      <div class="default text">选择语言</div>
-      <div class="menu">
-        <div class="item" data-value="0">C</div>
-        <div class="item" data-value="1">C++</div>
-        <div class="item" data-value="2">Java</div>
-        <div class="item" data-value="3">Python</div>
-        <div class="item" data-value="4">Ruby</div>
-        <div class="item" data-value="5">Go</div>
-        <div class="item" data-value="6">Perl</div>
-      </div>
-    </div>
-
-    <script>$('.ui.dropdown').dropdown();</script>
-
-    <div class="ui form">
-      <div class="field">
-        <label></label>
-        <textarea></textarea>
-      </div>
-    </div>
-
-
-    <button class="ui primary button" style="margin-top:0.5em">提交 </button>
-
-
   </div>
 
 
   <div th:include="template :: footer"></div>
+  <script>$('.ui.dropdown').dropdown();</script>
+  <script>
+    (function () {
+      var ld = {
+        object:{}
+      };
+      var pathId = getPathId();
+      var dataApi = '/api/p/' + pathId;
+
+      axios.get(dataApi)
+        .then(function (response) {
+          //TODO 系統異常處理
+          ld.object = response.data.data;
+          // $("#viewloader").hide();
+          // $("#viewdata").show();
+        })
+        .catch(function (error) {
+          if (error.response.status === 404) {
+            // $("#viewloader").hide();
+            // $("#view404").show();
+          } else {
+            console.log(error.response.status);
+            window.location.href = "/login";
+          }
+
+        });
+      var vm = new Vue({
+        el: '#app',
+        data: ld
+      })
+    })();
+
+  </script>
 </body>
 
 </html>

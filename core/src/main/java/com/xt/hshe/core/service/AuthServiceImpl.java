@@ -16,4 +16,13 @@ public class AuthServiceImpl extends BaseService implements AuthService {
         return Consts.Auth.OK;
     }
 
+    @Override
+    public String findNick(boolean isStu, String id) {
+        if (isStu) {
+            return studentRepository.findNickById(id);
+        } else {
+            return teacherRepository.findNickById(id);
+        }
+    }
+
 }

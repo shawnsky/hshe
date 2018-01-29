@@ -41,9 +41,6 @@ public class AuthController extends BaseController {
             String tokenGenerated = AES.Encrypt(sSrc, sKey);
             return new HttpMsg<>(result,"登陆成功~", tokenGenerated);
         }
-
-
-
     }
 
 }

@@ -25,4 +25,6 @@ public class BaseService {
 
     @Autowired
     protected ProblemService problemService;
+    @Autowired
+    protected AuthService authService;
 }

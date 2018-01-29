@@ -6,4 +6,6 @@ import org.springframework.stereotype.Service;
 public interface AuthService {
     int login(String id, String password);
 
+    String findNick(boolean isStu, String id);
+
 }

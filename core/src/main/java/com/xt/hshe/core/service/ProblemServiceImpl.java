@@ -41,6 +41,26 @@ public class ProblemServiceImpl extends BaseService implements ProblemService {
 
     @Override
     public ProblemVo findVo(Long problemId) {
-        return null;
+        Problem p = problemRepository.findOne(problemId);
+        if (p == null) {
+            return null;
+        }
+        ProblemVo vo = new ProblemVo();
+        vo.setId(p.getId());
+        vo.setTitle(p.getTitle());
+        vo.setDescription(p.getDescription());
+        vo.setMemoryLimit(p.getMemoryLimit());
+        vo.setTimeLimit(p.getTimeLimit());
+        vo.setCreateTime(p.getCreateTime());
+        vo.setAcceptNum(redisTemplate.opsForValue().get("acceptnum:"+p.getId()));
+        vo.setSubmitNum(redisTemplate.opsForValue().get("submitnum:"+p.getId()));
+        vo.setViewerNum(redisTemplate.opsForValue().get("viewernum:"+p.getId()));
+        String creatorNick = authService.findNick(false, p.getCreator());
+        if (creatorNick == null||"".equals(creatorNick)){
+            vo.setCreator(p.getCreator());
+        } else {
+            vo.setCreator(creatorNick);
+        }
+        return vo;
     }
 }
