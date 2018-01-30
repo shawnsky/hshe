@@ -11,4 +11,6 @@ import java.util.List;
 public interface TopicService {
     List<TopicListItemVo> findAllTopicsVo();
     TopicVo findVo(Long topicId);
+
+    String findTopicTitle(Long topicId);
 }

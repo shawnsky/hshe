@@ -21,4 +21,7 @@ public class ProblemVo {
     private String acceptNum;
     private String submitNum;
     private String viewerNum;
+    private String referer;
+    private String inputExample;
+    private String outputExample;
 }

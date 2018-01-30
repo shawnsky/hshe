@@ -12,6 +12,9 @@ import java.util.List;
 public interface TopicRepository extends CrudRepository<Topic, Long> {
     List<Topic> findAll();
 
+    @Query(value = "select t.title from Topic t where t.id = ?1")
+    String findTopicTitle(Long arg1);
+
     @Query(value = "SELECT t.id, t.title, u.nickname, (CASE " +
             "WHEN t.startTime>unix_timestamp(now())*1000 THEN -1 " +
             "WHEN t.endTime<unix_timestamp(now())*1000 THEN 0 " +

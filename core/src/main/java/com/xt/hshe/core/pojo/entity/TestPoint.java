@@ -18,4 +18,6 @@ public class TestPoint {
     private String index;
     private String input;
     private String output;
+    @Column(name = "problem_id")
+    private long problemId;
 }

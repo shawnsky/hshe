@@ -44,4 +44,9 @@ public class TopicServiceImpl extends BaseService implements TopicService{
         vo.setProblemListItemVos(problemService.findProblemsVoInTopic(topicId));
         return vo;
     }
+
+    @Override
+    public String findTopicTitle(Long topicId) {
+        return topicRepository.findTopicTitle(topicId);
+    }
 }

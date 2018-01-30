@@ -13,22 +13,27 @@
   <script src="/lib/axios.min.js"></script>
   <script src="/js/util.js"></script>
 
+
 </head>
 
 <body>
   <div th:include="template :: header"></div>
 
 
+  
+
+
   <div id="app" class="ui main container">
     <h1 class="ui header">UI</h1>
 
-    <div id="viewdata">
 
+    <div id="viewdata">
       <div class="ui breadcrumb">
         <i class="angle right icon"></i>
-        <a class="section">17软工信管《高级语言程序设计》实验10-文件</a>
-        <div class="divider"> / </div>
-        <div class="active section">Hero in Maze</div>
+        <a class="section" :href="referer" v-if="object.referer!=null">{{ object.referer }}</a>
+        <div class="divider" v-if="object.referer!=null"> / </div>
+
+        <div class="active section">{{ object.title }}</div>
       </div>
 
       <h1 class="ui header">
@@ -44,12 +49,12 @@
           </div>
           <h4>样例输入</h4>
           <div class="ui segment">
-            Given nums = [2, 7, 11, 15], target = 9,
+            {{ object.inputExample }}
           </div>
 
           <h4>样例输出</h4>
           <div class="ui segment">
-            Given nums = [2, 7, 11, 15], target = 9,
+            {{ object.outputExample }}
           </div>
         </div>
 
@@ -63,7 +68,7 @@
               </tr>
               <tr>
                 <td>
-                  <i class="wait icon"></i> 时间限制 {{ object.timeLimit }}s</td>
+                  <i class="wait icon"></i> 时间限制 {{ object.timeLimit }}ms</td>
               </tr>
               <tr>
                 <td>
@@ -75,22 +80,23 @@
               </tr>
               <tr>
                 <td>
-                  <i class="sticky note icon"></i> 提交 {{ object.submitNum }</td>
+                  <i class="sticky note icon"></i> 提交 {{ object.submitNum }}</td>
               </tr>
 
               <tr>
                 <td>
-                  <i class="percent icon"></i>通过率 67%</td>
+                  <i class="percent icon"></i>通过率 {{ (object.acceptNum*100/object.submitNum).toFixed(1) }}%</td>
               </tr>
 
             </tbody>
           </table>
         </div>
       </div>
+    </div>
+    <!--viewdata结束-->
 
-
+    <div id="viewsubmit">
       <h1>提交</h1>
-
       <!-- <i class="code icon"></i> -->
       <div class="ui selection dropdown">
         <input type="hidden" name="language" />
@@ -106,33 +112,35 @@
           <div class="item" data-value="6">Perl</div>
         </div>
       </div>
-
-      
-
+      <script>$('.ui.dropdown').dropdown();</script>
       <div class="ui form">
         <div class="field">
           <label></label>
           <textarea></textarea>
         </div>
       </div>
-
-
       <button class="ui primary button" style="margin-top:0.5em">提交 </button>
     </div>
+    <!-- viewsubmit结束 -->
+
   </div>
 
 
   <div th:include="template :: footer"></div>
-  <script>$('.ui.dropdown').dropdown();</script>
+
   <script>
     (function () {
       var ld = {
-        object:{}
+        object: {},
+        referer: document.referrer
       };
       var pathId = getPathId();
       var dataApi = '/api/p/' + pathId;
-
-      axios.get(dataApi)
+      axios.get(dataApi, {
+        headers: {
+          'My-Referer': ld.referer
+        }
+      })
         .then(function (response) {
           //TODO 系統異常處理
           ld.object = response.data.data;
@@ -150,7 +158,7 @@
 
         });
       var vm = new Vue({
-        el: '#app',
+        el: '#viewdata',
         data: ld
       })
     })();
