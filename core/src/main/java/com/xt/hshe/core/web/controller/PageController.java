@@ -1,5 +1,9 @@
 package com.xt.hshe.core.web.controller;
 
+import com.xt.hshe.core.mq.Sender;
+import com.xt.hshe.core.pojo.entity.Submission;
+import com.xt.hshe.core.util.Consts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class PageController {
+
     @GetMapping("/")
     public String index(){
         return "redirect:/topic";

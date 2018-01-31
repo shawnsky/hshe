@@ -1,5 +1,6 @@
 package com.xt.hshe.core.web.controller;
 
+import com.xt.hshe.core.mq.Sender;
 import com.xt.hshe.core.service.AuthService;
 import com.xt.hshe.core.service.ProblemService;
 import com.xt.hshe.core.service.SubmissionService;
@@ -23,6 +24,9 @@ public class BaseController {
 
     @Autowired
     protected SubmissionService submissionService;
+
+    @Autowired
+    protected Sender sender;
 
 
 }

@@ -23,4 +23,5 @@ public class Submission {
     private String src;
     @Column(name = "create_time")
     private String createTime;
+    private int judged;
 }

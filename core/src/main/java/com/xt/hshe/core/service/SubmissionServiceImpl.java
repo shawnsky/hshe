@@ -31,4 +31,16 @@ public class SubmissionServiceImpl extends BaseService implements SubmissionServ
     public Submission find(Long submissionId) {
         return submissionRepository.findOne(submissionId);
     }
+
+    @Override
+    public Long submit(String uid, String pid, String lang, String src) {
+        Submission s = new Submission();
+        s.setUserId(uid);
+        s.setProblemId(Long.parseLong(pid));
+        s.setLang(lang);
+        s.setSrc(src);
+        s.setCreateTime(String.valueOf(System.currentTimeMillis()));
+        submissionRepository.save(s);
+        return s.getId();
+    }
 }

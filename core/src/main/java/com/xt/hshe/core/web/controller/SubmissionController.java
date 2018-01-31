@@ -3,24 +3,48 @@ package com.xt.hshe.core.web.controller;
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.pojo.entity.Problem;
 import com.xt.hshe.core.pojo.entity.Submission;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.xt.hshe.core.util.Consts;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api")
 public class SubmissionController extends BaseController{
     @GetMapping("/s")
     public HttpMsg submissions(){
-        return new HttpMsg<>(1,null, submissionService.findAllSubmissions());
+        return new HttpMsg<>(Consts.ServerCode.SUCCESS,null, submissionService.findAllSubmissions());
     }
+
+
     @GetMapping("/s/{id}")
     public HttpMsg submission(@PathVariable Long id){
         Submission submission = submissionService.find(id);
         if (submission==null){
-            return new HttpMsg(0,"不存在的~");
+            return new HttpMsg(Consts.ServerCode.FAILURE,"不存在的~");
         }
-        return new HttpMsg<>(1,null, submission);
+        return new HttpMsg<>(Consts.ServerCode.SUCCESS,null, submission);
+    }
+
+    @PostMapping("/s")
+    public HttpMsg submit(HttpServletRequest request, HttpServletResponse response){
+        String uid = request.getParameter("userId");
+        Assert.hasText(uid, "请求失败，请重新登录!");
+        String pid = request.getParameter("problemId");
+        Assert.hasText(pid, "请求失败，请重试!");
+        String src = request.getParameter("src");
+        Assert.hasText(src, "代码不能为空!");
+        String lang = request.getParameter("lang");
+        Assert.hasText(lang, "请选择编程语言!");
+        Long sid = submissionService.submit(uid, pid, lang, src);//储存Submission到数据库
+        if (sid==null) {
+            return new HttpMsg(Consts.ServerCode.FAILURE, "提交失败");
+        } else {
+            sender.sendToJudge(sid.toString());//发消息给q执行编译判题
+            return new HttpMsg<>(Consts.ServerCode.SUCCESS, null, sid);
+        }
+
     }
 }

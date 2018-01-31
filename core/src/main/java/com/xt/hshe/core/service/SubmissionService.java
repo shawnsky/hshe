@@ -11,4 +11,5 @@ public interface SubmissionService {
     List<Submission> findSubmissionsInProblem(Long topicId);
     List<Submission> findSubmissionsOfUser(String userId);
     Submission find(Long submissionId);
+    Long submit(String uid, String pid, String lang, String src);
 }
