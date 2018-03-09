@@ -37,5 +37,6 @@ public class Consts {
         public static final int RE = 5; //运行时错误
         public static final int PE = 6; //格式错误
         public static final int CE = 7; //编译错误
+        public static final int SE = 8; //系统错误
     }
 }

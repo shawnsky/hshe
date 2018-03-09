@@ -20,7 +20,7 @@
   <div th:include="template :: header"></div>
 
 
-  
+
 
 
   <div id="app" class="ui main container">
@@ -30,31 +30,31 @@
     <div id="viewdata">
       <div class="ui breadcrumb">
         <i class="angle right icon"></i>
-        <a class="section" :href="referer" v-if="object.referer!=null">{{ object.referer }}</a>
-        <div class="divider" v-if="object.referer!=null"> / </div>
+        <a class="section" :href="referer" v-if="object0.referer!=null">{{ object0.referer }}</a>
+        <div class="divider" v-if="object0.referer!=null"> / </div>
 
-        <div class="active section">{{ object.title }}</div>
+        <div class="active section">{{ object0.title }}</div>
       </div>
 
       <h1 class="ui header">
-        {{ object.title }}</h1>
+        {{ object0.title }}</h1>
 
 
       <div class="ui grid">
 
         <div class="ui twelve wide column">
           <div>
-            <p style="line-height: 180%">{{ object.description }}
+            <p style="line-height: 180%">{{ object0.description }}
             </p>
           </div>
           <h4>样例输入</h4>
           <div class="ui segment">
-            {{ object.inputExample }}
+            {{ object0.inputExample }}
           </div>
 
           <h4>样例输出</h4>
           <div class="ui segment">
-            {{ object.outputExample }}
+            {{ object0.outputExample }}
           </div>
         </div>
 
@@ -63,29 +63,29 @@
             <tbody>
               <tr>
                 <td>
-                  <i class="microchip icon"></i> 内存限制 {{ object.memoryLimit }}M
+                  <i class="microchip icon"></i> 内存限制 {{ object0.memoryLimit }}M
                 </td>
               </tr>
               <tr>
                 <td>
-                  <i class="wait icon"></i> 时间限制 {{ object.timeLimit }}ms</td>
+                  <i class="wait icon"></i> 时间限制 {{ object0.timeLimit }}ms</td>
               </tr>
               <tr>
                 <td>
-                  <i class="unhide icon"></i> 浏览 {{ object.viewerNum }}</td>
+                  <i class="unhide icon"></i> 浏览 {{ object0.viewerNum }}</td>
               </tr>
               <tr>
                 <td>
-                  <i class="check circle icon"></i> 正确 {{ object.acceptNum }}</td>
+                  <i class="check circle icon"></i> 正确 {{ object0.acceptNum }}</td>
               </tr>
               <tr>
                 <td>
-                  <i class="sticky note icon"></i> 提交 {{ object.submitNum }}</td>
+                  <i class="sticky note icon"></i> 提交 {{ object0.submitNum }}</td>
               </tr>
 
               <tr>
                 <td>
-                  <i class="percent icon"></i>通过率 {{ (object.acceptNum*100/object.submitNum).toFixed(1) }}%</td>
+                  <i class="percent icon"></i>通过率 {{ (object0.acceptNum*100/object0.submitNum).toFixed(1) }}%</td>
               </tr>
 
             </tbody>
@@ -112,30 +112,34 @@
           <div class="item" data-value="6">Perl</div>
         </div>
       </div>
-      <script>$('.ui.dropdown').dropdown();</script>
+
       <div class="ui form">
         <div class="field">
           <label></label>
-          <textarea></textarea>
+          <textarea v-model="src"></textarea>
         </div>
       </div>
-      <button class="ui primary button" style="margin-top:0.5em">提交 </button>
+
+      <button class="ui primary button" style="margin-top:0.5em" v-on:click="submit">提交 </button>
     </div>
     <!-- viewsubmit结束 -->
 
   </div>
-
+  <!-- 放到下拉栏下面 -->
+  <script>$('.ui.dropdown').dropdown();</script>
 
   <div th:include="template :: footer"></div>
 
   <script>
     (function () {
       var ld = {
-        object: {},
-        referer: document.referrer
+        object0: {},
+        referer: document.referrer,
+        src: ''
       };
       var pathId = getPathId();
       var dataApi = '/api/p/' + pathId;
+      var submitApi = '/api/s';
       axios.get(dataApi, {
         headers: {
           'My-Referer': ld.referer
@@ -143,7 +147,7 @@
       })
         .then(function (response) {
           //TODO 系統異常處理
-          ld.object = response.data.data;
+          ld.object0 = response.data.data;
           // $("#viewloader").hide();
           // $("#viewdata").show();
         })
@@ -158,8 +162,34 @@
 
         });
       var vm = new Vue({
-        el: '#viewdata',
-        data: ld
+        el: '#app',
+        data: ld,
+        methods: {
+          submit: function () {
+            // axios({
+            //   url: submitApi,
+            //   method: 'post',
+            //   data: {
+            //     userId: '140705202',
+            //     problemId: ld.object0.id,
+            //     src: $('#src_area').text(),
+            //     lang: 'java'
+            //   }
+            // });
+            axios.post(submitApi, {
+              userId: '140705202',
+              problemId: ld.object0.id,
+              src: ld.src,
+              lang: 'java'
+            })
+              .then(function (response) {
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }
+        }
       })
     })();
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -29,14 +30,15 @@ public class SubmissionController extends BaseController{
     }
 
     @PostMapping("/s")
-    public HttpMsg submit(HttpServletRequest request, HttpServletResponse response){
-        String uid = request.getParameter("userId");
+    public HttpMsg submit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
+        String uid = (String) map.get("userId");
         Assert.hasText(uid, "请求失败，请重新登录!");
-        String pid = request.getParameter("problemId");
+        Integer l = (Integer) map.get("problemId");
+        String pid = l.toString();
         Assert.hasText(pid, "请求失败，请重试!");
-        String src = request.getParameter("src");
+        String src = (String) map.get("src");
         Assert.hasText(src, "代码不能为空!");
-        String lang = request.getParameter("lang");
+        String lang = (String) map.get("lang");
         Assert.hasText(lang, "请选择编程语言!");
         Long sid = submissionService.submit(uid, pid, lang, src);//储存Submission到数据库
         if (sid==null) {

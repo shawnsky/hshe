@@ -4,6 +4,7 @@ import com.xt.hshe.judge.pojo.entity.Submission;
 import com.xt.hshe.judge.repository.SubmissionRepository;
 import com.xt.hshe.judge.util.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ import java.nio.file.StandardOpenOption;
 
 @Component("compileHandler")
 public class CompileHandler {
+
+    @Value("${judge.sys.subs-path}")
+    public String sysSubsPath;
 
     /**
      * Compiler
@@ -49,7 +53,7 @@ public class CompileHandler {
 
     private String[] createFile(Submission s) throws IOException {
         //e.g. /data/subs/{pid}/{sid}/Main.java
-        String[] strings = {"/data/subs/" + s.getProblemId() + File.separator,  s.getId() + File.separator, "Main." + s.getLang()};
+        String[] strings = {sysSubsPath + s.getProblemId() + File.separator,  s.getId() + File.separator, "Main." + s.getLang()};
         Path problemPath = Paths.get(strings[0]);
         if (Files.notExists(problemPath)) {
             Files.createDirectory(problemPath);
@@ -65,10 +69,10 @@ public class CompileHandler {
         return strings;
     }
 
+    // FIXME: 2018/2/1 之后改用javax.tools.JavaCompiler
     private int java(String[] strings) throws IOException, InterruptedException {
         Process build = Runtime.getRuntime().exec("javac "+strings[0]+strings[1]+strings[2]);
         int result = build.waitFor();
-        Process delete = Runtime.getRuntime().exec("rm -f "+strings[0]+strings[1]+"Main.class");
         return result;
     }
 }
