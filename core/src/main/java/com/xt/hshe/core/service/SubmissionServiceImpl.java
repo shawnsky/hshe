@@ -1,6 +1,7 @@
 package com.xt.hshe.core.service;
 
 import com.xt.hshe.core.pojo.entity.Submission;
+import com.xt.hshe.core.util.Consts;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,8 +40,20 @@ public class SubmissionServiceImpl extends BaseService implements SubmissionServ
         s.setProblemId(Long.parseLong(pid));
         s.setLang(lang);
         s.setSrc(src);
+        s.setLength(src.getBytes().length);
         s.setCreateTime(String.valueOf(System.currentTimeMillis()));
+        s.setJudged(-1);
         submissionRepository.save(s);
         return s.getId();
+    }
+
+    @Override
+    public Long countOfSubmit(String userId) {
+        return submissionRepository.countByUserId(userId);
+    }
+
+    @Override
+    public Long countOfAccept(String userId) {
+        return submissionRepository.countByUserIdAndJudged(userId, Consts.Judge.AC);
     }
 }

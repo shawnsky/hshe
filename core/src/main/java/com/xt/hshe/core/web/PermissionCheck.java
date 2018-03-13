@@ -1,9 +1,14 @@
 package com.xt.hshe.core.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xt.hshe.core.pojo.HttpMsg;
+import com.xt.hshe.core.util.Consts;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +18,13 @@ import java.io.PrintWriter;
 @Component
 @Aspect
 public class PermissionCheck {
+
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public PermissionCheck(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Pointcut("execution(* com.xt.hshe.core.web.controller.*.T*(..))")
     public void invoke(){}
@@ -26,11 +38,11 @@ public class PermissionCheck {
         Object[] args = pjp.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         HttpServletResponse response = (HttpServletResponse) args[1];
-        if (!"teacher".equals(request.getAttribute("role"))){
-            response.setStatus(403);
-            response.setContentType("text/html;charset=UTF-8");
+        if (!Consts.Role.TEACHER.equals(request.getAttribute("role"))){
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setContentType("application/json;charset=UTF-8");
             try(PrintWriter writer = response.getWriter()){
-                writer.print("<center>403 Forbidden: Not authorized.</center><hr/><center>无权访问</center>");
+                writer.print(objectMapper.writeValueAsString(new HttpMsg(Consts.ServerCode.FAILURE, "无权访问")));
             }
             return null;
         }

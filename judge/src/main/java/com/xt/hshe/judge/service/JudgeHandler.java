@@ -54,31 +54,52 @@ public class JudgeHandler {
     }
 
 
-    public int judge(Submission submission, Problem problem, List<TestPoint> testPoints) throws IOException {
+    /**
+     * 判题处理器
+     * 遍历所有测试点运行情况,给出综合结果,最大运行耗时及最大运行内存.
+     * 优先级 WA > TLE > MLE > RE > AC
+     * @param submission - 提交记录对象
+     * @param problem - 题目记录对象
+     * @param testPoints - 测试用例列表
+     */
+    public Map<String, Integer> judge(Submission submission, Problem problem, List<TestPoint> testPoints) throws IOException {
+        Map<String, Integer> map = new HashMap<>();
         List<Map<String, Integer>> data = runProgram(submission, problem, testPoints);
         int totalPoints = data.size();
+        int maxMemUsed = 0;
+        int maxTimeUsed = 0;
         for (Map<String, Integer> m: data){
+            maxMemUsed = Math.max(maxMemUsed, m.get("usedMemory"));
+            maxTimeUsed = Math.max(maxTimeUsed, m.get("usedTime"));
             if (m.get("runtimeResult")==Consts.Judge.WA) {
-                return Consts.Judge.WA;
+                map.put("result", Consts.Judge.WA);
+                break;
             }
             if (m.get("runtimeResult")==Consts.Judge.TLE) {
-                return Consts.Judge.TLE;
+                map.put("result", Consts.Judge.TLE);
+                break;
             }
             if (m.get("runtimeResult")==Consts.Judge.MLE) {
-                return Consts.Judge.MLE;
+                map.put("result", Consts.Judge.MLE);
+                break;
             }
             if (m.get("runtimeResult")==Consts.Judge.RE) {
-                return Consts.Judge.RE;
+                map.put("result", Consts.Judge.RE);
+                break;
             }
             if (m.get("runtimeResult")==Consts.Judge.AC) {
                 totalPoints--;
             }
         }
-        if (totalPoints==0) {
-            return Consts.Judge.AC;
+        if (!map.containsKey("result") && totalPoints==0) {
+            map.put("result", Consts.Judge.AC);
         }
-        return Consts.Judge.SE;
-
+        if (!map.containsKey("result")) {
+            map.put("result", Consts.Judge.SE);
+        }
+        map.put("usedMemory", maxMemUsed);
+        map.put("usedTime", maxTimeUsed);
+        return map;
     }
 
     /**
@@ -93,7 +114,6 @@ public class JudgeHandler {
         long problemId = submission.getProblemId();
         for ( TestPoint testPoint : testPoints ) {
             String index = testPoint.getIndex();
-//            int checkpointScore = checkpoint.getScore();
             String inputFilePath = sysTestsPath + submissionId + File.separator + "input" + index + ".txt";
             String stdOutputFilePath = sysTestsPath + submissionId + File.separator + "output" + index + ".txt";
             String outputFilePath = sysSubsPath + problemId + File.separator + submissionId + File.separator + "output" + index + ".txt";
@@ -106,7 +126,6 @@ public class JudgeHandler {
             Map<String, Integer> runtimeResult = getRuntimeResult(
                     runnerGetRuntimeResult0(submission, problem, compiledFilePathNoExtension, inputFilePath, outputFilePath),
                     stdOutputFilePath, outputFilePath);
-//            runtimeResult.put("score", checkpointScore);
             runtimeResults.add(runtimeResult);
         }
         return runtimeResults;
@@ -144,7 +163,7 @@ public class JudgeHandler {
      * @param compiledFilePathNoExtension - 待执行的应用程序文件名(不包含文件后缀)
      * @param inputFilePath - 输入文件路径
      * @param outputFilePath - 输出文件路径
-     * @return 一个包含程序运行结果的Map<String, Object>对象
+     * @return 一个包含程序运行结果的Map<String, Integer>对象
      */
     private Map<String, Integer> runnerGetRuntimeResult0(Submission submission, Problem problem, String compiledFilePathNoExtension, String inputFilePath, String outputFilePath) {
         String commandLine = getRunCommandLine(submission, compiledFilePathNoExtension);

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Rank</title>
+  <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
+  <script src="/lib/jquery-3.2.1.min.js"></script>
+  <script src="/lib/semantic-ui/semantic.min.js"></script>
+  <script src="/lib/vue.js"></script>
+  <script src="/lib/axios.min.js"></script>
+  <script src="/js/util.js"></script>
+</head>
+
+<body>
+
+
+
+  <!-- <div class="ui main container">
+  <h1 class="ui header">Semantic UI Fixed Template</h1>
+
+  <h1 class="ui header">排名</h1>
+
+</div> -->
+  <div class="ui bottom attached segment pushable">
+
+
+    <div class="ui visible inverted left vertical sidebar menu">
+
+
+      <div class="ui secondary pointing menu">
+        <a class="active item">
+          <img src="/img/logo.png" class="ui centered mini image">Master</a>
+        <div class="right menu">
+          <a class="ui active item">返回系统 </a>
+        </div>
+      </div>
+
+      <a class="item">
+
+        <p>欢迎您，00079888</p>
+      </a>
+
+
+
+
+
+      <a class="item">
+        <i class="home icon"></i> 系统概览 </a>
+      <a class="item">
+        <i class="block layout icon"></i> 学生管理 </a>
+      <a class="item">
+        <i class="smile icon"></i> 作业管理 </a>
+      <a class="item">
+        <i class="calendar icon"></i> History </a>
+    </div>
+    <div class="pusher">
+      <div class="ui basic segment">
+        <h3 class="ui header">统计数据</h3>
+        <p></p>
+        <p></p>
+        <p></p>
+        <p></p>
+
+
+        <table class="ui compact celled definition table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Registration Date</th>
+              <th>E-mail address</th>
+              <th>Premium Plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="collapsing">
+                <div class="ui fitted slider checkbox">
+                  <input type="checkbox"> <label></label>
+                </div>
+              </td>
+              <td>约翰·莉丽亚</td>
+              <td>2013年9月14日</td>
+              <td>jhlilk22@yahoo.com</td>
+              <td>否</td>
+            </tr>
+            <tr>
+              <td class="collapsing">
+                <div class="ui fitted slider checkbox">
+                  <input type="checkbox"> <label></label>
+                </div>
+              </td>
+              <td>杰米·哈灵顿</td>
+              <td>2014年1月11日</td>
+              <td>jamieharingonton@yahoo.com</td>
+              <td>是</td>
+            </tr>
+            <tr>
+              <td class="collapsing">
+                <div class="ui fitted slider checkbox">
+                  <input type="checkbox"> <label></label>
+                </div>
+              </td>
+              <td>吉尔·刘易斯</td>
+              <td>2014年5月11日</td>
+              <td>jilsewris22@yahoo.com</td>
+              <td>是</td>
+            </tr>
+          </tbody>
+          <tfoot class="full-width">
+            <tr>
+              <th></th>
+              <th colspan="4">
+                <div class="ui right floated small primary labeled icon button"><i class="user icon"></i> 添加用户 </div>
+                <div class="ui small button">Approve </div>
+                <div class="ui small  disabled button">Approve All </div>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+
+
+
+
+
+
+
+
+        <div class="ui statistics">
+          <div class="statistic">
+            <div class="value">
+              22
+            </div>
+            <div class="label">题目 </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              31,200
+            </div>
+            <div class="label">提交 </div>
+          </div>
+          <div class="statistic">
+            <div class="value">
+              22
+            </div>
+            <div class="label">学生 </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    (function () {
+      var ld = {
+        list: []
+      };
+      axios.get('/api/s', {
+        headers: { 'Access-Token': window.localStorage.getItem("token") }
+      })
+        .then(function (response) {
+          ld.list = response.data.data;
+          $("#viewloader").hide();
+          $("#viewdata").show();
+        })
+        .catch(function (error) {
+          console.log(error);
+          $('.ui.basic.modal').modal('show');
+          $('#modalmsg').text(error.response.data.msg)
+          $(":root").delay(3000).queue(function () {
+            $('.ui.basic.modal').modal('hide');
+            window.location.href = "/login";
+          });
+        });
+      var vm = new Vue({
+        el: '#app',
+        data: ld,
+        methods: {
+          fmt: function (time) {
+            return moment(new Date(time)).toNow();
+          }
+        }
+      })
+    })();
+
+  </script>
+
+</body>
+
+</html>

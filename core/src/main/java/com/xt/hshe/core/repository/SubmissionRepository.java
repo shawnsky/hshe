@@ -17,4 +17,8 @@ public interface SubmissionRepository extends CrudRepository<Submission, Long> {
     @Query("select s from Submission s where s.userId = ?1")
     List<Submission> findByUserId(String arg1);
 
+    Long countByUserId(String arg1);
+
+    Long countByUserIdAndJudged(String arg0, Integer arg1);
+
 }

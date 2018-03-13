@@ -7,7 +7,7 @@
 
 <body>
     <div th:fragment="header">
-        <div class="ui fixed inverted menu">
+        <div id="header" class="ui fixed inverted menu">
             <div class="ui container">
                 <a href="/" class="header item">
                     <!-- <img class="logo" src="logo.png"> -->
@@ -16,7 +16,6 @@
 
                 <a href="/topic" class="item">作业</a>
                 <a href="/problem" class="item">题目</a>
-                <a href="/rank" class="item">排名</a>
                 <a href="/submission" class="item">提交</a>
                 <div class="ui simple dropdown item">
                     帮助
@@ -36,16 +35,53 @@
                         </div>
                         <a class="item" href="#">Link Item</a>
                     </div>
-
-
-
                 </div>
 
                 <a href="#" class="item right">
-                    <i class="user icon"></i>140705202</a>
-                <a href="#" class="item ">退出</a>
+                    <i class="user icon"></i>
+                    <span v-if="resultmap.user_nick==''">{{resultmap.user_id}}</span>
+                    <span v-if="resultmap.user_nick!=null">{{resultmap.user_nick}}</span>
+                </a>
+                <a class="item" v-on:click="logout" > 退出 </a>
+                <button class="tiny ui inverted blue basic button" v-if="resultmap.user_role==1" v-on:click="goMaster"  style="margin: 4px" > 作业管理 </button>
             </div>
         </div>
+        <script>
+            (function () {
+                var ld = {
+                    resultmap: {}
+                };
+                var dataApi = '/api/u/info';
+                axios.get(dataApi, {
+                    headers: { 'Access-Token': window.localStorage.getItem("token") }
+                })
+                    .then(function (response) {
+                        ld.resultmap = response.data.data;
+                    
+                    })
+                    .catch(function (error) {
+                        if (error.response.status === 404) {
+                        } else {
+                            console.log(error.response.status);
+                            window.location.href = "/login";
+                        }
+                    });
+                var vm = new Vue({
+                    el: '#header',
+                    data: ld,
+                    methods: {
+                        logout: function (event) {
+                            window.localStorage.clear();
+                            window.location.href = "/login";
+                        },
+                        goMaster: function () {
+                            window.location.href = "/master";
+                            // window.open("/master");
+                        }
+                    }
+                })
+            })();
+        </script>
     </div>
 
 

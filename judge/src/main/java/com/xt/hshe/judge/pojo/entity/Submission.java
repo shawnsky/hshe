@@ -24,4 +24,9 @@ public class Submission {
     @Column(name = "create_time")
     private String createTime;
     private int judged;
+    @Column(name = "mem_used")
+    private int memoryUsed;
+    @Column(name = "time_used")
+    private int timeUsed;
+    private int length;
 }

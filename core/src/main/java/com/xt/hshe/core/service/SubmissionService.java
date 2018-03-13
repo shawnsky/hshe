@@ -12,4 +12,6 @@ public interface SubmissionService {
     List<Submission> findSubmissionsOfUser(String userId);
     Submission find(Long submissionId);
     Long submit(String uid, String pid, String lang, String src);
+    Long countOfSubmit(String userId);
+    Long countOfAccept(String userId);
 }

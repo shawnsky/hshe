@@ -86,7 +86,9 @@
       if (pathId == null) {
         listDataApi = '/api/p';
       }
-      axios.get(listDataApi)
+      axios.get(listDataApi, {
+        headers: {'Access-Token': window.localStorage.getItem("token")}
+      })
         .then(function (response) {
           //TODO 系統異常處理
           data = response.data.data;

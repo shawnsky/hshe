@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service("judgeService")
 public class JudgeService {
@@ -37,7 +38,7 @@ public class JudgeService {
         LOGGER.info("Received a judge task[submission #"+sid+" ], begin to compile.");
         Submission s = submissionRepository.findOne(sid);
         if (compileHandler.compile(s) != 0) {
-            submissionRepository.updateJudged(sid, Consts.Judge.CE);
+            submissionRepository.updateJudged(sid, Consts.Judge.CE, 0, 0);
             return;
         }
         //通过编译，可执行文件已生成，抓取测试用例并保存文件
@@ -48,8 +49,8 @@ public class JudgeService {
         Problem p = problemRepository.findOne(s.getProblemId());
         
         //运行
-        int result = judgeHandler.judge(s,p,testPoints);
-        submissionRepository.updateJudged(sid, result);
+        Map<String, Integer> result = judgeHandler.judge(s,p,testPoints);
+        submissionRepository.updateJudged(sid, result.get("result"), result.get("usedMemory"), result.get("usedTime"));
 
         // TODO: 2018/3/8 If result=AC, send ToEval
 //        if (judgeHandler.judge(s, testPoints) != 0) {

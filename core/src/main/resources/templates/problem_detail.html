@@ -116,7 +116,7 @@
       <div class="ui form">
         <div class="field">
           <label></label>
-          <textarea v-model="src"></textarea>
+          <textarea v-model="src" rows="10"></textarea>
         </div>
       </div>
 
@@ -142,7 +142,8 @@
       var submitApi = '/api/s';
       axios.get(dataApi, {
         headers: {
-          'My-Referer': ld.referer
+          'My-Referer': ld.referer,
+          'Access-Token': window.localStorage.getItem("token")
         }
       })
         .then(function (response) {
@@ -166,28 +167,30 @@
         data: ld,
         methods: {
           submit: function () {
-            // axios({
-            //   url: submitApi,
-            //   method: 'post',
-            //   data: {
-            //     userId: '140705202',
-            //     problemId: ld.object0.id,
-            //     src: $('#src_area').text(),
-            //     lang: 'java'
-            //   }
-            // });
-            axios.post(submitApi, {
-              userId: '140705202',
-              problemId: ld.object0.id,
-              src: ld.src,
-              lang: 'java'
-            })
-              .then(function (response) {
-                console.log(response);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
+            axios({
+              url: submitApi,
+              method: 'post',
+              headers: { 'Access-Token': window.localStorage.getItem("token") },
+              data: {
+                userId: '140705202',
+                problemId: ld.object0.id,
+                src: ld.src,
+                lang: 'java'
+              }
+            });
+            // axios.post(submitApi, {
+            //   headers: {'Access-Token': window.localStorage.getItem("token")},
+            //   userId: '140705202',
+            //   problemId: ld.object0.id,
+            //   src: ld.src,
+            //   lang: 'java'
+            // })
+            //   .then(function (response) {
+            //     console.log(response);
+            //   })
+            //   .catch(function (error) {
+            //     console.log(error);
+            //   });
           }
         }
       })

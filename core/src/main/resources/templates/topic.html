@@ -11,6 +11,7 @@
   <script src="/lib/semantic-ui/semantic.min.js"></script>
   <script src="/lib/vue.js"></script>
   <script src="/lib/axios.min.js"></script>
+  <script src="/js/util.js"></script>
 </head>
 
 <body>
@@ -123,7 +124,9 @@
       var ld = {
         list: []
       };
-      axios.get('/api/t')
+      axios.get('/api/t', {
+        headers: {'Access-Token': window.localStorage.getItem("token")}
+      })
         .then(function (response) {
           ld.list = response.data.data;
           $("#viewloader").hide();

@@ -25,19 +25,19 @@ public class AuthController extends BaseController {
 
     @PostMapping("/login")
     public HttpMsg<String> login(HttpServletRequest request) throws Exception {
-        String role = request.getParameter("role");
-        Assert.hasText(role, "请选择身份!");
+        String roleFlag = request.getParameter("role");
+        Assert.hasText(roleFlag, "请选择身份!");
         String id = request.getParameter("id");
         Assert.hasText(id, "用户名不能为空!");
         String password = request.getParameter("password");
         Assert.hasText(password, "密码不能为空!");
-        int result = authService.login(id, password);
-        if (result== Consts.Auth.NOT_EXIST)
+        int result = authService.login(roleFlag, id, password);
+        if (result== Consts.Auth.LOGIN_NOT_EXIST)
             return new HttpMsg<>(result,"用户不存在~");
-        else if (result== Consts.Auth.WRONG_PASSWORD)
+        else if (result== Consts.Auth.LOGIN_WRONG_PASSWORD)
             return new HttpMsg<>(result,"密码输入错误~");
         else {
-            String sSrc = role + "#" + id + "#" + System.currentTimeMillis();
+            String sSrc = roleFlag + "#" + id + "#" + System.currentTimeMillis();
             String tokenGenerated = AES.Encrypt(sSrc, sKey);
             return new HttpMsg<>(result,"登陆成功~", tokenGenerated);
         }

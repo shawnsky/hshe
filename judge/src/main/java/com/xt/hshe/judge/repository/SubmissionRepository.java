@@ -11,6 +11,6 @@ import javax.transaction.Transactional;
 public interface SubmissionRepository extends CrudRepository<Submission, Long> {
     @Modifying
     @Transactional
-    @Query("update Submission s set s.judged = ?2 where s.id = ?1")
-    Integer updateJudged(Long sid, Integer result);
+    @Query("update Submission s set s.judged = ?2, s.memoryUsed = ?3, s.timeUsed = ?4 where s.id = ?1")
+    Integer updateJudged(Long sid, Integer result, Integer memUsed, Integer timeUsed);
 }

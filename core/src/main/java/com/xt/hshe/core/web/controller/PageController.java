@@ -29,9 +29,9 @@ public class PageController {
         return "login";
     }
 
-    @GetMapping("/rank")
-    public String rank(){
-        return "rank";
+    @GetMapping("/master")
+    public String master(){
+        return "master";
     }
 
 

@@ -26,6 +26,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Value("${token.skey}")
     private String sKey;
 
+    @Value("${core.auth.expires}")
+    private String expiresDays;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
@@ -52,9 +55,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-            String info = AES.Decrypt(token, sKey);//格式 student#140705202#1456789123456
+            String info = AES.Decrypt(token, sKey);//格式 0#140705202#1456789123456
             //token 非法
-            String tokenRgx = "[studenachr]{7}+#[0-9]{8,9}#[0-9]{13}";//教师工号可以8-9位
+            String tokenRgx = "[012]#[0-9]{8,9}#[0-9]{13}";//教师工号可以8-9位
             if (info==null || !info.matches(tokenRgx)){
 //                response.setStatus(400);
 //                response.setContentType("text/html;charset=UTF-8");
@@ -71,7 +74,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             //token 过期
             long inTime = Long.parseLong(infos[2]);
             long nowTime = System.currentTimeMillis();
-            if (TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)<nowTime-inTime){
+            if (TimeUnit.MILLISECONDS.convert(Integer.parseInt(expiresDays), TimeUnit.DAYS)<nowTime-inTime){
 //                response.setStatus(401);
 //                response.setContentType("text/html;charset=UTF-8");
 //                response.getWriter().print("<center>401 Unauthorized: Token Expired.</center><hr/><center>登录过期，请重新登录 <a href=\"/login\">登录</a></center>");
@@ -84,6 +87,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             }
             //设置给AOP权限检查使用，避免再解析一次token
             request.setAttribute("role", infos[0]);
+            request.setAttribute("user_id", infos[1]);
         }
         return true;
     }

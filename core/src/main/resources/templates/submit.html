@@ -2,138 +2,84 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Submits</title>
   <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
   <script src="/lib/jquery-3.2.1.min.js"></script>
   <script src="/lib/semantic-ui/semantic.min.js"></script>
+  <script src="/lib/vue.js"></script>
+  <script src="/lib/axios.min.js"></script>
+  <script src="/js/util.js"></script>
 </head>
 
 <body>
- <div th:include="template :: header"></div>
+  <script src="/lib/moment-with-locales.min.js"></script>
+  <script>
+    moment().format();
+  </script>
+  <div th:include="template :: header"></div>
 
 
-  <div class="ui main container">
+  <div th:include="template :: viewloader"></div>
+
+
+  <div id="app" class="ui main container">
     <h1 class="ui header">UI</h1>
-
     <h1 class="ui header">提交</h1>
-
     <div class="ui fluid icon input">
-      <input type="text" placeholder="根据学号或者题目编号搜索"/>
+      <input type="text" placeholder="根据学号或者题目编号搜索" />
       <i class="search icon"></i>
     </div>
-
-
-
     <table class="ui celled striped table">
       <thead>
         <tr>
           <th class="one wide">提交</th>
-          <th class="one wide">学号</th>
+          <th class="two wide">学号/工号</th>
           <th class="one wide">问题</th>
-          <th class="four wide">标题</th>
-          <th class="two wide">状态</th>
+
+          <th class="three wide">状态</th>
           <th class="one wide">内存</th>
           <th class="one wide">耗时</th>
           <th class="one wide">语言</th>
           <th class="one wide">长度</th>
-          <th class="three wide">提交时间</th>
+          <th class="five wide">提交时间</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td> 12313 </td>
+        <tr v-for="item in list">
+          <td> {{item.id}} </td>
           <td>
-            <a>140705202</a>
+            <a>{{item.userId}}</a>
           </td>
           <td>
-            <a>1001</a>
+            <a>{{item.problemId}}</a>
           </td>
           <td>
-            <a>Hero In Maze</a>
+            <button v-if="item.judged===-1" class="ui compact basic loading button">正在判题</button>
+            <button v-if="item.judged===0" class="ui compact green button">答案正确</button>
+            <button v-if="item.judged===1" class="ui compact red button">答案错误</button>
+            <button v-if="item.judged===2" class="ui compact yellow button">时间超限</button>
+            <button v-if="item.judged===3" class="ui compact yellow button">输出超限</button>
+            <button v-if="item.judged===4" class="ui compact yellow button">内存超限</button>
+            <button v-if="item.judged===5" class="ui compact yellow button">运行时错误</button>
+            <button v-if="item.judged===6" class="ui compact red button">格式错误</button>
+            <button v-if="item.judged===7" class="ui compact yellow button">编译错误</button>
+            <button v-if="item.judged===8" class="ui compact yellow button">系统错误</button>
           </td>
-          <td>
-            <button class="ui compact basic loading button">正在判题</button>
-          </td>
-          <td>0M</td>
-          <td>12ms</td>
-          <td>Ruby</td>
-          <td>32b</td>
-          <td>2017/12/30 22:46</td>
+          <td>{{ item.memoryUsed/1000 }}M</td>
+          <td>{{ item.timeUsed }}ms</td>
+          <td>{{ item.lang}} </td>
+          <td>{{ item.length }}b</td>
+          <td>{{ fmt(item.createTime) }}</td>
         </tr>
-
-        <tr>
-          <td> 12313 </td>
-          <td>
-            <a>140705202</a>
-          </td>
-          <td>
-            <a>1001</a>
-          </td>
-          <td>
-            <a>Hero In Maze</a>
-          </td>
-          <td>
-            <button class="ui compact green button">答案正确</button>
-          </td>
-          <td>0M</td>
-          <td>12ms</td>
-          <td>Ruby</td>
-          <td>32b</td>
-          <td>2017/12/30 22:46</td>
-        </tr>
-
-        <tr>
-          <td> 12313 </td>
-          <td>
-            <a>140705202</a>
-          </td>
-          <td>
-            <a>1001</a>
-          </td>
-          <td>
-            <a>Hero In Maze</a>
-          </td>
-          <td>
-            <button class="ui compact red button">答案错误</button>
-          </td>
-          <td>0M</td>
-          <td>12ms</td>
-          <td>Ruby</td>
-          <td>32b</td>
-          <td>2017/12/30 22:46</td>
-        </tr>
-
-        <tr>
-          <td> 12313 </td>
-          <td>
-            <a>140705202</a>
-          </td>
-          <td>
-            <a>1001</a>
-          </td>
-          <td>
-            <a>Hero In Maze</a>
-          </td>
-          <td>
-            <button class="ui compact yellow button">时间超限</button>
-          </td>
-          <td>0M</td>
-          <td>12ms</td>
-          <td>Ruby</td>
-          <td>32b</td>
-          <td>2017/12/30 22:46</td>
-        </tr>
-
-
       </tbody>
     </table>
 
 
 
-    <div class="ui right floated pagination menu">
+    <div class="ui  pagination menu">
       <a class="icon item">
         <i class="left chevron icon"></i>
       </a>
@@ -150,7 +96,45 @@
 
 
 
-<div th:include="template :: footer"></div>
+  <div th:include="template :: footer"></div>
+
+
+
+  <script>
+    (function () {
+      var ld = {
+        list: []
+      };
+      axios.get('/api/s', {
+        headers: { 'Access-Token': window.localStorage.getItem("token") }
+      })
+        .then(function (response) {
+          ld.list = response.data.data;
+          $("#viewloader").hide();
+          $("#viewdata").show();
+        })
+        .catch(function (error) {
+          console.log(error);
+          $('.ui.basic.modal').modal('show');
+          $('#modalmsg').text(error.response.data.msg)
+          $(":root").delay(3000).queue(function () {
+            $('.ui.basic.modal').modal('hide');
+            window.location.href = "/login";
+          });
+        });
+      var vm = new Vue({
+        el: '#app',
+        data: ld,
+        methods:{
+          fmt: function(time){
+            return moment(new Date(time)).toNow();
+          }
+        }
+      })
+    })();
+
+  </script>
+
 
 
 

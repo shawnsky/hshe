@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
     <script src="/lib/jquery-3.2.1.min.js"></script>
     <script src="/lib/semantic-ui/semantic.min.js"></script>
+    <script src="/js/util.js"></script>
 
     <style type="text/css">
         body {
@@ -66,7 +67,7 @@
                             e.preventDefault();
                             var $form = $('#loginForm');
                             $.ajax({
-                                url: "/auth/login",
+                                url: "/api/auth/login",
                                 type: "post",
                                 dataType: "json",
                                 data: $form.serialize(),
@@ -74,7 +75,9 @@
                                 success: function (data) {
                                     if (data.code == "1") {
                                         $('#failMsg').hide();
-                                        window.location.href = "/success.html";
+                                        // setCookie('token', data.data, 999);
+                                        window.localStorage.setItem('token', data.data);
+                                        window.location.href = "/topic";
                                     } else {
                                         $('#failMsg').show();
                                         $('#failText').text(data.msg);
@@ -136,13 +139,13 @@
 
                         <div class="field">
                             <div class="ui radio checkbox">
-                                <input type="radio" name="role" value="student" checked="checked" />
+                                <input type="radio" name="role" value="0" checked="checked" />
                                 <label>我是学生</label>
                             </div>
                         </div>
                         <div class="field">
                             <div class="ui radio checkbox">
-                                <input type="radio" name="role" value="teacher" />
+                                <input type="radio" name="role" value="1" />
                                 <label>我是教师</label>
                             </div>
                         </div>
