@@ -1,5 +1,6 @@
 package com.xt.hshe.judge.service;
 
+import com.xt.hshe.judge.mq.Sender;
 import com.xt.hshe.judge.pojo.entity.Problem;
 import com.xt.hshe.judge.pojo.entity.Submission;
 import com.xt.hshe.judge.pojo.entity.TestPoint;
@@ -18,6 +19,10 @@ import java.util.Map;
 
 @Service("judgeService")
 public class JudgeService {
+
+    @Autowired
+    protected Sender sender;
+
     @Autowired
     private SubmissionRepository submissionRepository;
     @Autowired
@@ -53,10 +58,8 @@ public class JudgeService {
         submissionRepository.updateJudged(sid, result.get("result"), result.get("usedMemory"), result.get("usedTime"));
 
         // TODO: 2018/3/8 If result=AC, send ToEval
-//        if (judgeHandler.judge(s, testPoints) != 0) {
-//            submissionRepository.updateJudged(sid, Consts.Judge.WA);
-//        } else {
-//            submissionRepository.updateJudged(sid, Consts.Judge.AC);
-//        }
+        if (Consts.Judge.AC == result.get("result")) {
+            sender.sendToSim(sid.toString());
+        }
     }
 }

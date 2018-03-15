@@ -12,6 +12,6 @@ public class RabbitConfig {
     }
     @Bean
     public Queue checkQueue() {
-        return new Queue("ToEval");
+        return new Queue("ToSim");
     }
 }

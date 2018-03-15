@@ -1,4 +1,4 @@
-package com.xt.hshe.judge.mq;
+package com.xt.hshe.sim.mq;
 
 
 import org.springframework.amqp.core.Queue;

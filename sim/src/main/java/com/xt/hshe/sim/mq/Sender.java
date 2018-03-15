@@ -1,4 +1,4 @@
-package com.xt.hshe.judge.mq;
+package com.xt.hshe.sim.mq;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ public class Sender {
         this.amqpTemplate = amqpTemplate;
     }
 
-    public void sendToSim(Object o){
-        amqpTemplate.convertAndSend("ToSim", o);
-    }
+//    public void sendToEval(Object o){
+//        amqpTemplate.convertAndSend("ToSim", o);
+//    }
 }
