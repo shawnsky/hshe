@@ -31,7 +31,7 @@ public class SubmissionController extends BaseController{
 
     @PostMapping("/s")
     public HttpMsg submit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
-        String uid = (String) map.get("userId");
+        String uid = (String) request.getAttribute("user_id");
         Assert.hasText(uid, "请求失败，请重新登录!");
         Integer l = (Integer) map.get("problemId");
         String pid = l.toString();

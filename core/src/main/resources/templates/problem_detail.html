@@ -172,25 +172,11 @@
               method: 'post',
               headers: { 'Access-Token': window.localStorage.getItem("token") },
               data: {
-                userId: '140705201',
                 problemId: ld.object0.id,
                 src: ld.src,
                 lang: 'java'
               }
             });
-            // axios.post(submitApi, {
-            //   headers: {'Access-Token': window.localStorage.getItem("token")},
-            //   userId: '140705202',
-            //   problemId: ld.object0.id,
-            //   src: ld.src,
-            //   lang: 'java'
-            // })
-            //   .then(function (response) {
-            //     console.log(response);
-            //   })
-            //   .catch(function (error) {
-            //     console.log(error);
-            //   });
           }
         }
       })

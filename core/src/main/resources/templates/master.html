@@ -18,313 +18,340 @@
 
 
 
-<div id="app" class="ui bottom attached segment pushable">
-  <div class="ui visible inverted left vertical sidebar menu">
-    <div class="ui secondary pointing menu">
-      <a class="active item">
-        <img src="/img/logo.png" class="ui centered mini image"></img>Master</a>
-      <div class="right menu">
-        <a v-on:click="window.location.href='/topic'" class="ui active item">返回系统 </a>
+  <div id="app" class="ui bottom attached segment pushable">
+    <div class="ui visible inverted left vertical sidebar menu">
+      <div class="ui secondary pointing menu">
+        <a class="active item">
+          <img src="/img/logo.png" class="ui centered mini image"></img>Master</a>
+        <div class="right menu">
+          <a v-on:click="window.location.href='/topic'" class="ui active item">返回系统 </a>
+        </div>
       </div>
-    </div>
-    <!-- <a class="ui teal image label" style="margin-left:16px;margin-bottom:16px">
+      <!-- <a class="ui teal image label" style="margin-left:16px;margin-bottom:16px">
       <img src="jenny.jpg"> 00079888
       <div class="detail">Teacher</div>
     </a> -->
-    <a class="item">
-      <p>欢迎您，00079888</p>
-    </a>
-    <a v-on:click="ovactive()" v-bind:class="{ active: active[0] }" class="item">
-      <i class="home icon"></i> 系统概览 </a>
-    <a v-on:click="smactive()" v-bind:class="{ active: active[1] }" class="item">
-      <i class="user icon"></i> 学生管理 </a>
-    <a v-on:click="tmactive()" v-bind:class="{ active: active[2] }" class="item">
-      <i class="folder open icon"></i> 作业管理 </a>
-    <a v-on:click="pmactive()" v-bind:class="{ active: active[3] }" class="item">
-      <i class="file alternate icon"></i> 题目管理 </a>
+      <a class="item">
+        <p>欢迎您，00079888</p>
+      </a>
+      <a v-on:click="ovactive()" v-bind:class="{ active: active[0] }" class="item">
+        <i class="home icon"></i> 系统概览 </a>
+      <a v-on:click="smactive()" v-bind:class="{ active: active[1] }" class="item">
+        <i class="user icon"></i> 学生管理 </a>
+      <a v-on:click="tmactive()" v-bind:class="{ active: active[2] }" class="item">
+        <i class="folder open icon"></i> 作业管理 </a>
+      <a v-on:click="pmactive()" v-bind:class="{ active: active[3] }" class="item">
+        <i class="file alternate icon"></i> 题目管理 </a>
 
-  </div>
-  <div class="pusher">
-    <div class="ui basic segment">
-      <div class="ui icon message">
-        <i class="notched circle loading icon"></i>
-        <div class="content">
-          <div class="header">稍候 </div>
-          <p>我们正在为您获取内容。</p>
-        </div>
-      </div>
-
-
-
-
-
-
-
-      <template v-if="active[0]">
-        <h3 class="ui header">评测机状态</h3>
-        <div class="ui horizontal list">
-          <div class="item">
-            <img class="ui avatar image"></img>
-            <div class="content">
-              <div class="header">Judger 01</div>在线 </div>
-          </div>
-          <div class="item">
-            <a class="ui green empty circular label right floated"></a>
-
-            <div class="content">
-
-              <div class="header">Judger 02</div>在线 </div>
-          </div>
-          <div class="item">
-            <img class="ui avatar image"></img>
-            <div class="content">
-              <div class="header">Judger 03</div>离线 </div>
-          </div>
-          <div class="item">
-            <img class="ui avatar image"></img>
-            <div class="content">
-              <div class="header">Judger 04</div>离线 </div>
-          </div>
-          <div class="item">
-            <img class="ui avatar image"></img>
-            <div class="content">
-              <div class="header">Judger 05</div>离线 </div>
+    </div>
+    <div class="pusher">
+      <div class="ui basic segment">
+        <div class="ui icon message">
+          <i class="notched circle loading icon"></i>
+          <div class="content">
+            <div class="header">稍候 </div>
+            <p>我们正在为您获取内容。</p>
           </div>
         </div>
 
 
 
-        <h3 class="ui header">统计数据</h3>
-        <div class="ui statistics">
-          <div class="statistic">
-            <div class="value">
-              22
+
+
+
+
+        <template v-if="active[0]">
+          <h3 class="ui header">评测机状态</h3>
+          <div class="ui horizontal list">
+            <div class="item">
+              <img class="ui avatar image"></img>
+              <div class="content">
+                <div class="header">Judger 01</div>在线 </div>
             </div>
-            <div class="label">题目 </div>
-          </div>
-          <div class="statistic">
-            <div class="value">
-              31,200
+            <div class="item">
+              <a class="ui green empty circular label right floated"></a>
+
+              <div class="content">
+
+                <div class="header">Judger 02</div>在线 </div>
             </div>
-            <div class="label">提交 </div>
-          </div>
-          <div class="statistic">
-            <div class="value">
-              22
+            <div class="item">
+              <img class="ui avatar image"></img>
+              <div class="content">
+                <div class="header">Judger 03</div>离线 </div>
             </div>
-            <div class="label">学生 </div>
-          </div>
-        </div>
-      </template>
-
-      <template v-if="active[1]">
-
-        <div class="ui top attached tabular menu">
-          <div class="item">账户</div>
-          <div class="item">添加</div>
-        </div>
-        <div class="ui bottom attached tab segment">
-          <p></p>
-          <p></p>
-        </div>
-        <h3 class="ui header">添加学生</h3>
-        <div class="ui form">
-          <div class="fields">
-            <div class="field">
-              <!-- <label>学号</label> -->
-              <input type="text" placeholder="ID"/>
+            <div class="item">
+              <img class="ui avatar image"></img>
+              <div class="content">
+                <div class="header">Judger 04</div>离线 </div>
             </div>
-            <div class="field">
-              <!-- <label>密码</label> -->
-              <input type="text" placeholder="Password"/>
-            </div>
-            <div class="ui submit button">提交</div>
-          </div>
-        </div>
-
-
-
-        <h3 class="ui header">添加学生（批量）</h3>
-        <div class="ui form">
-          <div class="fields">
-            <div class="field">
-              <!-- <label>起始学号</label> -->
-              <input type="text" placeholder="Begin"/>
-            </div>
-            <div class="field">
-              <!-- <label>结束学号</label> -->
-              <input type="text" placeholder="End"/>
-            </div>
-            <div class="field">
-              <!-- <label>密码</label> -->
-              <input type="text" placeholder="Password"/>
-            </div>
-            <div class="ui submit button">提交</div>
-          </div>
-        </div>
-
-
-        <h3 class="ui header">学生账户</h3>
-        <table class="ui fixed single line celled table">
-          <thead>
-          <tr>
-            <th>学号</th>
-            <th>昵称</th>
-            <th>邮箱</th>
-            <th>提交</th>
-            <th>通过</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>140705202</td>
-            <td>阿斯顿</td>
-            <td>140705202@qq.com</td>
-            <td>56</td>
-            <td>23</td>
-          </tr>
-          <tr>
-            <td>140705202</td>
-            <td>阿斯顿</td>
-            <td>140705202@qq.com</td>
-            <td>56</td>
-            <td>23</td>
-          </tr>
-          <tr>
-            <td>140705202</td>
-            <td>阿斯顿</td>
-            <td>140705202@qq.com</td>
-            <td>56</td>
-            <td>23</td>
-          </tr>
-          </tbody>
-        </table>
-      </template>
-
-
-
-
-
-      <template v-if="active[2]">
-        <h3 class="ui header">新建作业</h3>
-        <div class="ui form">
-          <div class="fields">
-            <div class="field">
-              <input type="text" placeholder="作业"/>
-            </div>
-
-            <div class="field">
-              <select class="ui fluid search dropdown" name="card[expire-month]">
-                <option value="">班级列表...</option>
-                <option value="1">17广电</option>
-                <option value="2">14电信2</option>
-                <option value="3">14电信1</option>
-                <option value="4">16电信</option>
-                <option value="5">17广电</option>
-              </select>
-            </div>
-
-            <div class="ui submit button">提交</div>
-          </div>
-        </div>
-      </template>
-
-
-      <template v-if="active[3]">
-        <h3 class="ui header">上传题目</h3>
-        <form class="ui form">
-          <div class="fields">
-            <div class="six wide field">
-              <label>题目标题</label>
-              <input type="text" name="title" placeholder="Title"/>
+            <div class="item">
+              <img class="ui avatar image"></img>
+              <div class="content">
+                <div class="header">Judger 05</div>离线 </div>
             </div>
           </div>
-          <div class="fields">
-            <div class="twelve wide field">
-              <label>关联作业</label>
-              <div class="two fields">
-                <div class="field">
-                  <select class="ui fluid search dropdown" name="card[expire-month]">
-                    <option value="">作业列表...</option>
-                    <option value="1">17广电第一次作业</option>
-                    <option value="2">14电信2网络实验</option>
-                    <option value="3">14电信1大作业</option>
-                    <option value="4">16电信数据结构</option>
-                    <option value="5">17广电结构体练习</option>
-                  </select>
+
+
+
+          <h3 class="ui header">统计数据</h3>
+          <div class="ui statistics">
+            <div class="statistic">
+              <div class="value">
+                22
+              </div>
+              <div class="label">题目 </div>
+            </div>
+            <div class="statistic">
+              <div class="value">
+                31,200
+              </div>
+              <div class="label">提交 </div>
+            </div>
+            <div class="statistic">
+              <div class="value">
+                22
+              </div>
+              <div class="label">学生 </div>
+            </div>
+          </div>
+        </template>
+
+        <template v-if="active[1]">
+
+          <div class="ui top attached tabular menu">
+            <div class="item">账户</div>
+            <div class="item">添加</div>
+          </div>
+          <div class="ui bottom attached tab segment">
+            <p></p>
+            <p></p>
+          </div>
+          <h3 class="ui header">添加学生</h3>
+          <div class="ui form">
+            <div class="fields">
+              <div class="field">
+                <!-- <label>学号</label> -->
+                <input type="text" placeholder="ID" />
+              </div>
+              <div class="field">
+                <!-- <label>密码</label> -->
+                <input type="text" placeholder="Password" />
+              </div>
+              <div class="ui submit button">提交</div>
+            </div>
+          </div>
+
+
+
+          <h3 class="ui header">添加学生（批量）</h3>
+          <div class="ui form">
+            <div class="fields">
+              <div class="field">
+                <!-- <label>起始学号</label> -->
+                <input type="text" placeholder="Begin" />
+              </div>
+              <div class="field">
+                <!-- <label>结束学号</label> -->
+                <input type="text" placeholder="End" />
+              </div>
+              <div class="field">
+                <!-- <label>密码</label> -->
+                <input type="text" placeholder="Password" />
+              </div>
+              <div class="ui submit button">提交</div>
+            </div>
+          </div>
+
+
+          <h3 class="ui header">学生账户</h3>
+          <table class="ui fixed single line celled table">
+            <thead>
+              <tr>
+                <th>学号</th>
+                <th>昵称</th>
+                <th>邮箱</th>
+                <th>提交</th>
+                <th>通过</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>140705202</td>
+                <td>阿斯顿</td>
+                <td>140705202@qq.com</td>
+                <td>56</td>
+                <td>23</td>
+              </tr>
+              <tr>
+                <td>140705202</td>
+                <td>阿斯顿</td>
+                <td>140705202@qq.com</td>
+                <td>56</td>
+                <td>23</td>
+              </tr>
+              <tr>
+                <td>140705202</td>
+                <td>阿斯顿</td>
+                <td>140705202@qq.com</td>
+                <td>56</td>
+                <td>23</td>
+              </tr>
+            </tbody>
+          </table>
+        </template>
+
+
+
+
+
+        <template v-if="active[2]">
+          <h3 class="ui header">新建作业</h3>
+          <div class="ui form">
+            <div class="fields">
+              <div class="field">
+                <input type="text" placeholder="作业" />
+              </div>
+
+              <div class="field">
+                <select class="ui fluid search dropdown" name="card[expire-month]">
+                  <option value="">班级列表...</option>
+                  <option value="1">17广电</option>
+                  <option value="2">14电信2</option>
+                  <option value="3">14电信1</option>
+                  <option value="4">16电信</option>
+                  <option value="5">17广电</option>
+                </select>
+              </div>
+
+              <div class="ui submit button">提交</div>
+            </div>
+          </div>
+        </template>
+
+
+        <template v-if="active[3]">
+          <h3 class="ui header">上传题目</h3>
+          <form class="ui form">
+            <div class="fields">
+              <div class="six wide field">
+                <label>题目标题</label>
+                <input type="text" name="title" placeholder="Title" />
+              </div>
+            </div>
+            <div class="fields">
+              <div class="twelve wide field">
+                <label>关联作业</label>
+                <div class="two fields">
+                  <div class="field">
+                    <select class="ui fluid search dropdown" name="card[expire-month]">
+                      <option value="">作业列表...</option>
+                      <option value="1">17广电第一次作业</option>
+                      <option value="2">14电信2网络实验</option>
+                      <option value="3">14电信1大作业</option>
+                      <option value="4">16电信数据结构</option>
+                      <option value="5">17广电结构体练习</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="fields">
-            <div class="six wide field">
-              <label>题目描述</label>
-              <textarea></textarea>
+            <div class="fields">
+              <div class="six wide field">
+                <label>题目描述</label>
+                <textarea></textarea>
+              </div>
             </div>
-          </div>
-          <div class="fields">
-            <div class="three wide field">
-              <label>时间限制(秒)</label>
-              <input type="text" name="card[number]" maxlength="16" placeholder="" value="1000"/>
+            <div class="fields">
+              <div class="three wide field">
+                <label>时间限制(秒)</label>
+                <input type="text" name="card[number]" maxlength="16" placeholder="" value="1000" />
+              </div>
+              <div class="three wide field">
+                <label>内存限制(KB)</label>
+                <input type="text" name="card[cvc]" maxlength="3" placeholder="" value="64000" />
+              </div>
             </div>
-            <div class="three wide field">
-              <label>内存限制(KB)</label>
-              <input type="text" name="card[cvc]" maxlength="3" placeholder="" value="64000"/>
+            <div class="fields">
+              <div class="three wide field">
+                <label>[测试用例-01] 输入</label>
+                <textarea rows="3"></textarea>
+              </div>
+              <div class="three wide field">
+                <label>[测试用例-01] 输出</label>
+                <textarea rows="3"></textarea>
+              </div>
             </div>
-          </div>
-          <div class="fields">
-            <div class="three wide field">
-              <label>[测试用例-01] 输入</label>
-              <textarea rows="3"></textarea>
-            </div>
-            <div class="three wide field">
-              <label>[测试用例-01] 输出</label>
-              <textarea rows="3"></textarea>
-            </div>
-          </div>
-          <button class="ui button" type="submit">增加测试用例</button>
-          <button class="ui primary button" type="submit">提交</button>
-        </form>
-      </template>
+            <button class="ui button" type="submit">增加测试用例</button>
+            <button class="ui primary button" type="submit">提交</button>
+          </form>
+        </template>
 
+      </div>
     </div>
   </div>
-</div>
 
 
-<script>
+  <script>
+
+
 
     (function () {
-        // 创建根实例
-        var vm = new Vue({
-            el: '#app',
-            data: {
-                active: [true, false, false, false],
 
-            },
-            created: function () {
-
-            },
-            methods: {
-                ovactive: function () {
-                    this.active = [true, false, false, false];
-                },
-                smactive: function () {
-                    this.active = [false, true, false, false];
-                },
-                tmactive: function () {
-                    this.active = [false, false, true, false];
-                },
-                pmactive: function () {
-                    this.active = [false, false, false, true];
-                }
-
+      function armin(api, method, data) {
+        if (method == 'get') {
+          axios.get(api, {
+            headers: {
+              'Access-Token': window.localStorage.getItem("token"),
+              params: data
             }
-        })
+          })
+            .then(function (response) {
+              return response.data.data;
+            });
+        }
+        else if (method == 'post') {
+          axios({
+            url: api,
+            method: 'post',
+            headers: { 'Access-Token': window.localStorage.getItem("token") },
+            data: data
+          });
+        }
+      }
+
+      var vm = new Vue({
+        el: '#app',
+        data: {
+          active: [true, false, false, false],
+          loaded: [true, false, false, false]
+        },
+        created: function () {
+        },
+        methods: {
+          ovactive: function () {
+            this.active = [true, false, false, false];
+
+          },
+          smactive: function () {
+            this.active = [false, true, false, false];
+            console.log(armin('/api/u', 'get', '{}'));
+
+          },
+          tmactive: function () {
+            this.active = [false, false, true, false];
+          },
+          pmactive: function () {
+            this.active = [false, false, false, true];
+          }
+        }
+      })
     })();
 
 
-</script>
+
+
+  </script>
 </body>
 
 
