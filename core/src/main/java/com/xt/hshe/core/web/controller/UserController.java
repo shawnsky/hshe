@@ -1,10 +1,9 @@
 package com.xt.hshe.core.web.controller;
 
 import com.xt.hshe.core.pojo.HttpMsg;
+import com.xt.hshe.core.pojo.entity.Classes;
 import com.xt.hshe.core.pojo.entity.Student;
-import com.xt.hshe.core.service.AuthService;
 import com.xt.hshe.core.util.Consts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,10 +48,10 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/u")
-    public HttpMsg TaddStudent(HttpServletRequest request, HttpServletResponse response){
-        String id = request.getParameter("id");
+    public HttpMsg TaddStudent(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
+        String id = (String) map.get("id");
         Assert.hasText(id, "学号不能为空!");
-        String password = request.getParameter("password");
+        String password = (String) map.get("password");
         Assert.hasText(password, "密码不能为空!");
         int result = authService.register(Consts.Role.STUDENT, id, password);
         if (result == Consts.Auth.REGISTER_HAS_EXIST) {
@@ -64,12 +63,12 @@ public class UserController extends BaseController {
     }
 
     @PutMapping("/u")
-    public HttpMsg TaddStudentBatch(HttpServletRequest request, HttpServletResponse response){
-        String str0 = request.getParameter("id0");
+    public HttpMsg TaddStudentBatch(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
+        String str0 = (String) map.get("id0");
         Assert.hasText(str0, "参数0不能为空!");
-        String str1 = request.getParameter("id1");
+        String str1 = (String) map.get("id1");
         Assert.hasText(str1, "参数1不能为空!");
-        String password = request.getParameter("password");
+        String password = (String) map.get("password");
         Assert.hasText(password, "密码不能为空!");
         BigInteger bi0 = new BigInteger(str0);
         BigInteger bi1 = new BigInteger(str1);
@@ -86,4 +85,6 @@ public class UserController extends BaseController {
 
         return new HttpMsg<>(Consts.ServerCode.SUCCESS, "批量注册完毕~");
     }
+
+
 }

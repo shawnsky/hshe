@@ -24,7 +24,7 @@
         <a class="active item">
           <img src="/img/logo.png" class="ui centered mini image"></img>Master</a>
         <div class="right menu">
-          <a v-on:click="window.location.href='/topic'" class="ui active item">返回系统 </a>
+          <a v-on:click="back()" class="ui active item">返回系统 </a>
         </div>
       </div>
       <!-- <a class="ui teal image label" style="margin-left:16px;margin-bottom:16px">
@@ -36,23 +36,20 @@
       </a>
       <a v-on:click="ovactive()" v-bind:class="{ active: active[0] }" class="item">
         <i class="home icon"></i> 系统概览 </a>
-      <a v-on:click="smactive()" v-bind:class="{ active: active[1] }" class="item">
+      <a v-on:click="cmactive()" v-bind:class="{ active: active[1] }" class="item">
+        <i class="user icon"></i> 班级管理 </a>
+      <a v-on:click="smactive()" v-bind:class="{ active: active[2] }" class="item">
         <i class="user icon"></i> 学生管理 </a>
-      <a v-on:click="tmactive()" v-bind:class="{ active: active[2] }" class="item">
+      <a v-on:click="tmactive()" v-bind:class="{ active: active[3] }" class="item">
         <i class="folder open icon"></i> 作业管理 </a>
-      <a v-on:click="pmactive()" v-bind:class="{ active: active[3] }" class="item">
+      <a v-on:click="pmactive()" v-bind:class="{ active: active[4] }" class="item">
         <i class="file alternate icon"></i> 题目管理 </a>
 
     </div>
     <div class="pusher">
       <div class="ui basic segment">
-        <div class="ui icon message">
-          <i class="notched circle loading icon"></i>
-          <div class="content">
-            <div class="header">稍候 </div>
-            <p>我们正在为您获取内容。</p>
-          </div>
-        </div>
+
+
 
 
 
@@ -61,6 +58,7 @@
 
 
         <template v-if="active[0]">
+          <loader v-if="loading"></loader>
           <h3 class="ui header">评测机状态</h3>
           <div class="ui horizontal list">
             <div class="item">
@@ -119,26 +117,62 @@
 
         <template v-if="active[1]">
 
-          <div class="ui top attached tabular menu">
-            <div class="item">账户</div>
-            <div class="item">添加</div>
+          <h3 class="ui header">创建班级</h3>
+          <div class="ui form">
+            <div class="fields">
+              <div class="field">
+                <input v-model="form_class.name" type="text" placeholder="班级名称" />
+              </div>
+              <div v-on:click="classadd()" class="ui submit button">提交</div>
+            </div>
           </div>
-          <div class="ui bottom attached tab segment">
-            <p></p>
-            <p></p>
+
+
+          <h3>全部班级</h3>
+          <table class="ui celled table">
+            <thead>
+              <tr>
+                <th class="two wide">编号</th>
+                <th class="six wide">名称</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in list_class">
+                <td>{{item.class_id}}</td>
+                <td>{{item.class_name}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </template>
+
+        <template v-if="active[2]">
+          <loader v-if="loading"></loader>
+          <!-- 
+          <div class="ui pointing secondary menu">
+            <a class="item active" data-tab="first">全部</a>
+            <a class="item" data-tab="second">添加</a>
+            <a class="item" data-tab="third">修改</a>
           </div>
+          <div class="ui tab segment active" data-tab="first">
+            asdad
+          </div>
+          <div class="ui tab segment" data-tab="second">
+            asdasdasdqqq
+          </div>
+          <div class="ui tab segment" data-tab="third">
+            asdasdasdasdddd
+          </div> -->
+
           <h3 class="ui header">添加学生</h3>
           <div class="ui form">
             <div class="fields">
               <div class="field">
-                <!-- <label>学号</label> -->
-                <input type="text" placeholder="ID" />
+                <input v-model="form_stu.id" type="text" placeholder="ID" />
               </div>
               <div class="field">
-                <!-- <label>密码</label> -->
-                <input type="text" placeholder="Password" />
+                <input v-model="form_stu.password" type="text" placeholder="Password" />
               </div>
-              <div class="ui submit button">提交</div>
+              <div v-on:click="stuadd()" v-bind:class="{ loading: form_stu_posting }" class="ui submit button">提交</div>
             </div>
           </div>
 
@@ -149,17 +183,17 @@
             <div class="fields">
               <div class="field">
                 <!-- <label>起始学号</label> -->
-                <input type="text" placeholder="Begin" />
+                <input v-model="form_stu_muti.arg0" type="text" placeholder="Begin" />
               </div>
               <div class="field">
                 <!-- <label>结束学号</label> -->
-                <input type="text" placeholder="End" />
+                <input v-model="form_stu_muti.arg1" type="text" placeholder="End" />
               </div>
               <div class="field">
                 <!-- <label>密码</label> -->
-                <input type="text" placeholder="Password" />
+                <input v-model="form_stu_muti.password" type="text" placeholder="Password" />
               </div>
-              <div class="ui submit button">提交</div>
+              <div v-on:click="stuaddmuti()" v-bind:class="{ loading: form_stu_muti_posting }" class="ui submit button">提交</div>
             </div>
           </div>
 
@@ -168,35 +202,26 @@
           <table class="ui fixed single line celled table">
             <thead>
               <tr>
-                <th>学号</th>
-                <th>昵称</th>
-                <th>邮箱</th>
-                <th>提交</th>
-                <th>通过</th>
+                <th class="two wide">学号</th>
+                <th class="two wide">昵称</th>
+                <th class="two wide">邮箱</th>
+                <th class="one wide">提交</th>
+                <th class="one wide">通过</th>
+                <th class="two wide">通过率</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>140705202</td>
-                <td>阿斯顿</td>
-                <td>140705202@qq.com</td>
-                <td>56</td>
-                <td>23</td>
+              <tr v-for="item in list_stu">
+                <td>{{item.id}}</td>
+                <td v-if="item.nick!=null">{{item.nick}}</td>
+                <td v-if="item.nick==null" style="color: #c9c9c9">无</td>
+                <td v-if="item.email!=null">{{item.email}}</td>
+                <td v-if="item.email==null" style="color: #c9c9c9">无</td>
+                <td>{{item.submit}}</td>
+                <td>{{item.accept}}</td>
+                <td>{{(item.accept*100/item.submit).toFixed(1)}}%</td>
               </tr>
-              <tr>
-                <td>140705202</td>
-                <td>阿斯顿</td>
-                <td>140705202@qq.com</td>
-                <td>56</td>
-                <td>23</td>
-              </tr>
-              <tr>
-                <td>140705202</td>
-                <td>阿斯顿</td>
-                <td>140705202@qq.com</td>
-                <td>56</td>
-                <td>23</td>
-              </tr>
+
             </tbody>
           </table>
         </template>
@@ -205,32 +230,64 @@
 
 
 
-        <template v-if="active[2]">
+        <template v-if="active[3]">
+          <loader v-if="loading"></loader>
           <h3 class="ui header">新建作业</h3>
           <div class="ui form">
             <div class="fields">
               <div class="field">
-                <input type="text" placeholder="作业" />
+                <input v-model="form_topic.title" type="text" placeholder="作业" />
+              </div>
+              <div class="field">
+                <input v-model="form_topic.begin_time" type="text" placeholder="开始时间" />
+              </div>
+              <div class="field">
+                <input v-model="form_topic.end_time" type="text" placeholder="结束时间" />
               </div>
 
               <div class="field">
-                <select class="ui fluid search dropdown" name="card[expire-month]">
+                <select class="ui fluid search dropdown" v-model="form_topic.class_flag">
                   <option value="">班级列表...</option>
-                  <option value="1">17广电</option>
-                  <option value="2">14电信2</option>
-                  <option value="3">14电信1</option>
-                  <option value="4">16电信</option>
-                  <option value="5">17广电</option>
+                  <option v-for="item in list_class">{{item.class_id}}-{{item.class_name}}</option>
                 </select>
               </div>
 
-              <div class="ui submit button">提交</div>
+              <div v-on:click="topicadd()" class="ui submit button">提交</div>
             </div>
           </div>
+
+
+          <h3 class="ui header">所有作业</h3>
+          <table class="ui fixed single line celled table">
+            <thead>
+              <tr>
+                <th class="one wide">编号</th>
+                <th class="two wide">标题</th>
+                <th class="one wide">状态</th>
+                <th class="one wide">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in list_topic">
+                <td>{{item.id}}</td>
+                <td>{{item.title}}</td>
+                <td v-if="item.topicStatus=1">
+                  <i class="icon checkmark"></i> 进行中</td>
+                <td v-if="item.topicStatus=0">
+                  <i class="icon close"></i> 已关闭</td>
+                <td>
+                  <a>编辑</a>|
+                  <a>查看分析</a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
         </template>
 
 
-        <template v-if="active[3]">
+        <template v-if="active[4]">
+          <loader v-if="loading"></loader>
           <h3 class="ui header">上传题目</h3>
           <form class="ui form">
             <div class="fields">
@@ -294,59 +351,194 @@
 
   <script>
 
+    Vue.component('loader', {
+      template: '<div class="ui icon message"> <i class="notched circle loading icon"></i> <div class="content"> <div class="header">稍候 </div> <p>我们正在为您获取内容。</p> </div> </div>'
+    })
 
-
-    (function () {
-
-      function armin(api, method, data) {
-        if (method == 'get') {
-          axios.get(api, {
-            headers: {
-              'Access-Token': window.localStorage.getItem("token"),
-              params: data
-            }
-          })
-            .then(function (response) {
-              return response.data.data;
-            });
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        active: [true, false, false, false, false],
+        loaded: [true, false, false, false, false],
+        loading: false,
+        form_stu_posting: false,
+        form_stu_muti_posting: false,
+        form_topic_posting: false,
+        form_class_posting: false,
+        list_class: [],
+        list_stu: [],
+        list_topic: [],
+        list_problem: [],
+        form_stu: {
+          id: '',
+          password: ''
+        },
+        form_stu_muti: {
+          arg0: '',
+          arg1: '',
+          password: ''
+        },
+        form_topic: {
+          title: '',
+          begin_time: '',
+          end_time: '',
+          class_flag: ''
+        },
+        form_class: {
+          name: ''
         }
-        else if (method == 'post') {
-          axios({
-            url: api,
-            method: 'post',
-            headers: { 'Access-Token': window.localStorage.getItem("token") },
-            data: data
-          });
+
+      },
+      created: function () {
+      },
+      methods: {
+        back: function () {
+          window.location.href = "/topic";
+        },
+        ovactive: function () {
+          this.active = [true, false, false, false, false];
+
+        },
+        cmactive: function () {
+          this.active = [false, true, false, false, false];
+          getClassList();
+        },
+        smactive: function () {
+          this.active = [false, false, true, false, false];
+          getStulist();
+        },
+        tmactive: function () {
+          this.active = [false, false, false, true, false];
+          getTopicList();
+          getClassList();
+        },
+        pmactive: function () {
+          this.active = [false, false, false, false, true];
+        },
+        stuadd: function () {
+          postStuAdd(this.form_stu.id, this.form_stu.password);
+        },
+        stuaddmuti: function () {
+          postStuAddMuti(this.form_stu_muti.arg0, this.form_stu_muti.arg1, this.form_stu_muti.password);
+        },
+        topicadd: function () {
+          postTopicAdd(this.form_topic.title, this.form_topic.begin_time, this.form_topic.end_time, this.form_topic.class_flag);
+        },
+        classadd: function () {
+          postClassAdd(this.form_class.name);
         }
       }
+    })
 
-      var vm = new Vue({
-        el: '#app',
-        data: {
-          active: [true, false, false, false],
-          loaded: [true, false, false, false]
-        },
-        created: function () {
-        },
-        methods: {
-          ovactive: function () {
-            this.active = [true, false, false, false];
-
-          },
-          smactive: function () {
-            this.active = [false, true, false, false];
-            console.log(armin('/api/u', 'get', '{}'));
-
-          },
-          tmactive: function () {
-            this.active = [false, false, true, false];
-          },
-          pmactive: function () {
-            this.active = [false, false, false, true];
-          }
+    function getStulist() {
+      this.loading = true;
+      axios.get('/api/u', {
+        headers: {
+          'Access-Token': window.localStorage.getItem("token")
         }
       })
-    })();
+        .then(function (response) {
+          vm.list_stu = response.data.data;
+          vm.loading = false;
+        });
+    }
+
+    function postStuAdd(id, password) {
+      vm.form_stu_posting = true;
+      axios({
+        url: '/api/u',
+        method: 'post',
+        headers: { 'Access-Token': window.localStorage.getItem("token") },
+        data: {
+          id: id,
+          password: password
+        }
+      })
+        .then(function (response) {
+          vm.form_stu_posting = false;
+        });
+    }
+
+    function postStuAddMuti(arg0, arg1, password) {
+      vm.form_stu_muti_posting = true;
+      axios({
+        url: '/api/u',
+        method: 'put',
+        headers: { 'Access-Token': window.localStorage.getItem("token") },
+        data: {
+          id0: arg0,
+          id1: arg1,
+          password: password
+        }
+      })
+        .then(function (response) {
+          vm.form_stu_muti_posting = false;
+        });
+    }
+
+
+    function getTopicList() {
+      this.loading = true;
+      axios.get('/api/t', {
+        headers: {
+          'Access-Token': window.localStorage.getItem("token")
+        }
+      })
+        .then(function (response) {
+          vm.list_topic = response.data.data;
+          vm.loading = false;
+        });
+    }
+
+    function getClassList() {
+      this.loading = true;
+      axios.get('/api/c', {
+        headers: {
+          'Access-Token': window.localStorage.getItem("token")
+        }
+      })
+        .then(function (response) {
+          vm.list_class = response.data.data;
+          vm.loading = false;
+        });
+    }
+
+    function postTopicAdd(title, begin_time, end_time, class_flag) {
+      vm.form_topic_posting = true;
+      axios({
+        url: '/api/t',
+        method: 'post',
+        headers: { 'Access-Token': window.localStorage.getItem("token") },
+        data: {
+          title: title,
+          begin_time: begin_time,
+          end_time: end_time,
+          class_flag: class_flag
+        }
+      })
+        .then(function (response) {
+          vm.form_topic_posting = false;
+        });
+    }
+
+
+    function postClassAdd(name) {
+      vm.form_class_posting = true;
+      axios({
+        url: '/api/c',
+        method: 'post',
+        headers: { 'Access-Token': window.localStorage.getItem("token") },
+        data: {
+          name: name
+        }
+      })
+        .then(function (response) {
+          vm.form_class_posting = false;
+        });
+    }
+
+
+
 
 
 

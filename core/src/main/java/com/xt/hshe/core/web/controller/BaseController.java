@@ -1,10 +1,7 @@
 package com.xt.hshe.core.web.controller;
 
 import com.xt.hshe.core.mq.Sender;
-import com.xt.hshe.core.service.AuthService;
-import com.xt.hshe.core.service.ProblemService;
-import com.xt.hshe.core.service.SubmissionService;
-import com.xt.hshe.core.service.TopicService;
+import com.xt.hshe.core.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -24,6 +21,9 @@ public class BaseController {
 
     @Autowired
     protected SubmissionService submissionService;
+
+    @Autowired
+    protected ClassService classService;
 
     @Autowired
     protected Sender sender;

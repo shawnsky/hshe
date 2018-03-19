@@ -11,6 +11,8 @@ public class BaseService {
     @Autowired
     protected ClassesRepository classesRepository;
     @Autowired
+    protected ClassesTopicRepository classesTopicRepository;
+    @Autowired
     protected ProblemRepository problemRepository;
     @Autowired
     protected StudentRepository studentRepository;

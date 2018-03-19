@@ -1,5 +1,6 @@
 package com.xt.hshe.core.service;
 
+import com.xt.hshe.core.pojo.entity.ClassesTopic;
 import com.xt.hshe.core.pojo.entity.Problem;
 import com.xt.hshe.core.pojo.entity.Topic;
 import com.xt.hshe.core.pojo.vo.ProblemListItemVo;
@@ -48,5 +49,23 @@ public class TopicServiceImpl extends BaseService implements TopicService{
     @Override
     public String findTopicTitle(Long topicId) {
         return topicRepository.findTopicTitle(topicId);
+    }
+
+    @Override
+    public long add(Long classId, String title, String desc, String beginTime, String endTime, String creator) {
+        Topic topic = new Topic();
+        topic.setTitle(title);
+        topic.setCreateTime(String.valueOf(System.currentTimeMillis()));
+        topic.setCreator(creator);
+        topic.setDescription(desc);
+        topic.setEndTime(endTime);
+        topic.setStartTime(beginTime);
+        topicRepository.save(topic);
+        Long topicId = topic.getId();
+        ClassesTopic ct = new ClassesTopic();
+        ct.setClassId(classId);
+        ct.setTopicId(topicId);
+        classesTopicRepository.save(ct);
+        return topicId;
     }
 }

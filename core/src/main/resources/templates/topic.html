@@ -22,33 +22,19 @@
     <h1 class="ui header">UI</h1>
     <h1 class="ui header">目录</h1>
     <div class="ui cards">
-      <div class="card">
+      <div v-for="item in list2" class="card">
         <div class="content">
-          <div class="header"> 17信息1班</div>
-          <div class="meta">15个作业</div>
-          <div class="description">最新
-            <a href="problem.html">17软工信管《高级语言程序设计》实验10-文件</a>
+          <div class="header"> {{item.class_name}}</div>
+          <div class="meta">{{item.tot_topic}}个作业</div>
+          <div v-if="item.lastest_topic_id!=null" class="description">最新
+              <a :href="'/topic/'+item.lastest_topic_id">{{item.lastest_topic_title}}</a>
+            </div>
+          <div v-if="item.lastest_topic_id==null" class="description">无最新作业
+         
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="content">
-          <div class="header">15信息1班</div>
-          <div class="meta">3个作业</div>
-          <div class="description">最新
-            <a href="problem.html">17软工信管《高级语言程序设计》实验10-文件</a>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="content">
-          <div class="header">15信息1班</div>
-          <div class="meta">3个作业</div>
-          <div class="description">最新
-            <a href="problem.html">17软工信管《高级语言程序设计》实验10-文件</a>
-          </div>
-        </div>
-      </div>
+    
     </div>
 
 
@@ -122,10 +108,11 @@
   <script>
     (function () {
       var ld = {
-        list: []
+        list: [],
+        list2: []
       };
       axios.get('/api/t', {
-        headers: {'Access-Token': window.localStorage.getItem("token")}
+        headers: { 'Access-Token': window.localStorage.getItem("token") }
       })
         .then(function (response) {
           ld.list = response.data.data;
@@ -140,6 +127,15 @@
             $('.ui.basic.modal').modal('hide');
             window.location.href = "/login";
           });
+        });
+
+      axios.get('/api/c', {
+        headers: { 'Access-Token': window.localStorage.getItem("token") }
+      })
+        .then(function (response) {
+          ld.list2 = response.data.data;
+        })
+        .catch(function (error) {
         });
       var vm = new Vue({
         el: '#app',
