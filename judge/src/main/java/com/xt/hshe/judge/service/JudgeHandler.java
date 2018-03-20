@@ -113,7 +113,7 @@ public class JudgeHandler {
         long submissionId = submission.getId();
         long problemId = submission.getProblemId();
         for ( TestPoint testPoint : testPoints ) {
-            String index = testPoint.getIndex();
+            int index = testPoint.getIndeex();
             String inputFilePath = sysTestsPath + submissionId + File.separator + "input" + index + ".txt";
             String stdOutputFilePath = sysTestsPath + submissionId + File.separator + "output" + index + ".txt";
             String outputFilePath = sysSubsPath + problemId + File.separator + submissionId + File.separator + "output" + index + ".txt";

@@ -7,8 +7,10 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>管理后台</title>
   <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
+  <link rel="stylesheet" type="text/css" href="/lib/semantic-ui-calendar/calendar.min.css" />
   <script src="/lib/jquery-3.2.1.min.js"></script>
   <script src="/lib/semantic-ui/semantic.min.js"></script>
+  <script src="/lib/semantic-ui-calendar/calendar.min.js" charset="utf-8"></script>
   <script src="/lib/vue.js"></script>
   <script src="/lib/axios.min.js"></script>
   <script src="/js/util.js"></script>
@@ -172,6 +174,12 @@
               <div class="field">
                 <input v-model="form_stu.password" type="text" placeholder="Password" />
               </div>
+              <div class="field">
+                <select v-model="form_stu.classes_flag" class="ui fluid search dropdown">
+                  <option value="">班级列表...</option>
+                  <option v-for="item in list_class">{{item.class_id}}-{{item.class_name}}</option>
+                </select>
+              </div>
               <div v-on:click="stuadd()" v-bind:class="{ loading: form_stu_posting }" class="ui submit button">提交</div>
             </div>
           </div>
@@ -193,6 +201,12 @@
                 <!-- <label>密码</label> -->
                 <input v-model="form_stu_muti.password" type="text" placeholder="Password" />
               </div>
+              <div class="field">
+                <select v-model="form_stu_muti.classes_flag" class="ui fluid search dropdown">
+                  <option value="">班级列表...</option>
+                  <option v-for="item in list_class">{{item.class_id}}-{{item.class_name}}</option>
+                </select>
+              </div>
               <div v-on:click="stuaddmuti()" v-bind:class="{ loading: form_stu_muti_posting }" class="ui submit button">提交</div>
             </div>
           </div>
@@ -202,8 +216,9 @@
           <table class="ui fixed single line celled table">
             <thead>
               <tr>
-                <th class="two wide">学号</th>
-                <th class="two wide">昵称</th>
+                <th class="one wide">学号</th>
+                <th class="one wide">昵称</th>
+                <th class="two wide">班级</th>
                 <th class="two wide">邮箱</th>
                 <th class="one wide">提交</th>
                 <th class="one wide">通过</th>
@@ -215,8 +230,10 @@
                 <td>{{item.id}}</td>
                 <td v-if="item.nick!=null">{{item.nick}}</td>
                 <td v-if="item.nick==null" style="color: #c9c9c9">无</td>
+                <td>{{item.classes}}</td>
                 <td v-if="item.email!=null">{{item.email}}</td>
                 <td v-if="item.email==null" style="color: #c9c9c9">无</td>
+               
                 <td>{{item.submit}}</td>
                 <td>{{item.accept}}</td>
                 <td>{{(item.accept*100/item.submit).toFixed(1)}}%</td>
@@ -239,10 +256,28 @@
                 <input v-model="form_topic.title" type="text" placeholder="作业" />
               </div>
               <div class="field">
-                <input v-model="form_topic.begin_time" type="text" placeholder="开始时间" />
+                <div class="ui input left icon">
+                  <i class="calendar icon"></i>
+                  <input v-model="form_topic.begin_time" type="date" placeholder="开始时间" />
+                </div>
+                <!-- <div class="ui calendar" id="example1">
+                  <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    <input v-model="form_topic.begin_time" type="text" placeholder="开始时间"/>
+                  </div>
+                </div> -->
               </div>
               <div class="field">
-                <input v-model="form_topic.end_time" type="text" placeholder="结束时间" />
+                <div class="ui input left icon">
+                  <i class="calendar icon"></i>
+                  <input v-model="form_topic.end_time" type="date" placeholder="结束时间" />
+                </div>
+                <!-- <div class="ui calendar" id="example2">
+                  <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    <input v-model="form_topic.end_time" type="text" placeholder="结束时间" />
+                  </div>
+                </div> -->
               </div>
 
               <div class="field">
@@ -252,7 +287,7 @@
                 </select>
               </div>
 
-              <div v-on:click="topicadd()" class="ui submit button">提交</div>
+              <div v-on:click="topicadd()" v-bind:class="{loading: form_topic_posting}" class="ui submit button">提交</div>
             </div>
           </div>
 
@@ -271,11 +306,14 @@
               <tr v-for="item in list_topic">
                 <td>{{item.id}}</td>
                 <td>{{item.title}}</td>
-                <td v-if="item.topicStatus=1">
+                <td v-if="item.topicStatus==1">
                   <i class="icon checkmark"></i> 进行中</td>
-                <td v-if="item.topicStatus=0">
+                <td v-if="item.topicStatus==0">
                   <i class="icon close"></i> 已关闭</td>
+                <td v-if="item.topicStatus==-1">
+                  <i class="icon clock"></i> 未开始</td>
                 <td>
+
                   <a>编辑</a>|
                   <a>查看分析</a>
                 </td>
@@ -293,7 +331,7 @@
             <div class="fields">
               <div class="six wide field">
                 <label>题目标题</label>
-                <input type="text" name="title" placeholder="Title" />
+                <input v-model="form_problem.title" type="text" name="title" placeholder="Title" />
               </div>
             </div>
             <div class="fields">
@@ -301,13 +339,9 @@
                 <label>关联作业</label>
                 <div class="two fields">
                   <div class="field">
-                    <select class="ui fluid search dropdown" name="card[expire-month]">
+                    <select v-model="form_problem.topic_flag" class="ui fluid search dropdown">
                       <option value="">作业列表...</option>
-                      <option value="1">17广电第一次作业</option>
-                      <option value="2">14电信2网络实验</option>
-                      <option value="3">14电信1大作业</option>
-                      <option value="4">16电信数据结构</option>
-                      <option value="5">17广电结构体练习</option>
+                      <option v-for="item in list_topic">{{item.id}}-{{item.title}}</option>
                     </select>
                   </div>
                 </div>
@@ -316,31 +350,31 @@
             <div class="fields">
               <div class="six wide field">
                 <label>题目描述</label>
-                <textarea></textarea>
+                <textarea v-model="form_problem.description"></textarea>
               </div>
             </div>
             <div class="fields">
               <div class="three wide field">
                 <label>时间限制(秒)</label>
-                <input type="text" name="card[number]" maxlength="16" placeholder="" value="1000" />
+                <input v-model="form_problem.time_limit" type="text" placeholder="Time Limits" />
               </div>
               <div class="three wide field">
-                <label>内存限制(KB)</label>
-                <input type="text" name="card[cvc]" maxlength="3" placeholder="" value="64000" />
+                <label>内存限制(M)</label>
+                <input v-model="form_problem.memory_limit" type="text" placeholder="Mem Limits" />
               </div>
             </div>
             <div class="fields">
               <div class="three wide field">
                 <label>[测试用例-01] 输入</label>
-                <textarea rows="3"></textarea>
+                <textarea v-model="form_problem.input0" rows="3"></textarea>
               </div>
               <div class="three wide field">
                 <label>[测试用例-01] 输出</label>
-                <textarea rows="3"></textarea>
+                <textarea v-model="form_problem.output0" rows="3"></textarea>
               </div>
             </div>
-            <button class="ui button" type="submit">增加测试用例</button>
-            <button class="ui primary button" type="submit">提交</button>
+            <button class="ui button">增加测试用例</button>
+            <button v-on:click="problemadd()" class="ui primary button">提交</button>
           </form>
         </template>
 
@@ -365,18 +399,21 @@
         form_stu_muti_posting: false,
         form_topic_posting: false,
         form_class_posting: false,
+        form_problem_posting: false,
         list_class: [],
         list_stu: [],
         list_topic: [],
         list_problem: [],
         form_stu: {
           id: '',
-          password: ''
+          password: '',
+          classes_flag: ''
         },
         form_stu_muti: {
           arg0: '',
           arg1: '',
-          password: ''
+          password: '',
+          classes_flag: ''
         },
         form_topic: {
           title: '',
@@ -386,10 +423,21 @@
         },
         form_class: {
           name: ''
+        },
+        form_problem: {
+          title: '',
+          topic_flag: '',
+          description: '',
+          time_limit: 1000,
+          memory_limit: 64,
+          tests_count: 1,
+          input0: '',
+          output0: ''
         }
 
       },
       created: function () {
+
       },
       methods: {
         back: function () {
@@ -406,6 +454,7 @@
         smactive: function () {
           this.active = [false, false, true, false, false];
           getStulist();
+          getClassList();
         },
         tmactive: function () {
           this.active = [false, false, false, true, false];
@@ -414,18 +463,22 @@
         },
         pmactive: function () {
           this.active = [false, false, false, false, true];
+          getTopicList();
         },
         stuadd: function () {
-          postStuAdd(this.form_stu.id, this.form_stu.password);
+          postStuAdd(this.form_stu.id, this.form_stu.password, this.form_stu.classes_flag);
         },
         stuaddmuti: function () {
-          postStuAddMuti(this.form_stu_muti.arg0, this.form_stu_muti.arg1, this.form_stu_muti.password);
+          postStuAddMuti(this.form_stu_muti.arg0, this.form_stu_muti.arg1, this.form_stu_muti.password, this.form_stu.classes_flag);
         },
         topicadd: function () {
           postTopicAdd(this.form_topic.title, this.form_topic.begin_time, this.form_topic.end_time, this.form_topic.class_flag);
         },
         classadd: function () {
           postClassAdd(this.form_class.name);
+        },
+        problemadd: function () {
+          postProblemAdd(this.form_problem.title, this.form_problem.topic_flag, this.form_problem.description, this.form_problem.time_limit, this.form_problem.memory_limit, this.form_problem.tests_count, this.form_problem.input0, this.form_problem.output0);
         }
       }
     })
@@ -443,7 +496,7 @@
         });
     }
 
-    function postStuAdd(id, password) {
+    function postStuAdd(id, password, classes_flag) {
       vm.form_stu_posting = true;
       axios({
         url: '/api/u',
@@ -451,7 +504,8 @@
         headers: { 'Access-Token': window.localStorage.getItem("token") },
         data: {
           id: id,
-          password: password
+          password: password,
+          classes_flag: classes_flag
         }
       })
         .then(function (response) {
@@ -459,7 +513,7 @@
         });
     }
 
-    function postStuAddMuti(arg0, arg1, password) {
+    function postStuAddMuti(arg0, arg1, password, classes_flag) {
       vm.form_stu_muti_posting = true;
       axios({
         url: '/api/u',
@@ -468,7 +522,8 @@
         data: {
           id0: arg0,
           id1: arg1,
-          password: password
+          password: password,
+          classes_flag: classes_flag
         }
       })
         .then(function (response) {
@@ -534,6 +589,29 @@
       })
         .then(function (response) {
           vm.form_class_posting = false;
+        });
+    }
+
+
+    function postProblemAdd(title, topic_flag, description, time_limit, memory_limit, tests_count, input0, output0) {
+      vm.form_problem_posting = true;
+      axios({
+        url: '/api/p',
+        method: 'post',
+        headers: { 'Access-Token': window.localStorage.getItem("token") },
+        data: {
+          title: title,
+          topic_flag: topic_flag,
+          description: description,
+          time_limit: time_limit,
+          memory_limit: memory_limit,
+          tests_count: tests_count,
+          input0: input0,
+          output0: output0
+        }
+      })
+        .then(function (response) {
+          vm.form_problem_posting = false;
         });
     }
 

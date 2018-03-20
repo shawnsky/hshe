@@ -29,13 +29,13 @@ public class TestHandler {
         }
         Files.createDirectory(testPath);
         for (TestPoint t: testPoints) {
-            Path inPath = Paths.get(strings[0] + "input" + t.getIndex() + ".txt");
+            Path inPath = Paths.get(strings[0] + "input" + t.getIndeex() + ".txt");
             Files.createFile(inPath);
             try(BufferedWriter writer = Files.newBufferedWriter(inPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE)){
                 writer.write(t.getInput());
                 writer.flush();
             }
-            Path outPath = Paths.get(strings[0] + "output" + t.getIndex() + ".txt");
+            Path outPath = Paths.get(strings[0] + "output" + t.getIndeex() + ".txt");
             Files.createFile(outPath);
             try(BufferedWriter writer = Files.newBufferedWriter(outPath, StandardCharsets.UTF_8, StandardOpenOption.WRITE)){
                 writer.write(t.getOutput());

@@ -28,7 +28,7 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     }
 
     @Override
-    public int register(String role, String id, String password) {
+    public int register(String role, String id, String password, Long classesId) {
         if (Consts.Role.STUDENT.equals(role)) {
             Student recordstu = studentRepository.findOne(id);
             //用户已存在
@@ -38,6 +38,7 @@ public class AuthServiceImpl extends BaseService implements AuthService {
                 Student student = new Student();
                 student.setId(id);
                 student.setPassword(password);
+                student.setClasses(classesId);
                 studentRepository.save(student);
                 return Consts.Auth.REGISTER_OK;
             }
@@ -63,6 +64,12 @@ public class AuthServiceImpl extends BaseService implements AuthService {
             return teacherRepository.findNickById(id);
         }
     }
+
+    @Override
+    public String findClassesName(Long classesId) {
+        return (String) classesRepository.findNameById(classesId);
+    }
+
 
     @Override
     public List<Student> findAllStudent() {

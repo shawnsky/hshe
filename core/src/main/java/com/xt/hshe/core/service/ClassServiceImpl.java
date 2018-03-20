@@ -1,6 +1,7 @@
 package com.xt.hshe.core.service;
 
 import com.xt.hshe.core.pojo.entity.Classes;
+import com.xt.hshe.core.pojo.entity.Student;
 import com.xt.hshe.core.pojo.entity.Topic;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,11 @@ public class ClassServiceImpl extends BaseService implements ClassService {
         classes.setName(name);
         classesRepository.save(classes);
         return classes.getId();
+    }
+
+    @Override
+    public List<Student> findStudents(Long id) {
+        return studentRepository.findAllByClasses(id);
     }
 
     @Override

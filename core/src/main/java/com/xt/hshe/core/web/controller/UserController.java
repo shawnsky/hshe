@@ -39,6 +39,7 @@ public class UserController extends BaseController {
             Map<String, String> map = new HashMap<>();
             map.put("id", s.getId());
             map.put("nick", s.getNickname());
+            map.put("classes", authService.findClassesName(s.getClasses()));
             map.put("email", s.getEmail());
             map.put("submit", submissionService.countOfSubmit(s.getId()).toString());
             map.put("accept", submissionService.countOfAccept(s.getId()).toString());
@@ -53,7 +54,13 @@ public class UserController extends BaseController {
         Assert.hasText(id, "学号不能为空!");
         String password = (String) map.get("password");
         Assert.hasText(password, "密码不能为空!");
-        int result = authService.register(Consts.Role.STUDENT, id, password);
+
+        String classesFlag = (String) map.get("classes_flag");
+        Assert.hasText(classesFlag, "班级编号不能为空!");
+        String classesId = classesFlag.substring(0, classesFlag.indexOf('-'));
+
+
+        int result = authService.register(Consts.Role.STUDENT, id, password, Long.parseLong(classesId));
         if (result == Consts.Auth.REGISTER_HAS_EXIST) {
             return new HttpMsg<>(result, "该学号已存在");
         } else {
@@ -70,6 +77,12 @@ public class UserController extends BaseController {
         Assert.hasText(str1, "参数1不能为空!");
         String password = (String) map.get("password");
         Assert.hasText(password, "密码不能为空!");
+
+        String classesFlag = (String) map.get("classes_flag");
+        Assert.hasText(classesFlag, "班级编号不能为空!");
+        String classesId = classesFlag.substring(0, classesFlag.indexOf('-'));
+
+
         BigInteger bi0 = new BigInteger(str0);
         BigInteger bi1 = new BigInteger(str1);
         BigInteger idLeft = bi0;
@@ -79,7 +92,7 @@ public class UserController extends BaseController {
             idRight = bi0;
         }
         do {
-            authService.register(Consts.Role.STUDENT, idLeft.toString(), password);
+            authService.register(Consts.Role.STUDENT, idLeft.toString(), password, Long.parseLong(classesId));
             idLeft = idLeft.add(BigInteger.ONE);
         } while (!idLeft.equals(idRight));
 

@@ -2,6 +2,7 @@ package com.xt.hshe.core.service;
 
 import com.xt.hshe.core.pojo.entity.Problem;
 import com.xt.hshe.core.pojo.entity.TestPoint;
+import com.xt.hshe.core.pojo.entity.TopicProblem;
 import com.xt.hshe.core.pojo.vo.ProblemListItemVo;
 import com.xt.hshe.core.pojo.vo.ProblemVo;
 import org.springframework.stereotype.Service;
@@ -78,4 +79,35 @@ public class ProblemServiceImpl extends BaseService implements ProblemService {
     public List<TestPoint> findTestPoints(Long problemId) {
         return testPointRepository.findAllByProblemId(problemId);
     }
+
+    @Override
+    public long addProblem(String title, Long topicId, String description, String timeLimit, String memoryLimit, String creator) {
+        Problem problem = new Problem();
+        problem.setTitle(title);
+        problem.setCreateTime(String.valueOf(System.currentTimeMillis()));
+        problem.setCreator(creator);
+        problem.setDescription(description);
+        problem.setMemoryLimit(memoryLimit);
+        problem.setTimeLimit(timeLimit);
+        problemRepository.save(problem);
+        Long problemId = problem.getId();
+        TopicProblem tp = new TopicProblem();
+        tp.setTopicId(topicId);
+        tp.setProblemId(problemId);
+        topicProblemRepository.save(tp);
+        return problemId;
+    }
+
+    @Override
+    public long addTestPoint(int indeex, String input, String output, Long problemId) {
+        TestPoint tp = new TestPoint();
+        tp.setIndeex(indeex);
+        tp.setInput(input);
+        tp.setOutput(output);
+        tp.setProblemId(problemId);
+        testPointRepository.save(tp);
+        return tp.getId();
+    }
+
+
 }

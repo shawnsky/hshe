@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TestPointRepository extends CrudRepository<TestPoint, Long> {
 
-    @Query(value = "select t from TestPoint t where t.problemId = ?1 and t.index = 0")
+    @Query(value = "select t from TestPoint t where t.problemId = ?1 and t.indeex = 0")
     TestPoint findExample(Long arg1);
 
     List<TestPoint> findAllByProblemId(Long arg1);

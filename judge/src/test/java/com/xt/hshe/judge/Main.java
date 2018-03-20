@@ -7,10 +7,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        String s =  "java -classpath {pathname} Main";
-        String p = "/data/subs/1/10/Main";
-        String n = s.replaceAll("\\{pathname\\}", p.substring(0, p.indexOf("Main")));
-        System.out.println(n);
-
+        System.out.println(System.currentTimeMillis());
     }
 }

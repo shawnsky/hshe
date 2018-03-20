@@ -1,5 +1,6 @@
 package com.xt.hshe.core.service;
 
+import com.xt.hshe.core.pojo.entity.Classes;
 import com.xt.hshe.core.pojo.entity.ClassesTopic;
 import com.xt.hshe.core.pojo.entity.Problem;
 import com.xt.hshe.core.pojo.entity.Topic;
@@ -67,5 +68,11 @@ public class TopicServiceImpl extends BaseService implements TopicService{
         ct.setTopicId(topicId);
         classesTopicRepository.save(ct);
         return topicId;
+    }
+
+    @Override
+    public Classes findClasses(Long topicId) {
+        Long classesId = (Long) classesTopicRepository.findClassesByTopicId(topicId);
+        return classesRepository.findOne(classesId);
     }
 }

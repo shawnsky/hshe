@@ -12,4 +12,6 @@ public interface ProblemRepository extends CrudRepository<Problem, Long> {
 
     @Query(value = "select p.* from topic_problem tp, problem p where tp.topic_id = ?1 and tp.problem_id = p.id", nativeQuery = true)
     List<Problem> findByTopicId(Long arg1);
+
+
 }

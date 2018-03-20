@@ -15,7 +15,7 @@ public class TestPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String index;
+    private int indeex;
     private String input;
     private String output;
     @Column(name = "problem_id")

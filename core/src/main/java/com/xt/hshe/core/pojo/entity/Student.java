@@ -19,4 +19,5 @@ public class Student {
     private String nickname;
     private String password;
     private String email;
+    private Long classes;
 }

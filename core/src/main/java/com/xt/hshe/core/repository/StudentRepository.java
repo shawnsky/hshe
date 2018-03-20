@@ -13,4 +13,7 @@ public interface StudentRepository extends CrudRepository<Student, String> {
     String findNickById(String arg1);
 
     List<Student> findAll();
+
+    @Query(value = "select s from Student s where s.classes = ?1")
+    List<Student> findAllByClasses(Long classesId);
 }

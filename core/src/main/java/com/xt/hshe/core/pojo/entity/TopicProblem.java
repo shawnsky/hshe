@@ -1,4 +1,4 @@
-package com.xt.hshe.sim.pojo.entity;
+package com.xt.hshe.core.pojo.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,17 +7,16 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "testpoint")
+@Table(name = "topic_problem")
 @Getter
 @Setter
 @ToString
-public class TestPoint {
+public class TopicProblem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private int indeex;
-    private String input;
-    private String output;
+    @Column(name = "topic_id")
+    private Long topicId;
     @Column(name = "problem_id")
-    private long problemId;
+    private Long problemId;
 }
