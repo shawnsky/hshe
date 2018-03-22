@@ -21,4 +21,6 @@ public class SimInfo {
     private long targetSid;
     @Column(name = "similarity")
     private int similarity;
+    @Column(name = "problem_id")
+    private long problemId;
 }

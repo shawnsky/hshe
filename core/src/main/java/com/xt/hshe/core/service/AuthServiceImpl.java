@@ -70,6 +70,11 @@ public class AuthServiceImpl extends BaseService implements AuthService {
         return (String) classesRepository.findNameById(classesId);
     }
 
+    @Override
+    public Student findStudent(String id) {
+        return studentRepository.findOne(id);
+    }
+
 
     @Override
     public List<Student> findAllStudent() {

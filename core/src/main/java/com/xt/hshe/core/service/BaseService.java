@@ -26,6 +26,8 @@ public class BaseService {
     protected TopicRepository topicRepository;
     @Autowired
     protected SubmissionRepository submissionRepository;
+    @Autowired
+    protected SimInfoRepository simInfoRepository;
 
     @Autowired
     protected ProblemService problemService;

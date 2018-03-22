@@ -26,6 +26,9 @@ public class BaseController {
     protected ClassService classService;
 
     @Autowired
+    protected MasterService masterService;
+
+    @Autowired
     protected Sender sender;
 
 

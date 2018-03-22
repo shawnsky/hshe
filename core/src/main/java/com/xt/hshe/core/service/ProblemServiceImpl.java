@@ -25,6 +25,11 @@ public class ProblemServiceImpl extends BaseService implements ProblemService {
         return entityToVo(problems);
     }
 
+    @Override
+    public List<Problem> findProblemsInTopic(Long topicId) {
+        return problemRepository.findByTopicId(topicId);
+    }
+
 
     private List<ProblemListItemVo> entityToVo(List<Problem> problems){
         List<ProblemListItemVo> vos = new ArrayList<>();

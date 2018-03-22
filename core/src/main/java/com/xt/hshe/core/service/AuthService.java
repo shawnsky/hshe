@@ -16,6 +16,8 @@ public interface AuthService {
 
     String findClassesName(Long classesId);
 
+    Student findStudent(String id);
+
     List<Student> findAllStudent();
 
     List<Teacher> findAllTeacher();

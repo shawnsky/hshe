@@ -44,6 +44,7 @@ public class SimService {
         // 这样用关系型数据库存比较合适,但是又觉得一次性插入的数据太多,是否影响性能?
         // 不过想想没必要搞那么复杂了,只选择保存相似度最大的那一条,也基本可以满足需求:p
         SimInfo theMax = new SimInfo();
+        theMax.setProblemId(problemId);
         theMax.setSourceSid(id);
         theMax.setSimilarity(0);
         LOGGER.debug("Found "+otherSub.size()+" submissions this problem.");

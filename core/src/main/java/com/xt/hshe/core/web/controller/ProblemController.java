@@ -32,6 +32,7 @@ public class ProblemController extends BaseController{
 
     @GetMapping("/p/{id}")
     public HttpMsg problem(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response){
+        redisTemplate.opsForValue().increment("viewernum:"+id,1);
         ProblemVo vo = problemService.findVo(id);
         if (vo==null){
             response.setStatus(HttpStatus.NOT_FOUND.value());

@@ -11,6 +11,7 @@ import com.xt.hshe.judge.util.Consts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class JudgeService {
     private TestPointRepository testPointRepository;
     @Autowired
     private ProblemRepository problemRepository;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Autowired
     private CompileHandler compileHandler;
@@ -40,8 +43,11 @@ public class JudgeService {
     private static final Logger LOGGER = LogManager.getLogger(JudgeService.class);
 
     public void judge(Long sid) throws IOException, InterruptedException {
-        LOGGER.info("Received a judge task[submission #"+sid+" ], begin to compile.");
         Submission s = submissionRepository.findOne(sid);
+        //查询题目时间内存要求
+        Problem p = problemRepository.findOne(s.getProblemId());
+        redisTemplate.opsForValue().increment("submitnum:"+p.getId(), 1);
+        LOGGER.info("Received a judge task[submission #"+sid+" ], begin to compile.");
         if (compileHandler.compile(s) != 0) {
             submissionRepository.updateJudged(sid, Consts.Judge.CE, 0, 0);
             return;
@@ -50,8 +56,7 @@ public class JudgeService {
         List<TestPoint> testPoints = testPointRepository.findAllByProblemId(s.getProblemId());
         testHandler.save(s, testPoints);
 
-        //查询题目时间内存要求
-        Problem p = problemRepository.findOne(s.getProblemId());
+
         
         //运行
         Map<String, Integer> result = judgeHandler.judge(s,p,testPoints);
@@ -60,6 +65,8 @@ public class JudgeService {
         // TODO: 2018/3/8 If result=AC, send ToEval
         if (Consts.Judge.AC == result.get("result")) {
             sender.sendToSim(sid.toString());
+            redisTemplate.opsForValue().increment("acceptnum:"+p.getId(), 1);
+            redisTemplate.opsForSet().add("acceptuser:"+p.getId(), s.getUserId());
         }
     }
 }
