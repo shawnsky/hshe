@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,136 +11,149 @@
   <script src="/lib/vue.js"></script>
   <script src="/lib/axios.min.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/components.js"></script>
 </head>
-
 <body>
 
-  <div th:include="template :: header"></div>
+  <div id="app">
+    <my-header v-bind:userinfo='userinfo'></my-header>
+    <div class="ui main container">
+      <h1 class="ui header">UI</h1>
 
-  <div id="app" class="ui main container">
-    <h1 class="ui header">UI</h1>
-    <h1 class="ui header">目录</h1>
-    <div class="ui cards">
-      <div v-for="item in list2" class="card">
-        <div class="content">
-          <div class="header"> {{item.class_name}}</div>
-          <div class="meta">{{item.tot_topic}}个作业</div>
-          <div v-if="item.lastest_topic_id!=null" class="description">最新
-              <a :href="'/topic/'+item.lastest_topic_id">{{item.lastest_topic_title}}</a>
+      <!-- viewClass开始 -->
+      <template>
+          <h1 class="ui header">目录</h1>
+          <div class="ui cards">
+            <div v-for="item in list2" class="card">
+              <div class="content">
+                <div class="header"> {{item.class_name}}</div>
+                <div class="meta">{{item.tot_topic}}个作业</div>
+                <div v-if="item.lastest_topic_id!=null" class="description">最新
+                  <a :href="'/topic/'+item.lastest_topic_id">{{item.lastest_topic_title}}</a>
+                </div>
+                <div v-if="item.lastest_topic_id==null" class="description">无最新作业
+                </div>
+              </div>
             </div>
-          <div v-if="item.lastest_topic_id==null" class="description">无最新作业
-         
           </div>
+      </template>
+     <!-- viewClass结束 -->
+
+
+     <view-loader v-if='loading'></view-loader>
+
+
+     <!-- viewdata开始 -->
+      <template v-if='!loading'>
+
+          <h1 class="ui header">所有作业</h1>
+          <div class="ui fluid action input">
+            <input type="text" placeholder="Search..." />
+            <div class="ui primary button">搜索</div>
+          </div>
+          <br/>
+        <table class="ui  striped table">
+          <thead>
+            <tr>
+              <th class="two wide">作业编号</th>
+              <th class="ten wide">标题</th>
+              <th class="two wide">状态</th>
+              <th class="two wide">创建者</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in list">
+              <td> {{ item.id }} </td>
+              <td>
+                <a :href="'/topic/'+item.id">{{ item.title }}</a>
+              </td>
+              <td v-if="item.topicStatus=1">
+                <i class="icon checkmark"></i> 进行中</td>
+              <td v-if="item.topicStatus=0">
+                <i class="icon close"></i> 已关闭</td>
+              <td>{{item.creator}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ui  pagination menu">
+          <a class="icon item">
+            <i class="left chevron icon"></i>
+          </a>
+          <a class="item">1</a>
+          <a class="item">2</a>
+          <a class="item">3</a>
+          <a class="item">4</a>
+          <a class="icon item">
+            <i class="right chevron icon"></i>
+          </a>
         </div>
-      </div>
-    
+      </template>
+      <!-- viewdata结束 -->
+
     </div>
 
-
-    <h1 class="ui header">所有作业</h1>
-
-    <div class="ui fluid action input">
-      <input type="text" placeholder="Search..." />
-      <div class="ui primary button">搜索</div>
-    </div>
-
-    <div th:include="template :: viewloader"></div>
-    <br/>
-    <div id="viewdata" style="display:none;">
-      <table class="ui  striped table">
-        <thead>
-          <tr>
-            <th class="two wide">作业编号</th>
-            <th class="ten wide">标题</th>
-            <th class="two wide">状态</th>
-            <th class="two wide">创建者</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in list">
-            <td> {{ item.id }} </td>
-            <td>
-              <a :href="'/topic/'+item.id">{{ item.title }}</a>
-            </td>
-            <td v-if="item.topicStatus=1">
-              <i class="icon checkmark"></i> 进行中</td>
-            <td v-if="item.topicStatus=0">
-              <i class="icon close"></i> 已关闭</td>
-            <td>{{item.creator}}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="ui  pagination menu">
-        <a class="icon item">
-          <i class="left chevron icon"></i>
-        </a>
-        <a class="item">1</a>
-        <a class="item">2</a>
-        <a class="item">3</a>
-        <a class="item">4</a>
-        <a class="icon item">
-          <i class="right chevron icon"></i>
-        </a>
-      </div>
-    </div>
+    <auth-modal></auth-modal>
+    <my-footer></my-footer>
   </div>
 
-  <div th:include="template :: footer"></div>
 
-  <div class="ui basic modal">
-    <div class="ui icon header">
-      <i class="user circle icon"></i>
-      <span id="modalmsg"></span>
-    </div>
-    <div class="content">
-      <p style="font-size:1.5em">不好意思，必须通过身份认证才可以继续使用本系统。即将自动跳转到登录页面...</p>
-    </div>
-    <div class="actions">
-      <div class="ui green ok inverted button" onclick="javascript:window.location.href='/login'">
-        <i class="checkmark icon"></i>
-        前往登录
-      </div>
-    </div>
-  </div>
+
+  
 
   <script>
-    (function () {
-      var ld = {
-        list: [],
-        list2: []
-      };
-      axios.get('/api/t', {
-        headers: { 'Access-Token': window.localStorage.getItem("token") }
-      })
-        .then(function (response) {
-          ld.list = response.data.data;
-          $("#viewloader").hide();
-          $("#viewdata").show();
-        })
-        .catch(function (error) {
-          console.log(error);
-          $('.ui.basic.modal').modal('show');
-          $('#modalmsg').text(error.response.data.msg)
-          $(":root").delay(3000).queue(function () {
-            $('.ui.basic.modal').modal('hide');
-            window.location.href = "/login";
-          });
-        });
 
-      axios.get('/api/c', {
-        headers: { 'Access-Token': window.localStorage.getItem("token") }
+    var ld = {
+      list: [],
+      list2: [],
+      userinfo: {},
+      loading: true
+    };
+
+
+    axios.get('/api/u/info', {
+      headers: { 'Access-Token': window.localStorage.getItem('token') }
+    })
+      .then(function (response) {
+        ld.userinfo = response.data.data
       })
-        .then(function (response) {
-          ld.list2 = response.data.data;
-        })
-        .catch(function (error) {
+      .catch(function (error) {
+        $('.ui.basic.modal').modal('show');
+        $('#modalmsg').text(error.response.data.msg)
+        $(":root").delay(3000).queue(function () {
+          $('.ui.basic.modal').modal('hide');
+          window.location.href = "/login";
         });
-      var vm = new Vue({
-        el: '#app',
-        data: ld
       })
-    })();
+
+    axios.get('/api/t', {
+      headers: { 'Access-Token': window.localStorage.getItem("token") }
+    })
+      .then(function (response) {
+        ld.list = response.data.data;
+        ld.loading = false;
+      })
+      .catch(function (error) {
+        console.log(error);
+        ld.loading = false;
+      });
+
+
+
+    axios.get('/api/c', {
+      headers: { 'Access-Token': window.localStorage.getItem("token") }
+    })
+      .then(function (response) {
+        ld.list2 = response.data.data;
+      })
+      .catch(function (error) {
+      });
+
+
+    var vm = new Vue({
+      el: '#app',
+      data: ld
+    })
 
   </script>
 

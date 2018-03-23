@@ -68,10 +68,8 @@ public class MasterController extends BaseController {
         data.put("groupInfos", groupInfos);
 
 
-
-
-
         //详细报告，每道题具体情况，显示所有提交信息及重复率
+
 
 
         return new HttpMsg<>(Consts.ServerCode.SUCCESS, null, data);

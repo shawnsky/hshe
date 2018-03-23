@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -12,134 +12,162 @@
   <script src="/lib/vue.js"></script>
   <script src="/lib/axios.min.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/components.js"></script>
 
 
 </head>
 
 <body>
-  <div th:include="template :: header"></div>
+
+  <div id="app">
+    <my-header v-bind:userinfo='userinfo'></my-header>
+    <div class="ui main container">
+      <h1 class="ui header">UI</h1>
+      <view-loader v-if='loading'></view-loader>
+      <view-404 v-if='is404'></view-404>
+      <!-- viewdata开始 -->
+      <template v-if='!loading &amp;&amp; !is404'>
+        <div class="ui breadcrumb">
+          <i class="angle right icon"></i>
+          <a class="section" :href="referer" v-if="object0.referer!=null">{{ object0.referer }}</a>
+          <div class="divider" v-if="object0.referer!=null"> / </div>
+
+          <div class="active section">{{ object0.title }}</div>
+        </div>
+
+        <h1 class="ui header">
+          {{ object0.title }}</h1>
 
 
+        <div class="ui grid">
 
+          <div class="ui twelve wide column">
+            <div>
+              <p style="line-height: 180%">{{ object0.description }}
+              </p>
+            </div>
+            <h4>样例输入</h4>
+            <div class="ui segment">
+              {{ object0.inputExample }}
+            </div>
 
-
-  <div id="app" class="ui main container">
-    <h1 class="ui header">UI</h1>
-
-
-    <div id="viewdata">
-      <div class="ui breadcrumb">
-        <i class="angle right icon"></i>
-        <a class="section" :href="referer" v-if="object0.referer!=null">{{ object0.referer }}</a>
-        <div class="divider" v-if="object0.referer!=null"> / </div>
-
-        <div class="active section">{{ object0.title }}</div>
-      </div>
-
-      <h1 class="ui header">
-        {{ object0.title }}</h1>
-
-
-      <div class="ui grid">
-
-        <div class="ui twelve wide column">
-          <div>
-            <p style="line-height: 180%">{{ object0.description }}
-            </p>
+            <h4>样例输出</h4>
+            <div class="ui segment">
+              {{ object0.outputExample }}
+            </div>
           </div>
-          <h4>样例输入</h4>
-          <div class="ui segment">
-            {{ object0.inputExample }}
-          </div>
 
-          <h4>样例输出</h4>
-          <div class="ui segment">
-            {{ object0.outputExample }}
+          <div class="ui four wide column">
+            <table class="ui celled structured striped table">
+              <tbody>
+                <tr>
+                  <td>
+                    <i class="microchip icon"></i> 内存限制 {{ object0.memoryLimit }}M
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="wait icon"></i> 时间限制 {{ object0.timeLimit }}ms</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="unhide icon"></i> 浏览 {{ object0.viewerNum==null?0:object0.viewerNum }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="check circle icon"></i> 正确 {{ object0.acceptNum==null?0:object0.acceptNum }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="sticky note icon"></i> 提交 {{ object0.submitNum==null?0:object0.submitNum }}</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <i class="percent icon"></i>通过率 {{ (object0.acceptNum*100/object0.submitNum).toFixed(1) }}%</td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </template>
+      <!--viewdata结束-->
+
+      <!-- viewsubmit开始 -->
+      <template v-if='!loading &amp;&amp; !is404'>
+        <h1>提交</h1>
+        <!-- <i class="code icon"></i> -->
+        <div class="ui selection dropdown">
+          <input type="hidden" name="language" />
+          <i class="dropdown icon"></i>
+          <div class="default text">选择语言</div>
+          <div class="menu">
+            <div class="item" data-value="0">C</div>
+            <div class="item" data-value="1">C++</div>
+            <div class="item" data-value="2">Java</div>
+            <div class="item" data-value="3">Python</div>
+            <div class="item" data-value="4">Ruby</div>
+            <div class="item" data-value="5">Go</div>
+            <div class="item" data-value="6">Perl</div>
           </div>
         </div>
 
-        <div class="ui four wide column">
-          <table class="ui celled structured striped table">
-            <tbody>
-              <tr>
-                <td>
-                  <i class="microchip icon"></i> 内存限制 {{ object0.memoryLimit }}M
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <i class="wait icon"></i> 时间限制 {{ object0.timeLimit }}ms</td>
-              </tr>
-              <tr>
-                <td>
-                  <i class="unhide icon"></i> 浏览 {{ object0.viewerNum }}</td>
-              </tr>
-              <tr>
-                <td>
-                  <i class="check circle icon"></i> 正确 {{ object0.acceptNum }}</td>
-              </tr>
-              <tr>
-                <td>
-                  <i class="sticky note icon"></i> 提交 {{ object0.submitNum }}</td>
-              </tr>
-
-              <tr>
-                <td>
-                  <i class="percent icon"></i>通过率 {{ (object0.acceptNum*100/object0.submitNum).toFixed(1) }}%</td>
-              </tr>
-
-            </tbody>
-          </table>
+        <div class="ui form">
+          <div class="field">
+            <label></label>
+            <textarea v-model="src" rows="10"></textarea>
+          </div>
         </div>
-      </div>
+
+        <button class="ui primary button" style="margin-top:0.5em" v-on:click="submit">提交 </button>
+      </template>
+      <!-- viewsubmit结束 -->
+
     </div>
-    <!--viewdata结束-->
 
-    <div id="viewsubmit">
-      <h1>提交</h1>
-      <!-- <i class="code icon"></i> -->
-      <div class="ui selection dropdown">
-        <input type="hidden" name="language" />
-        <i class="dropdown icon"></i>
-        <div class="default text">选择语言</div>
-        <div class="menu">
-          <div class="item" data-value="0">C</div>
-          <div class="item" data-value="1">C++</div>
-          <div class="item" data-value="2">Java</div>
-          <div class="item" data-value="3">Python</div>
-          <div class="item" data-value="4">Ruby</div>
-          <div class="item" data-value="5">Go</div>
-          <div class="item" data-value="6">Perl</div>
-        </div>
-      </div>
-
-      <div class="ui form">
-        <div class="field">
-          <label></label>
-          <textarea v-model="src" rows="10"></textarea>
-        </div>
-      </div>
-
-      <button class="ui primary button" style="margin-top:0.5em" v-on:click="submit">提交 </button>
-    </div>
-    <!-- viewsubmit结束 -->
+    <auth-modal></auth-modal>
+    <my-footer></my-footer>
 
   </div>
+
+
+
   <!-- 放到下拉栏下面 -->
   <script>$('.ui.dropdown').dropdown();</script>
 
-  <div th:include="template :: footer"></div>
 
   <script>
     (function () {
       var ld = {
         object0: {},
         referer: document.referrer,
-        src: ''
+        src: '',
+        userinfo: {},
+        loading: true,
+        is404: false
       };
+
       var pathId = getPathId();
       var dataApi = '/api/p/' + pathId;
       var submitApi = '/api/s';
+
+      axios.get('/api/u/info', {
+        headers: { 'Access-Token': window.localStorage.getItem('token') }
+      })
+        .then(function (response) {
+          ld.userinfo = response.data.data
+        })
+        .catch(function (error) {
+          $('.ui.basic.modal').modal('show');
+          $('#modalmsg').text(error.response.data.msg)
+          $(":root").delay(3000).queue(function () {
+            $('.ui.basic.modal').modal('hide');
+            window.location.href = "/login";
+          });
+        })
+
+
       axios.get(dataApi, {
         headers: {
           'My-Referer': ld.referer,
@@ -149,19 +177,18 @@
         .then(function (response) {
           //TODO 系統異常處理
           ld.object0 = response.data.data;
-          // $("#viewloader").hide();
-          // $("#viewdata").show();
+          ld.loading = false
         })
         .catch(function (error) {
           if (error.response.status === 404) {
-            // $("#viewloader").hide();
-            // $("#view404").show();
+            ld.loading = false
+            ld.is404 = true
           } else {
             console.log(error.response.status);
-            window.location.href = "/login";
           }
-
         });
+
+
       var vm = new Vue({
         el: '#app',
         data: ld,

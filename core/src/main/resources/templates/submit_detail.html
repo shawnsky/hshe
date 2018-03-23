@@ -2,41 +2,163 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Submits</title>
   <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
   <script src="/lib/jquery-3.2.1.min.js"></script>
   <script src="/lib/semantic-ui/semantic.min.js"></script>
+  <script src="/lib/vue.js"></script>
+  <script src="/lib/axios.min.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/components.js"></script>
 </head>
 
 <body>
- <div th:include="template :: header"></div>
+
+  <script src="/lib/moment-with-locales.min.js"></script>
+  <script>
+    moment().format();
+    moment.locale('zh-cn');
+  </script>
+
+  <div id="app">
+    <my-header v-bind:userinfo='userinfo'></my-header>
+
+    <view-loader v-if='loading'></view-loader>
+    <view-404 v-if='is404'></view-404>
+
+    <!-- viewdata开始 -->
+    <template v-if="!loading &amp;&amp; !is404">
+      <div class="ui main container">
+        <h1 class="ui header">UI</h1>
+
+        <h1 class="ui header">源代码 #{{object0.id}}</h1>
+        <div class="ui grid">
+
+          <div class="ui twelve wide column">
+            <div class="ui form">
+              <div class="field">
+                <label></label>
+                <textarea rows="20">{{object0.src}}</textarea>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="ui four wide column">
+            <table class="ui celled structured striped table">
+              <tbody>
+                <tr>
+                  <td>
+                    <i class="file alternate icon"></i> 题目 {{ object0.problemId }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="user icon"></i> 用户名 {{ object0.userId }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="i cursor icon"></i> 语言类型 {{ object0.lang }}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="microchip icon"></i> 内存使用 {{ (object0.memoryUsed/1000).toFixed(2) }}M
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="hourglass half icon"></i> 运行时间 {{ object0.timeUsed }}ms</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <i class="file code icon"></i> 长度 {{ object0.length }}b</td>
+                </tr>
+                <tr>
+                  <td>
+                    <i class="calendar alternate outline icon"></i> 提交时间 {{ fmt0(object0.createTime) }}</td>
+                </tr>
 
 
-  <div class="ui main container">
-    <h1 class="ui header">UI</h1>
 
-    <h1 class="ui header">提交细节（源代码）</h1>
-
-    <div class="ui fluid icon input">
-      <input type="text" placeholder="搜索用户">
-      <i class="search icon"></i>
-    </div>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
 
+      </div>
+    </template>
+    <!-- viewdata结束 -->
+
+
+    <auth-modal></auth-modal>
+    <my-footer></my-footer>
 
 
   </div>
 
+  <script>
+    var ld = {
+      object0: {},
+      userinfo: {},
+      loading: true,
+      is404: false
+    };
 
 
-<div th:include="template :: footer"></div>
+    axios.get('/api/u/info', {
+      headers: { 'Access-Token': window.localStorage.getItem('token') }
+    })
+      .then(function (response) {
+        ld.userinfo = response.data.data
+      })
+      .catch(function (error) {
+        $('.ui.basic.modal').modal('show');
+        $('#modalmsg').text(error.response.data.msg)
+        $(":root").delay(3000).queue(function () {
+          $('.ui.basic.modal').modal('hide');
+          window.location.href = "/login";
+        });
+      });
+
+    var dataApi = '/api/s/' + getPathId();
 
 
+    axios.get(dataApi, {
+      headers: { 'Access-Token': window.localStorage.getItem("token") }
+    })
+      .then(function (response) {
+        ld.object0 = response.data.data;
+        ld.loading = false;
+      })
+      .catch(function (error) {
+        ld.loading = false;
+        if (error.response.status === 404) {
+          ld.is404 = true;
+        } else {
+          console.log(error.response.status);
+        }
+      });
 
+
+    var vm = new Vue({
+      el: '#app',
+      data: ld,
+      methods: {
+        fmt0: function (time) {
+          var date = new Date();
+          date.setTime(time);
+          return date.toLocaleString();
+        }
+      }
+    })
+
+  </script>
 
 </body>
 

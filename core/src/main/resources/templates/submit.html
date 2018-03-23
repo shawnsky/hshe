@@ -12,6 +12,7 @@
   <script src="/lib/vue.js"></script>
   <script src="/lib/axios.min.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/components.js"></script>
 </head>
 
 <body>
@@ -20,109 +21,128 @@
     moment().format();
     moment.locale('zh-cn');
   </script>
-  <div th:include="template :: header"></div>
+
+  <div id="app">
+    <my-header v-bind:userinfo='userinfo'></my-header>
+    
+
+    <template v-if='!loading'>
+      <div class="ui main container">
+        <h1 class="ui header">UI</h1>
+        <h1 class="ui header">提交</h1>
+        <div class="ui fluid icon input">
+          <input type="text" placeholder="根据学号或者题目编号搜索"/>
+          <i class="search icon"></i>
+        </div>
+        <table class="ui celled striped table">
+          <thead>
+            <tr>
+              <th class="one wide">提交</th>
+              <th class="two wide">学号/工号</th>
+              <th class="one wide">问题</th>
+              <th class="three wide">状态</th>
+              <th class="one wide">内存</th>
+              <th class="one wide">耗时</th>
+              <th class="one wide">语言</th>
+              <th class="one wide">长度</th>
+              <th class="five wide">提交时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in list">
+              <td> {{item.id}} </td>
+              <td>
+                <a>{{item.userId}}</a>
+              </td>
+              <td>
+                <a :href="'/problem/'+item.problemId">{{item.problemId}}</a>
+              </td>
+              <td>
+                <button v-if="item.judged===-1" v-on:click='checkOut(item.id)' class="ui compact basic loading button">正在判题</button>
+                <button v-if="item.judged===0" v-on:click='checkOut(item.id)' class="ui compact green button">答案正确</button>
+                <button v-if="item.judged===1" v-on:click='checkOut(item.id)' class="ui compact red button">答案错误</button>
+                <button v-if="item.judged===2" v-on:click='checkOut(item.id)' class="ui compact yellow button">时间超限</button>
+                <button v-if="item.judged===3" v-on:click='checkOut(item.id)' class="ui compact yellow button">输出超限</button>
+                <button v-if="item.judged===4" v-on:click='checkOut(item.id)' class="ui compact yellow button">内存超限</button>
+                <button v-if="item.judged===5" v-on:click='checkOut(item.id)' class="ui compact yellow button">运行时错误</button>
+                <button v-if="item.judged===6" v-on:click='checkOut(item.id)' class="ui compact red button">格式错误</button>
+                <button v-if="item.judged===7" v-on:click='checkOut(item.id)' class="ui compact yellow button">编译错误</button>
+                <button v-if="item.judged===8" v-on:click='checkOut(item.id)' class="ui compact yellow button">系统错误</button>
+              </td>
+              <td>{{ (item.memoryUsed/1000).toFixed(2) }}M</td>
+              <td>{{ item.timeUsed }}ms</td>
+              <td>{{ item.lang}} </td>
+              <td>{{ item.length }}b</td>
+              <td><span v-bind:title="fmt0(item.createTime)">{{ fmt(item.createTime) }}</span></td>
+            </tr>
+          </tbody>
+        </table>
 
 
-  <div th:include="template :: viewloader"></div>
+
+        <div class="ui  pagination menu">
+          <a class="icon item">
+            <i class="left chevron icon"></i>
+          </a>
+          <a class="item">1</a>
+          <a class="item">2</a>
+          <a class="item">3</a>
+          <a class="item">4</a>
+          <a class="icon item">
+            <i class="right chevron icon"></i>
+          </a>
+        </div>
+
+      </div>
+    </template>
+
+    <view-loader v-if='loading'></view-loader>
 
 
-  <div id="app" class="ui main container">
-    <h1 class="ui header">UI</h1>
-    <h1 class="ui header">提交</h1>
-    <div class="ui fluid icon input">
-      <input type="text" placeholder="根据学号或者题目编号搜索" />
-      <i class="search icon"></i>
-    </div>
-    <table class="ui celled striped table">
-      <thead>
-        <tr>
-          <th class="one wide">提交</th>
-          <th class="two wide">学号/工号</th>
-          <th class="one wide">问题</th>
-
-          <th class="three wide">状态</th>
-          <th class="one wide">内存</th>
-          <th class="one wide">耗时</th>
-          <th class="one wide">语言</th>
-          <th class="one wide">长度</th>
-          <th class="five wide">提交时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in list">
-          <td> {{item.id}} </td>
-          <td>
-            <a>{{item.userId}}</a>
-          </td>
-          <td>
-            <a :href="'/problem/'+item.problemId">{{item.problemId}}</a>
-          </td>
-          <td>
-            <button v-if="item.judged===-1" class="ui compact basic loading button">正在判题</button>
-            <button v-if="item.judged===0" class="ui compact green button">答案正确</button>
-            <button v-if="item.judged===1" class="ui compact red button">答案错误</button>
-            <button v-if="item.judged===2" class="ui compact yellow button">时间超限</button>
-            <button v-if="item.judged===3" class="ui compact yellow button">输出超限</button>
-            <button v-if="item.judged===4" class="ui compact yellow button">内存超限</button>
-            <button v-if="item.judged===5" class="ui compact yellow button">运行时错误</button>
-            <button v-if="item.judged===6" class="ui compact red button">格式错误</button>
-            <button v-if="item.judged===7" class="ui compact yellow button">编译错误</button>
-            <button v-if="item.judged===8" class="ui compact yellow button">系统错误</button>
-          </td>
-          <td>{{ (item.memoryUsed/1000).toFixed(2) }}M</td>
-          <td>{{ item.timeUsed }}ms</td>
-          <td>{{ item.lang}} </td>
-          <td>{{ item.length }}b</td>
-          <td>{{ fmt(item.createTime) }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-
-
-    <div class="ui  pagination menu">
-      <a class="icon item">
-        <i class="left chevron icon"></i>
-      </a>
-      <a class="item">1</a>
-      <a class="item">2</a>
-      <a class="item">3</a>
-      <a class="item">4</a>
-      <a class="icon item">
-        <i class="right chevron icon"></i>
-      </a>
-    </div>
-
+    <auth-modal></auth-modal>
+    <my-footer></my-footer>
   </div>
-
-
-
-  <div th:include="template :: footer"></div>
-
 
 
   <script>
     (function () {
       var ld = {
-        list: []
+        list: [],
+        loading: true,
+        userinfo: {}
       };
-      axios.get('/api/s', {
-        headers: { 'Access-Token': window.localStorage.getItem("token") }
+
+
+      axios.get('/api/u/info', {
+        headers: { 'Access-Token': window.localStorage.getItem('token') }
       })
         .then(function (response) {
-          ld.list = response.data.data;
-          $("#viewloader").hide();
-          $("#viewdata").show();
+          ld.userinfo = response.data.data
         })
         .catch(function (error) {
-          console.log(error);
           $('.ui.basic.modal').modal('show');
           $('#modalmsg').text(error.response.data.msg)
           $(":root").delay(3000).queue(function () {
             $('.ui.basic.modal').modal('hide');
             window.location.href = "/login";
           });
+        })
+
+
+
+      axios.get('/api/s', {
+        headers: { 'Access-Token': window.localStorage.getItem("token") }
+      })
+        .then(function (response) {
+          ld.list = response.data.data;
+          ld.loading = false;
+        })
+        .catch(function (error) {
+          console.log(error);
+          ld.loading = false;
         });
+
+
       var vm = new Vue({
         el: '#app',
         data: ld,
@@ -131,6 +151,14 @@
             var date = new Date();
             date.setTime(time);
             return moment(date.toISOString()).fromNow();
+          },
+          fmt0: function (time) {
+            var date = new Date();
+            date.setTime(time);
+            return date.toLocaleString();
+          },
+          checkOut: function (id) {
+            window.location.href="/submission/"+id;
           }
         }
       })
