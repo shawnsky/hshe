@@ -16,5 +16,9 @@ public interface SimInfoRepository extends CrudRepository<SimInfo, Long> {
     @Query(value = "select s from SimInfo s where s.problemId = ?1 and s.similarity >= 85")
     List<SimInfo> findAbsoluteByProblemId(Long arg);
 
+    SimInfo findBySourceSid(Long arg);
+
+
+
 
 }

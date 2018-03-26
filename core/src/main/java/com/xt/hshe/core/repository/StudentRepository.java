@@ -16,4 +16,6 @@ public interface StudentRepository extends CrudRepository<Student, String> {
 
     @Query(value = "select s from Student s where s.classes = ?1")
     List<Student> findAllByClasses(Long classesId);
+
+    long count();
 }

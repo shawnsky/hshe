@@ -19,8 +19,8 @@ public class SubmissionServiceImpl extends BaseService implements SubmissionServ
     }
 
     @Override
-    public List<Submission> findSubmissionsInProblem(Long topicId) {
-        return submissionRepository.findByProblemId(topicId);
+    public List<Submission> findSubmissionsInProblem(Long problemId) {
+        return submissionRepository.findByProblemId(problemId);
     }
 
     @Override

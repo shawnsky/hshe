@@ -26,7 +26,7 @@ public class ProblemController extends BaseController{
         vo.setId(67373);
         vo.setTitle("所有题目");
         vo.setProblemListItemVos(problemListItemVos);
-        return new HttpMsg<>(1,null, vo);
+        return new HttpMsg<>(Consts.ServerCode.SUCCESS,null, vo);
     }
 
 
@@ -48,7 +48,7 @@ public class ProblemController extends BaseController{
         } else {
             vo.setReferer(null);
         }
-        return new HttpMsg<>(1,null, vo);
+        return new HttpMsg<>(Consts.ServerCode.SUCCESS,null, vo);
     }
 
     @PostMapping("/p")

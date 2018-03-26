@@ -48,7 +48,7 @@
         <i class="file alternate icon"></i> 题目管理 </a>
 
     </div>
-    <div class="pusher" style="width:1024px">
+    <div class="pusher" style="width:80%">
       <div class="ui basic segment">
 
 
@@ -65,12 +65,13 @@
             <h3 class="ui header">评测机状态</h3>
             <div class="ui horizontal list">
               <div class="item">
+                <a class="ui green empty circular label"></a>
                 <img class="ui avatar image"></img>
                 <div class="content">
                   <div class="header">Judger 01</div>在线 </div>
               </div>
               <div class="item">
-                <a class="ui green empty circular label right floated"></a>
+                <img class="ui avatar image"></img>
 
                 <div class="content">
 
@@ -277,7 +278,7 @@
             </div>
           </div>
 
-          <div class="ui segment">
+          <div v-if="!childactive" class="ui segment">
             <h3 class="ui header">所有作业</h3>
             <table class="ui fixed single line celled table">
               <thead>
@@ -300,13 +301,100 @@
                     <i class="icon clock"></i> 未开始</td>
                   <td>
 
-                    <a>编辑</a>|
-                    <a>查看分析</a>
+                    <a>编辑</a> |
+                    <a v-on:click="analysisactive(item.id)">查看分析</a>
                   </td>
                 </tr>
 
               </tbody>
             </table>
+          </div>
+
+          <div v-if="childactive" class="ui segment">
+            <div v-if="loading_analysis" class="ui active inverted dimmer">
+              <div class="ui text loader">加载</div>
+            </div>
+
+            <a v-on:click="analysisback">
+              <i class="icon chevron left" style="margin-bottom:16px"></i>返回</a>
+
+
+            <template v-if="!loading &amp;&amp; object_analysis != null">
+              <h3 class="ui header">作业总览</h3>
+              <!-- 已完成统计 -->
+              <div class="ui segment">
+                <div class="ui top left attached label">已完成</div>
+
+                <div class="ui relaxed horizontal list">
+                  <div v-for="item in object_analysis.allACWithAVG" class="item">
+                    <img class="ui avatar image" src="/img/stevie.jpg" />
+                    <div class="content">
+                      <a class="header">{{item.id}}({{item.simAVG}})</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 未完成统计 -->
+              <div class="ui segment">
+                <div class="ui top left attached label">未完成</div>
+
+                <div class="ui relaxed horizontal list">
+                  <div v-for="item in object_analysis.notCompleteWithAVG" class="item">
+                    <img class="ui avatar image" src="/img/stevie.jpg" />
+                    <div class="content">
+                      <a class="header">{{item.id}}</a>
+                      <a class="ui label">
+                        {{item.simAVG}}%
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="ui header">详情及分组</h3>
+
+              <!-- 每个问题一个表格 -->
+              <table v-for="item in object_analysis.detailInfos" class="ui selectable table">
+                <thead>
+                  <!-- 标题 -->
+                  <tr>
+                    <th colspan="3">{{item.problem_title}} </th>
+                  </tr>
+                  <!-- 分组 -->
+                  <tr>
+                    <th colspan="3">
+                      <p v-if="item.groups.length==0">无雷同</p>
+                      <div class="ui four column grid">
+                        <div v-for="group in item.groups" class="column">
+
+                          <div class="ui segment">
+                            <div class="ui  horizontal list">
+                              <div v-for="g in group" class="item">
+                                <!-- <img class="ui avatar image" src="/img/stevie.jpg" /> -->
+                                <div class="content">
+                                  <a class="header" v-bind:title="g.src">{{g.userId}}</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="s in item.submissions" v-on:click="goSubmission(s.id)">
+                    <td>#{{s.id}}</td>
+                    <td>{{s.userId}}</td>
+                    <td v-if="s.sim==-1"><span style="color:#c9c9c9">相似度获取失败</span></td>
+                    <td v-if="s.sim!=-1">{{s.sim}}%</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+
+            </template>
+
           </div>
         </template>
 
@@ -379,7 +467,9 @@
       data: {
         active: [true, false, false, false, false],
         loaded: [true, false, false, false, false],
-        loading: false,
+        childactive: false,
+        loading: true,
+        loading_analysis: true,
         form_stu_posting: false,
         form_stu_muti_posting: false,
         form_topic_posting: false,
@@ -389,6 +479,7 @@
         list_stu: [],
         list_topic: [],
         list_problem: [],
+        object_analysis: {},
         form_stu: {
           id: '',
           password: '',
@@ -428,6 +519,9 @@
         back: function () {
           window.location.href = "/topic";
         },
+        goSubmission: function(sid){
+          window.open("/submission/"+sid);
+        },
         ovactive: function () {
           this.active = [true, false, false, false, false];
 
@@ -464,6 +558,14 @@
         },
         problemadd: function () {
           postProblemAdd(this.form_problem.title, this.form_problem.topic_flag, this.form_problem.description, this.form_problem.time_limit, this.form_problem.memory_limit, this.form_problem.tests_count, this.form_problem.input0, this.form_problem.output0);
+        },
+        analysisactive: function (topic_id) {
+          this.childactive = true;
+          getAnalysis(topic_id);
+        },
+        analysisback: function () {
+          this.childactive = false;
+          this.loading_analysis = true;
         }
       }
     })
@@ -597,6 +699,26 @@
       })
         .then(function (response) {
           vm.form_problem_posting = false;
+        });
+    }
+
+    function getAnalysis(topic_id) {
+      this.loading = true;
+      axios.get('/api/analysis', {
+        headers: {
+          'Access-Token': window.localStorage.getItem("token")
+        },
+        params: {
+          topic_id: topic_id
+        }
+      })
+        .then(function (response) {
+          vm.object_analysis = response.data.data;
+          vm.loading_analysis = false;
+        })
+        .catch(function (error) {
+          console.log(error);
+          vm.loading_analysis = false;
         });
     }
 

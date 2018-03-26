@@ -14,5 +14,7 @@ public interface ClassesRepository extends CrudRepository<Classes, Long> {
     Object findNameById(Long arg1);
 
 
+    long count();
+
 
 }

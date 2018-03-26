@@ -14,29 +14,56 @@ public class MasterServiceImpl extends BaseService implements MasterService {
 
 
     @Override
+    public int findSim(Long submissionId) {
+        SimInfo simInfo = simInfoRepository.findBySourceSid(submissionId);
+        if (simInfo==null) {
+            return -1;
+        } else {
+            return simInfo.getSimilarity();
+        }
+
+    }
+
+    @Override
+    public double findAVG(List<Problem> problems, String userId) {
+        int sum = 0;
+        int tot = 0;
+        for (Problem p: problems) {
+            List<Submission> submissions = submissionRepository.findByUserIdAndProblemId(userId, p.getId());
+            //用户可能同一道题提交多次
+            for (Submission s: submissions) {
+                int record = findSim(s.getId());
+                if (record==-1) {
+                    continue;
+                }
+                sum += record;
+                tot++;
+            }
+        }
+        return sum*1.0/tot;
+    }
+
+
+    @Override
     public Map<String, List<Student>> achievement(List<Problem> problems, List<Student> studentList) {
         Map<String, List<Student>> data = new HashMap<>();
         //全部做对多少人，未完成多少人
         List<Student> allAC = new ArrayList<>();
         List<Student> notComplete = new ArrayList<>();
-        List<Set<String>> sets = new ArrayList<>();
-        //作业里每道题通过同学数据
-        for (Problem p: problems) {
-            Set<String> set = redisTemplate.opsForSet().members("acceptuser:"+p.getId());
-            if (set==null) {
-                sets.add(new HashSet<>());
-            } else {
-                sets.add(set);
-            }
-        }
-        //全部作对同学id 为所有集合取交集
         Set<String> resultSet = new HashSet<>();
         resultSet.clear();
-        resultSet.addAll(sets.get(0));
-        int len = sets.size();
-        for (int i=1;i<len;++i){
-            resultSet.retainAll(sets.get(i));
+        boolean first = true;
+        //作业里每道题通过同学数据, 同时取交集
+        for (Problem p: problems) {
+            Set<String> set = redisTemplate.opsForSet().members("acceptuser:"+p.getId());
+            if (first) {
+                resultSet.addAll(set==null?new HashSet<>():set);
+                first = false;
+            } else {
+                resultSet.retainAll(set==null?new HashSet<>():set);
+            }
         }
+
         for (String userId: resultSet){
             allAC.add(authService.findStudent(userId));
         }
@@ -91,6 +118,17 @@ public class MasterServiceImpl extends BaseService implements MasterService {
             subGroups.add(subList);
         }
         return subGroups;
+    }
+
+    @Override
+    public Map<String, String> getStatistics() {
+        Map<String, String> map = new HashMap<>();
+        map.put("submissions", String.valueOf(submissionRepository.count()));
+        map.put("students", String.valueOf(studentRepository.count()));
+        map.put("topics", String.valueOf(topicRepository.count()));
+        map.put("classes", String.valueOf(classesRepository.count()));
+        map.put("problems", String.valueOf(problemRepository.count()));
+        return map;
     }
 
 

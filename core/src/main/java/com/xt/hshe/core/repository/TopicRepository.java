@@ -23,4 +23,6 @@ public interface TopicRepository extends CrudRepository<Topic, Long> {
             "WHEN t.endTime<unix_timestamp(now())*1000 THEN 0 " +
             "ELSE 1 END) as topicStatus FROM Topic t, Teacher u WHERE t.creator = u.id")
     List<Object[]> findAllTopicItemVo();
+
+    long count();
 }

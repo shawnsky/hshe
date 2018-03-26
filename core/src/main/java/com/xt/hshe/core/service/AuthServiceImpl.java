@@ -27,6 +27,7 @@ public class AuthServiceImpl extends BaseService implements AuthService {
 
     }
 
+
     @Override
     public int register(String role, String id, String password, Long classesId) {
         if (Consts.Role.STUDENT.equals(role)) {
@@ -56,6 +57,7 @@ public class AuthServiceImpl extends BaseService implements AuthService {
         }
     }
 
+
     @Override
     public String findNick(boolean isStu, String id) {
         if (isStu) {
@@ -65,10 +67,14 @@ public class AuthServiceImpl extends BaseService implements AuthService {
         }
     }
 
+
+
     @Override
     public String findClassesName(Long classesId) {
         return (String) classesRepository.findNameById(classesId);
     }
+
+
 
     @Override
     public Student findStudent(String id) {
@@ -76,10 +82,13 @@ public class AuthServiceImpl extends BaseService implements AuthService {
     }
 
 
+
     @Override
     public List<Student> findAllStudent() {
         return studentRepository.findAll();
     }
+
+
 
     @Override
     public List<Teacher> findAllTeacher() {
