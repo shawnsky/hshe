@@ -20,6 +20,11 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.*;
 
+/**
+ * 用于程序运行判题
+ *
+ * @author Shawn Chen
+ */
 @Component("judgeHandler")
 public class JudgeHandler {
 

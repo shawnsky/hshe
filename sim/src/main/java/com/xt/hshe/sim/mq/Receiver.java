@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
+/**
+ * 消息接收
+ *
+ * @author Shawn Chen
+ */
 @Component
 @RabbitListener(queues = "ToSim")
 public class Receiver {

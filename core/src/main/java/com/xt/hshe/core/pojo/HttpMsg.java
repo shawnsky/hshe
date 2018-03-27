@@ -4,6 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * HTTP 响应对象
+ *
+ * @author Shawn Chen
+ */
 @Getter
 @Setter
 @ToString

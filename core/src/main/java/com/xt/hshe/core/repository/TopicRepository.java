@@ -25,4 +25,5 @@ public interface TopicRepository extends CrudRepository<Topic, Long> {
     List<Object[]> findAllTopicItemVo();
 
     long count();
+
 }

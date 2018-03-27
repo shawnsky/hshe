@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+/**
+ * 全局异常处理器
+ *
+ * @author Shawn Chen
+ */
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

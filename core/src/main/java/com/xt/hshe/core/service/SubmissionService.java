@@ -59,4 +59,12 @@ public interface SubmissionService {
      * @return 记录数
      */
     Long countOfAccept(String userId);
+
+
+    /**
+     * 计算当前提交是否符合题目日期限制
+     * @param problemId 题目ID
+     * @return 是否可提交
+     */
+    boolean isSubmittable(Long problemId);
 }

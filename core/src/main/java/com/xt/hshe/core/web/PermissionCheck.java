@@ -15,6 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
+/**
+ * AOP权限检查
+ *
+ * @author Shawn Chen
+ */
 @Component
 @Aspect
 public class PermissionCheck {

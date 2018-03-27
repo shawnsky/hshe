@@ -1,6 +1,7 @@
 package com.xt.hshe.core.service;
 
 import com.xt.hshe.core.pojo.entity.Classes;
+import com.xt.hshe.core.pojo.entity.Topic;
 import com.xt.hshe.core.pojo.vo.TopicListItemVo;
 import com.xt.hshe.core.pojo.vo.TopicVo;
 
@@ -45,4 +46,5 @@ public interface TopicService {
      * @return 班级对象
      */
     Classes findClasses(Long topicId);
+
 }

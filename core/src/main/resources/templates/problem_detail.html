@@ -43,17 +43,17 @@
 
           <div class="ui twelve wide column">
             <div>
-              <p style="line-height: 180%">{{ object0.description }}
+              <p style="line-height: 180%" v-html="object0.description">
               </p>
             </div>
             <h4>样例输入</h4>
-            <div class="ui segment">
-              {{ object0.inputExample }}
+            <div class="ui segment" v-html="object0.inputExample">
+
             </div>
 
             <h4>样例输出</h4>
-            <div class="ui segment">
-              {{ object0.outputExample }}
+            <div class="ui segment" v-html="object0.outputExample">
+
             </div>
           </div>
 
@@ -120,7 +120,19 @@
           </div>
         </div>
 
-        <button class="ui primary button" style="margin-top:0.5em" v-on:click="submit">提交 </button>
+        <button class="ui primary button" style="margin-top:0.5em" v-on:click="submit" v-bind:class="{ loading: posting }">提交 </button>
+
+        <div v-if="object1.code &amp;&amp; object1.code==1" class="ui info message">
+          <i class="close icon"></i>
+          <div class="header">成功</div>
+          <p>{{object1.msg}}</p>
+        </div>
+
+        <div v-if="object1.code &amp;&amp; object1.code!=1" class="ui warning message">
+          <i class="close icon"></i>
+          <div class="header">失败</div>
+          <p>{{object1.msg}}</p>
+        </div>
       </template>
       <!-- viewsubmit结束 -->
 
@@ -138,76 +150,89 @@
 
 
   <script>
-    (function () {
-      var ld = {
-        object0: {},
-        referer: document.referrer,
-        src: '',
-        userinfo: {},
-        loading: true,
-        is404: false
-      };
 
-      var pathId = getPathId();
-      var dataApi = '/api/p/' + pathId;
-      var submitApi = '/api/s';
+    var ld = {
+      object0: {},
+      referer: document.referrer,
+      src: '',
+      userinfo: {},
+      posting: false,
+      object1: {},
+      loading: true,
+      is404: false
+    };
 
-      axios.get('/api/u/info', {
-        headers: { 'Access-Token': window.localStorage.getItem('token') }
+    var pathId = getPathId();
+    var dataApi = '/api/p/' + pathId;
+    var submitApi = '/api/s';
+
+    axios.get('/api/u/info', {
+      headers: { 'Access-Token': window.localStorage.getItem('token') }
+    })
+      .then(function (response) {
+        ld.userinfo = response.data.data
       })
-        .then(function (response) {
-          ld.userinfo = response.data.data
-        })
-        .catch(function (error) {
-          $('.ui.basic.modal').modal('show');
-          $('#modalmsg').text(error.response.data.msg)
-          $(":root").delay(3000).queue(function () {
-            $('.ui.basic.modal').modal('hide');
-            window.location.href = "/login";
-          });
-        })
-
-
-      axios.get(dataApi, {
-        headers: {
-          'My-Referer': ld.referer,
-          'Access-Token': window.localStorage.getItem("token")
-        }
+      .catch(function (error) {
+        $('.ui.basic.modal').modal('show');
+        $('#modalmsg').text(error.response.data.msg)
+        $(":root").delay(3000).queue(function () {
+          $('.ui.basic.modal').modal('hide');
+          window.location.href = "/login";
+        });
       })
-        .then(function (response) {
-          //TODO 系統異常處理
-          ld.object0 = response.data.data;
-          ld.loading = false
-        })
-        .catch(function (error) {
+
+
+    axios.get(dataApi, {
+      headers: {
+        'My-Referer': ld.referer,
+        'Access-Token': window.localStorage.getItem("token")
+      }
+    })
+      .then(function (response) {
+        //TODO 系統異常處理
+        ld.object0 = response.data.data;
+        ld.object0.description = ld.object0.description.replace(/\r?\n/g, '<br/>')
+        ld.object0.inputExample = ld.object0.inputExample.replace(/\r?\n/g, '<br/>')
+        ld.object0.outputExample = ld.object0.outputExample.replace(/\r?\n/g, '<br/>')
+        ld.loading = false
+      })
+      .catch(function (error) {
+        if (error.response) {
           if (error.response.status === 404) {
             ld.loading = false
             ld.is404 = true
           } else {
             console.log(error.response.status);
           }
-        });
-
-
-      var vm = new Vue({
-        el: '#app',
-        data: ld,
-        methods: {
-          submit: function () {
-            axios({
-              url: submitApi,
-              method: 'post',
-              headers: { 'Access-Token': window.localStorage.getItem("token") },
-              data: {
-                problemId: ld.object0.id,
-                src: ld.src,
-                lang: 'java'
-              }
-            });
-          }
         }
-      })
-    })();
+
+      });
+
+
+    var vm = new Vue({
+      el: '#app',
+      data: ld,
+      methods: {
+        submit: function () {
+          this.posting = true;
+          axios({
+            url: submitApi,
+            method: 'post',
+            headers: { 'Access-Token': window.localStorage.getItem("token") },
+            data: {
+              problemId: ld.object0.id,
+              src: ld.src,
+              lang: 'java'
+            }
+          })
+            .then(function (response) {
+              vm.posting = false;
+              vm.object1 = response.data;
+            });
+        }
+      }
+    })
+
 
   </script>
 </body>

@@ -16,6 +16,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+/**
+ * 查重服务
+ * 通过调用sim_judge.sh获得结果
+ *
+ * @author Shawn Chen
+ */
 @Service("simService")
 public class SimService {
 

@@ -33,7 +33,7 @@ Vue.component('my-header', {
 
     <a href="#" class="item right">
         <i class="user icon"></i>
-        <span v-if="userinfo.user_nick==''">{{userinfo.user_id}}</span>
+        <span v-if="userinfo.user_nick==null">{{userinfo.user_id}}</span>
         <span v-if="userinfo.user_nick!=null">{{userinfo.user_nick}}</span>
     </a>
     <a class="item" v-on:click="logout" > 退出 </a>
@@ -113,4 +113,21 @@ methods: {
         window.location.href='/'
     }
 }
+})
+
+
+
+Vue.component('my-pager', {
+    template: `<div class="ui  pagination menu">
+    <a class="icon item">
+      <i class="left chevron icon"></i>
+    </a>
+    <a class="item">1</a>
+    <a class="item">2</a>
+    <a class="item">3</a>
+    <a class="item">4</a>
+    <a class="icon item">
+      <i class="right chevron icon"></i>
+    </a>
+  </div>`
 })

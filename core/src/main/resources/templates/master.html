@@ -329,7 +329,11 @@
                   <div v-for="item in object_analysis.allACWithAVG" class="item">
                     <img class="ui avatar image" src="/img/stevie.jpg" />
                     <div class="content">
-                      <a class="header">{{item.id}}({{item.simAVG}})</a>
+                      <a class="header">{{item.id}}</a>
+                      <a class="ui label">
+                        {{isNaN(item.simAVG)?'无':item.simAVG+'%'}}
+                      </a>
+
                     </div>
                   </div>
                 </div>
@@ -344,7 +348,7 @@
                     <div class="content">
                       <a class="header">{{item.id}}</a>
                       <a class="ui label">
-                        {{item.simAVG}}%
+                        {{isNaN(item.simAVG)?'None':item.simAVG+'%'}}
                       </a>
                     </div>
                   </div>
@@ -354,25 +358,26 @@
               <h3 class="ui header">详情及分组</h3>
 
               <!-- 每个问题一个表格 -->
-              <table v-for="item in object_analysis.detailInfos" class="ui selectable table">
+              <table v-for="(item, index) in object_analysis.detailInfos" class="ui selectable table">
                 <thead>
                   <!-- 标题 -->
                   <tr>
-                    <th colspan="3">{{item.problem_title}} </th>
+                    <th colspan="3">[题目{{index+1}}] {{item.problem_title}} </th>
                   </tr>
                   <!-- 分组 -->
                   <tr>
                     <th colspan="3">
-                      <p v-if="item.groups.length==0">无雷同</p>
+                      <p v-if="item.groups.length==0"></p>
                       <div class="ui four column grid">
                         <div v-for="group in item.groups" class="column">
 
-                          <div class="ui segment">
+                          <div class="ui segment" data-tooltip="雷同作业分组" data-position="top center">
                             <div class="ui  horizontal list">
-                              <div v-for="g in group" class="item">
+                              <div v-for="(g, index) in group" class="item">
                                 <!-- <img class="ui avatar image" src="/img/stevie.jpg" /> -->
                                 <div class="content">
-                                  <a class="header" v-bind:title="g.src">{{g.userId}}</a>
+                                  <a class="header" v-bind:title="g.src">{{g.userId}}<span v-if="index==0">(原创)</span></a>
+                                  
                                 </div>
                               </div>
                             </div>
@@ -384,10 +389,16 @@
                 </thead>
                 <tbody>
                   <tr v-for="s in item.submissions" v-on:click="goSubmission(s.id)">
-                    <td>#{{s.id}}</td>
+                    <td class="collapsing">#{{s.id}}</td>
                     <td>{{s.userId}}</td>
-                    <td v-if="s.sim==-1"><span style="color:#c9c9c9">相似度获取失败</span></td>
-                    <td v-if="s.sim!=-1">{{s.sim}}%</td>
+                    <td class="right aligned collapsing" v-if="s.sim==-1"><span style="color:#c9c9c9">编译失败或无相似度信息</span></td>
+                    <td class="right aligned collapsing" v-if="s.sim!=-1"> 
+                      <a v-if="s.sim&gt;=80" class="ui red label">{{s.sim}}%</a>
+                      <a v-if="s.sim&gt;=60 &amp;&amp; s.sim&lt;80" class="ui orange label">{{s.sim}}%</a>
+                      <a v-if="s.sim&gt;=40 &amp;&amp; s.sim&lt;60" class="ui yellow label">{{s.sim}}%</a>
+                      <a v-if="s.sim&gt;=20 &amp;&amp; s.sim&lt;40" class="ui olive label">{{s.sim}}%</a>
+                      <a v-if="s.sim&lt;20" class="ui green label">{{s.sim}}%</a>
+                    </td>
                   </tr>
                   
                 </tbody>

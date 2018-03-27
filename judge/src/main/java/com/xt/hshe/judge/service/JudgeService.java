@@ -42,6 +42,10 @@ public class JudgeService {
 
     private static final Logger LOGGER = LogManager.getLogger(JudgeService.class);
 
+    /**
+     * 判题程序入口
+     * @param sid 提交ID
+     */
     public void judge(Long sid) throws IOException, InterruptedException {
         Submission s = submissionRepository.findOne(sid);
         //查询题目时间内存要求
@@ -56,8 +60,6 @@ public class JudgeService {
         List<TestPoint> testPoints = testPointRepository.findAllByProblemId(s.getProblemId());
         testHandler.save(s, testPoints);
 
-
-        
         //运行
         Map<String, Integer> result = judgeHandler.judge(s,p,testPoints);
         submissionRepository.updateJudged(sid, result.get("result"), result.get("usedMemory"), result.get("usedTime"));

@@ -17,6 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 拦截器
+ * 拦截未经认证的请求
+ *
+ * @author Shawn Chen
+ */
 public class AuthInterceptor implements HandlerInterceptor {
 
 

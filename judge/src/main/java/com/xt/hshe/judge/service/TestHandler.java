@@ -14,11 +14,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+
+
+/**
+ * 文件存储
+ *
+ * @author Shawn Chen
+ */
 @Component("testHandler")
 public class TestHandler {
     @Value("${judge.sys.tests-path}")
     private String sysTestsPath;
 
+    /**
+     * 把测试用例存储为本地文件
+     * @param s 提交记录对象
+     * @param testPoints 测试点列表
+     */
     public void save(Submission s, List<TestPoint> testPoints) throws IOException {
         //e.g. /data/tests/1/input1.txt
         String[] strings = {sysTestsPath+s.getId()+ File.separator};

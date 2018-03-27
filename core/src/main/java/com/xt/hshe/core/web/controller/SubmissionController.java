@@ -40,12 +40,17 @@ public class SubmissionController extends BaseController{
         Assert.hasText(src, "代码不能为空!");
         String lang = (String) map.get("lang");
         Assert.hasText(lang, "请选择编程语言!");
+        //作业和题目 目前不是多对多的关系
+        if (!submissionService.isSubmittable(Long.parseLong(pid))) {
+            return new HttpMsg(Consts.ServerCode.FAILURE, "作业已经结束~");
+        }
+
         Long sid = submissionService.submit(uid, pid, lang, src);//储存Submission到数据库
         if (sid==null) {
             return new HttpMsg(Consts.ServerCode.FAILURE, "提交失败");
         } else {
             sender.sendToJudge(sid.toString());//发消息给q执行编译判题
-            return new HttpMsg<>(Consts.ServerCode.SUCCESS, null, sid);
+            return new HttpMsg<>(Consts.ServerCode.SUCCESS, "提交成功~", sid);
         }
 
     }

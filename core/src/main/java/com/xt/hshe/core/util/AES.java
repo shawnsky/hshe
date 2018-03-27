@@ -5,7 +5,11 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-
+/**
+ * AES加密解密工具类
+ *
+ * @author Shawn Chen
+ */
 public class AES {
 
     public static String Encrypt(String sSrc, String sKey) throws Exception {

@@ -15,6 +15,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+
+/**
+ * 用于文件编译的处理器
+ *
+ * @author Shawn Chen
+ */
 @Component("compileHandler")
 public class CompileHandler {
 
