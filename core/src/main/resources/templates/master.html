@@ -14,6 +14,7 @@
   <script src="/lib/vue.js"></script>
   <script src="/lib/axios.min.js"></script>
   <script src="/js/util.js"></script>
+  <script src="/js/components.js"></script>
 </head>
 
 <body>
@@ -464,6 +465,7 @@
 
       </div>
     </div>
+    <auth-modal></auth-modal>
   </div>
 
 
@@ -472,6 +474,9 @@
     Vue.component('loader', {
       template: '<div class="ui icon message"> <i class="notched circle loading icon"></i> <div class="content"> <div class="header">稍候 </div> <p>我们正在为您获取内容。</p> </div> </div>'
     })
+
+
+   
 
     var vm = new Vue({
       el: '#app',
@@ -490,6 +495,7 @@
         list_stu: [],
         list_topic: [],
         list_problem: [],
+        object_statistics: {},
         object_analysis: {},
         form_stu: {
           id: '',
@@ -524,7 +530,7 @@
 
       },
       created: function () {
-
+          getStatistice();
       },
       methods: {
         back: function () {
@@ -580,6 +586,28 @@
         }
       }
     })
+
+
+     function getStatistice() {
+      this.loading = true;
+      axios.get('/api/statistics', {
+        headers: {
+          'Access-Token': window.localStorage.getItem("token")
+        }
+      })
+        .then(function (response) {
+          vm.list_stu = response.data.data;
+          vm.loading = false;
+        })
+        .catch(function (error) {
+        $('.ui.basic.modal').modal('show');
+        $('#modalmsg').text(error.response.data.msg)
+        $(":root").delay(3000).queue(function () {
+          $('.ui.basic.modal').modal('hide');
+          window.location.href = "/login";
+        });
+      })
+    }
 
     function getStulist() {
       this.loading = true;
