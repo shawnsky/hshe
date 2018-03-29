@@ -15,19 +15,12 @@ Vue.component('my-header', {
         帮助
         <i class="dropdown icon"></i>
         <div class="menu">
-            <a class="item" href="#">Link Item</a>
-            <a class="item" href="#">Link Item</a>
+            <a class="item" href="#">API文档</a>
             <div class="divider"></div>
-            <div class="header">Header Item</div>
-            <div class="item">
-                <i class="dropdown icon"></i>
-                Sub Menu
-                <div class="menu">
-                    <a class="item" href="#">Link Item</a>
-                    <a class="item" href="#">Link Item</a>
-                </div>
-            </div>
-            <a class="item" href="#">Link Item</a>
+            <div class="header">How to use</div>
+     
+            <a class="item" href="#">使用指南</a>
+            <a class="item" href="#">常见错误</a>
         </div>
     </div>
 

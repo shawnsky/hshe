@@ -6,11 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Problems</title>
-  <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" />
-  <script src="/lib/jquery-3.2.1.min.js"></script>
-  <script src="/lib/semantic-ui/semantic.min.js"></script>
-  <script src="/lib/vue.js"></script>
-  <script src="/lib/axios.min.js"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="/lib/semantic-ui/semantic.min.css" /> -->
+  <link href="https://cdn.bootcss.com/semantic-ui/2.3.1/semantic.min.css" rel="stylesheet">
+  <!-- <script src="/lib/jquery-3.2.1.min.js"></script> -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <!-- <script src="/lib/semantic-ui/semantic.min.js"></script> -->
+  <script src="https://cdn.bootcss.com/semantic-ui/2.3.1/semantic.min.js"></script>
+  <!-- <script src="/lib/vue.js"></script> -->
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.js"></script>
+  <!-- <script src="/lib/axios.min.js"></script> -->
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/components.js"></script>
 </head>
@@ -20,7 +25,7 @@
     <my-header v-bind:userinfo='userinfo'></my-header>
 
     <div class="ui main container">
-      <h1 class="ui header">　</h1>
+      <h1 class="ui header" style="color:transparent">UI</h1>
       <br/>
 
       <view-loader v-if='loading'></view-loader>
