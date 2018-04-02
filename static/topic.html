@@ -28,7 +28,7 @@
       <h1 class="ui header" style="color:transparent">UI</h1>
 
       <!-- viewClass开始 -->
-      <template>
+      <template v-if='!loading'>
         <h1 class="ui header">目录</h1>
         <div class="ui cards">
           <div v-for="item in list2" class="card">
@@ -89,7 +89,7 @@
 
     </div>
 
-    <auth-modal></auth-modal>
+    <auth-modal v-bind:errorinfo='errorinfo'></auth-modal>
     <my-footer></my-footer>
   </div>
 
@@ -103,6 +103,10 @@
       list: [],
       list2: [],
       userinfo: {},
+      errorinfo: {
+        type: 0,
+        msg: ''
+      },
       loading: true
     };
 
@@ -114,8 +118,13 @@
         ld.userinfo = response.data.data
       })
       .catch(function (error) {
+        if (/50\d/.test(error.response.status)) {
+          ld.errorinfo.type = 500;
+        } else {
+          ld.errorinfo.type = 400;
+          ld.errorinfo.msg = error.response.data.msg;
+        }
         $('.ui.basic.modal').modal('show');
-        $('#modalmsg').text(error.response.data.msg)
         $(":root").delay(3000).queue(function () {
           $('.ui.basic.modal').modal('hide');
           window.location.href = "/login";

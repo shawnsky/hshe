@@ -29,14 +29,14 @@
 
   <div id="app">
     <my-header v-bind:userinfo='userinfo'></my-header>
-    
+
 
     <template v-if='!loading'>
       <div class="ui main container">
         <h1 class="ui header" style="color:transparent">UI</h1>
         <h1 class="ui header">提交</h1>
         <div class="ui fluid icon input">
-          <input type="text" placeholder="根据学号或者题目编号搜索"/>
+          <input type="text" placeholder="根据学号或者题目编号搜索" />
           <i class="search icon"></i>
         </div>
         <table class="ui celled striped table">
@@ -78,15 +78,17 @@
               <td>{{ item.timeUsed }}ms</td>
               <td>{{ item.lang}} </td>
               <td>{{ item.length }}b</td>
-              <td><span v-bind:title="fmt0(item.createTime)">{{ fmt(item.createTime) }}</span></td>
+              <td>
+                <span v-bind:title="fmt0(item.createTime)">{{ fmt(item.createTime) }}</span>
+              </td>
             </tr>
-            
+
           </tbody>
         </table>
 
 
 
-       <!-- <my-pager></my-pager> -->
+        <!-- <my-pager></my-pager> -->
 
       </div>
     </template>
@@ -94,7 +96,7 @@
     <view-loader v-if='loading'></view-loader>
 
 
-    <auth-modal></auth-modal>
+    <auth-modal v-bind:errorinfo='errorinfo'></auth-modal>
     <my-footer></my-footer>
   </div>
 
@@ -104,7 +106,11 @@
       var ld = {
         list: [],
         loading: true,
-        userinfo: {}
+        userinfo: {},
+        errorinfo: {
+          type: 0,
+          msg: ''
+        }
       };
 
 
@@ -115,8 +121,13 @@
           ld.userinfo = response.data.data
         })
         .catch(function (error) {
+          if (/50\d/.test(error.response.status)) {
+            ld.errorinfo.type = 500;
+          } else {
+            ld.errorinfo.type = 400;
+            ld.errorinfo.msg = error.response.data.msg;
+          }
           $('.ui.basic.modal').modal('show');
-          $('#modalmsg').text(error.response.data.msg)
           $(":root").delay(3000).queue(function () {
             $('.ui.basic.modal').modal('hide');
             window.location.href = "/login";
@@ -154,7 +165,7 @@
             return date.toLocaleString();
           },
           checkOut: function (id) {
-            window.location.href="/submission/"+id;
+            window.location.href = "/submission/" + id;
           }
         }
       })

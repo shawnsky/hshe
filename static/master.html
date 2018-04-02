@@ -376,8 +376,10 @@
                               <div v-for="(g, index) in group" class="item">
                                 <!-- <img class="ui avatar image" src="/img/stevie.jpg" /> -->
                                 <div class="content">
-                                  <a class="header" v-bind:title="g.src">{{g.userId}}<span v-if="index==0">(原创)</span></a>
-                                  
+                                  <a class="header" v-bind:title="g.src">{{g.userId}}
+                                    <span v-if="index==0">(原创)</span>
+                                  </a>
+
                                 </div>
                               </div>
                             </div>
@@ -391,8 +393,10 @@
                   <tr v-for="s in item.submissions" v-on:click="goSubmission(s.id)">
                     <td class="collapsing">#{{s.id}}</td>
                     <td>{{s.userId}}</td>
-                    <td class="right aligned collapsing" v-if="s.sim==-1"><span style="color:#c9c9c9">编译失败或无相似度信息</span></td>
-                    <td class="right aligned collapsing" v-if="s.sim!=-1"> 
+                    <td class="right aligned collapsing" v-if="s.sim==-1">
+                      <span style="color:#c9c9c9">编译失败或无相似度信息</span>
+                    </td>
+                    <td class="right aligned collapsing" v-if="s.sim!=-1">
                       <a v-if="s.sim&gt;=80" class="ui red label">{{s.sim}}%</a>
                       <a v-if="s.sim&gt;=60 &amp;&amp; s.sim&lt;80" class="ui orange label">{{s.sim}}%</a>
                       <a v-if="s.sim&gt;=40 &amp;&amp; s.sim&lt;60" class="ui yellow label">{{s.sim}}%</a>
@@ -400,7 +404,7 @@
                       <a v-if="s.sim&lt;20" class="ui green label">{{s.sim}}%</a>
                     </td>
                   </tr>
-                  
+
                 </tbody>
               </table>
 
@@ -464,7 +468,7 @@
 
       </div>
     </div>
-    <auth-modal></auth-modal>
+    <auth-modal v-bind:errorinfo='errorinfo'></auth-modal>
   </div>
 
 
@@ -475,7 +479,7 @@
     })
 
 
-   
+
 
     var vm = new Vue({
       el: '#app',
@@ -525,18 +529,22 @@
           tests_count: 1,
           input0: '',
           output0: ''
+        },
+        errorinfo: {
+          type: 0,
+          msg: ''
         }
 
       },
       created: function () {
-          getStatistice();
+        getStatistice();
       },
       methods: {
         back: function () {
           window.location.href = "/topic";
         },
-        goSubmission: function(sid){
-          window.open("/submission/"+sid);
+        goSubmission: function (sid) {
+          window.open("/submission/" + sid);
         },
         ovactive: function () {
           this.active = [true, false, false, false, false];
@@ -587,7 +595,7 @@
     })
 
 
-     function getStatistice() {
+    function getStatistice() {
       this.loading = true;
       axios.get('/api/statistics', {
         headers: {
@@ -599,13 +607,18 @@
           vm.loading = false;
         })
         .catch(function (error) {
-        $('.ui.basic.modal').modal('show');
-        $('#modalmsg').text(error.response.data.msg)
-        $(":root").delay(3000).queue(function () {
-          $('.ui.basic.modal').modal('hide');
-          window.location.href = "/login";
-        });
-      })
+          if (/50\d/.test(error.response.status)) {
+            vm.errorinfo.type = 500;
+          } else {
+            vm.errorinfo.type = 400;
+            vm.errorinfo.msg = error.response.data.msg;
+          }
+          $('.ui.basic.modal').modal('show');
+          $(":root").delay(3000).queue(function () {
+            $('.ui.basic.modal').modal('hide');
+            window.location.href = "/login";
+          });
+        })
     }
 
     function getStulist() {

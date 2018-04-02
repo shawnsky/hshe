@@ -65,13 +65,17 @@ Vue.component('my-footer', {
 })
 
 Vue.component('auth-modal', {
+    props: ['errorinfo'],
     template: `<div class="ui basic modal">
     <div class="ui icon header">
-      <i class="user circle icon"></i>
-      <span id="modalmsg"></span>
+      <i v-if="errorinfo.type==500" class="ban icon"></i>
+      <i v-if="errorinfo.type==400" class="user circle icon"></i>
+      <span v-if="errorinfo.type==500">系统维护中</span>
+      <span v-if="errorinfo.type==400">{{errorinfo.msg}}</span>
     </div>
     <div class="content">
-      <p style="font-size:1.5em">不好意思，必须通过身份认证才可以继续使用本系统。即将自动跳转到登录页面...</p>
+    <p v-if="errorinfo.type==500" style="font-size:1.5em">不好意思，可能是系统维护导致系统暂不可用，请稍候再试。请及时联系管理员...</p>
+    <p v-if="errorinfo.type==400" style="font-size:1.5em">不好意思，必须通过身份认证才可以继续使用本系统。即将自动跳转到登录页面...</p>
     </div>
     <div class="actions">
       <div class="ui green ok inverted button" onclick="javascript:window.location.href='/login'">

@@ -101,7 +101,7 @@
     <!-- viewdata结束 -->
 
 
-    <auth-modal></auth-modal>
+    <auth-modal v-bind:errorinfo='errorinfo'></auth-modal>
     <my-footer></my-footer>
 
 
@@ -112,7 +112,11 @@
       object0: {},
       userinfo: {},
       loading: true,
-      is404: false
+      is404: false,
+      errorinfo: {
+        type: 0,
+        msg: ''
+      }
     };
 
 
@@ -123,8 +127,13 @@
         ld.userinfo = response.data.data
       })
       .catch(function (error) {
+        if (/50\d/.test(error.response.status)) {
+          ld.errorinfo.type = 500;
+        } else {
+          ld.errorinfo.type = 400;
+          ld.errorinfo.msg = error.response.data.msg;
+        }
         $('.ui.basic.modal').modal('show');
-        $('#modalmsg').text(error.response.data.msg)
         $(":root").delay(3000).queue(function () {
           $('.ui.basic.modal').modal('hide');
           window.location.href = "/login";
