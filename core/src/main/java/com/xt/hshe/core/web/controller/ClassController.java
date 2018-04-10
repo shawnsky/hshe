@@ -1,5 +1,6 @@
 package com.xt.hshe.core.web.controller;
 
+import com.xt.hshe.core.annotation.TeacherRequired;
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.util.Consts;
 import org.springframework.util.Assert;
@@ -19,6 +20,7 @@ public class ClassController extends BaseController {
     }
 
     @PostMapping("/c")
+    @TeacherRequired
     public HttpMsg<Long> Tadd(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
         String name = (String) map.get("name");
         Assert.hasText(name, "班级名称不能为空!");

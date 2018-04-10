@@ -31,7 +31,10 @@ public class PermissionCheck {
         this.objectMapper = objectMapper;
     }
 
-    @Pointcut("execution(* com.xt.hshe.core.web.controller.*.T*(..))")
+//    @Pointcut("execution(* com.xt.hshe.core.web.controller.*.T*(..))")
+//    public void invoke(){}
+
+    @Pointcut("@annotation(com.xt.hshe.core.annotation.TeacherRequired)")
     public void invoke(){}
 
     /**

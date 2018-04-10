@@ -1,5 +1,6 @@
 package com.xt.hshe.core.web.controller;
 
+import com.xt.hshe.core.annotation.TeacherRequired;
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.pojo.entity.Topic;
 import com.xt.hshe.core.pojo.vo.TopicVo;
@@ -38,6 +39,7 @@ public class TopicController extends BaseController {
     }
 
     @PostMapping("/t")
+    @TeacherRequired
     public HttpMsg<Long> TaddTopic(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map) {
         String title = (String) map.get("title");
         Assert.hasText(title, "作业标题不能为空!");

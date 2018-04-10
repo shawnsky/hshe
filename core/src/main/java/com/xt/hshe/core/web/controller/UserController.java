@@ -1,5 +1,6 @@
 package com.xt.hshe.core.web.controller;
 
+import com.xt.hshe.core.annotation.TeacherRequired;
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.pojo.entity.Classes;
 import com.xt.hshe.core.pojo.entity.Student;
@@ -32,6 +33,7 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/u")
+    @TeacherRequired
     public HttpMsg<List<Map<String,String>>> TallStudents(HttpServletRequest request, HttpServletResponse response){
         List<Map<String, String>> data = new ArrayList<>();
         List<Student> studentList = authService.findAllStudent();
@@ -49,6 +51,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/u")
+    @TeacherRequired
     public HttpMsg TaddStudent(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
         String id = (String) map.get("id");
         Assert.hasText(id, "学号不能为空!");
@@ -70,6 +73,7 @@ public class UserController extends BaseController {
     }
 
     @PutMapping("/u")
+    @TeacherRequired
     public HttpMsg TaddStudentBatch(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
         String str0 = (String) map.get("id0");
         Assert.hasText(str0, "参数0不能为空!");

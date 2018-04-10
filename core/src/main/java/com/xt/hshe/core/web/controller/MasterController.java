@@ -1,5 +1,6 @@
 package com.xt.hshe.core.web.controller;
 
+import com.xt.hshe.core.annotation.TeacherRequired;
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.pojo.entity.*;
 import com.xt.hshe.core.pojo.vo.SubmissionMasterVo;
@@ -19,11 +20,13 @@ import java.util.*;
 @RequestMapping("/api")
 public class MasterController extends BaseController {
     @GetMapping("/statistics")
+    @TeacherRequired
     public HttpMsg<Map<String, String>> Tstatistics(HttpServletRequest request, HttpServletResponse response){
         return new HttpMsg<>(Consts.ServerCode.SUCCESS, null, masterService.getStatistics());
     }
 
     @GetMapping("/analysis")
+    @TeacherRequired
     public HttpMsg<Map<String, Object>> Tanalysis(HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> data = new HashMap<>();
         String Id = request.getParameter("topic_id");
