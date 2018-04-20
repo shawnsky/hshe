@@ -100,19 +100,19 @@
             <div class="ui statistics">
               <div class="statistic">
                 <div class="value">
-                  22
+                  {{object_statistics.problems}}
                 </div>
                 <div class="label">题目 </div>
               </div>
               <div class="statistic">
                 <div class="value">
-                  31,200
+                  {{object_statistics.submissions}}
                 </div>
                 <div class="label">提交 </div>
               </div>
               <div class="statistic">
                 <div class="value">
-                  22
+                  {{object_statistics.students}}
                 </div>
                 <div class="label">学生 </div>
               </div>
@@ -603,7 +603,7 @@
         }
       })
         .then(function (response) {
-          vm.list_stu = response.data.data;
+          vm.object_statistics = response.data.data;
           vm.loading = false;
         })
         .catch(function (error) {
