@@ -64,34 +64,14 @@
           <div class="ui segment">
             <h3 class="ui header">评测机状态</h3>
             <div class="ui horizontal list">
-              <div class="item">
-                <a class="ui green empty circular label"></a>
-                <img class="ui avatar image"></img>
-                <div class="content">
-                  <div class="header">Judger 01</div>在线 </div>
-              </div>
-              <div class="item">
-                <img class="ui avatar image"></img>
 
-                <div class="content">
+              <template v-for="container in list_container">
+                <div v-if="container.Image=='image-judge' || container.Image=='image-sim'" class="item">
+                  <img class="ui avatar image" src="/img/server.png"></img>
+                  <div class="content"><div class="header">{{container.Names[0]}}</div>{{container.Status}} </div>
+                </div>
+              </template>
 
-                  <div class="header">Judger 02</div>在线 </div>
-              </div>
-              <div class="item">
-                <img class="ui avatar image"></img>
-                <div class="content">
-                  <div class="header">Judger 03</div>离线 </div>
-              </div>
-              <div class="item">
-                <img class="ui avatar image"></img>
-                <div class="content">
-                  <div class="header">Judger 04</div>离线 </div>
-              </div>
-              <div class="item">
-                <img class="ui avatar image"></img>
-                <div class="content">
-                  <div class="header">Judger 05</div>离线 </div>
-              </div>
             </div>
           </div>
 
@@ -500,6 +480,7 @@
         list_problem: [],
         object_statistics: {},
         object_analysis: {},
+        list_container: [],
         form_stu: {
           id: '',
           password: '',
@@ -548,7 +529,7 @@
         },
         ovactive: function () {
           this.active = [true, false, false, false, false];
-
+          getDockerStatus();
         },
         cmactive: function () {
           this.active = [false, true, false, false, false];
@@ -618,6 +599,19 @@
             $('.ui.basic.modal').modal('hide');
             window.location.href = "/login";
           });
+        })
+    }
+
+    function getDockerStatus() {
+      axios.get('/api/status', {
+        headers: {
+          'Access-Token': window.localStorage.getItem("token")
+        }
+      })
+        .then(function (response) {
+          vm.list_container = response.data;
+        })
+        .catch(function (error) {
         })
     }
 

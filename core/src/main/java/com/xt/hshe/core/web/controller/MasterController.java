@@ -1,5 +1,7 @@
 package com.xt.hshe.core.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xt.hshe.core.annotation.TeacherRequired;
 import com.xt.hshe.core.pojo.HttpMsg;
 import com.xt.hshe.core.pojo.entity.*;
@@ -7,13 +9,21 @@ import com.xt.hshe.core.pojo.vo.SubmissionMasterVo;
 import com.xt.hshe.core.util.Consts;
 import com.xt.hshe.core.util.SimComparator;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @RestController
@@ -58,9 +68,7 @@ public class MasterController extends BaseController {
         data.put("allACWithAVG", avgWrap(problems, allACList));
         data.put("notCompleteWithAVG", avgWrap(problems, notComplete));
 
-
-
-        //分组情况分析，最大连通分量
+        //分组情况分析
         //详细报告，每道题具体情况，显示所有提交信息及重复率
         List<Map<String, Object>> detailInfos = new ArrayList<>();
         for (Problem p: problems) {
@@ -83,8 +91,29 @@ public class MasterController extends BaseController {
             detailInfos.add(map);
         }
         data.put("detailInfos", detailInfos);
-
         return new HttpMsg<>(Consts.ServerCode.SUCCESS, null, data);
+    }
+
+    // FIXME: 2018/4/26 获取118.25.0.112机器上的容器信息.又不是不能用.之后可以删了
+    @GetMapping("/status")
+    @TeacherRequired
+    public String status(HttpServletRequest request, HttpServletResponse response) throws URISyntaxException, IOException {
+        //Request for JWT
+        RestTemplate authTemplate = new RestTemplate();
+        URI authURI = new URI("http://118.25.0.112:9008/api/auth");
+        HttpEntity<EntitySubject> authEntity = new HttpEntity<>(new EntitySubject());
+        ResponseEntity<String> authResponseEntity = authTemplate.postForEntity(authURI, authEntity, String.class);
+        String body = authResponseEntity.getBody();
+        String jwt = body.substring(body.indexOf(":")+2, body.indexOf("}")-1);
+
+        //Request Containers Info
+        RestTemplate template = new RestTemplate();
+        URI infoURI = URI.create("http://118.25.0.112:9008/api/endpoints/1/docker/containers/json");
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add("Authorization", jwt);
+        HttpEntity<String> infoEntity = new HttpEntity<>(null, requestHeaders);
+        ResponseEntity<String> entityContainerResponseEntity = template.exchange(infoURI, HttpMethod.GET, infoEntity, String.class);
+        return entityContainerResponseEntity.getBody();
     }
 
     private List<StudentMasterVo> avgWrap(List<Problem> problems, List<Student> students) {
@@ -96,5 +125,46 @@ public class MasterController extends BaseController {
             vos.add(vo);
         }
         return vos;
+    }
+
+    private class EntitySubject {
+        String Username = "admin";
+        String Password = "cxt960323";
+        public String getUsername() {
+            return Username;
+        }
+
+        public void setUsername(String username) {
+            Username = username;
+        }
+
+        public String getPassword() {
+            return Password;
+        }
+
+        public void setPassword(String password) {
+            Password = password;
+        }
+    }
+
+
+
+    private class EntityContainers {
+        List<Container> list;
+        class Container {
+            String Command;
+            Long Created;
+            Object HostConfig;
+            String Id;
+            String Image;
+            String ImageID;
+            Object Labels;
+            List<Object> Mounts;
+            List<String> Names;
+            Object NetworkSettings;
+            Object Ports;
+            String State;
+            String Status;
+        }
     }
 }
