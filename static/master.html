@@ -519,6 +519,7 @@
       },
       created: function () {
         getStatistice();
+        getDockerStatus();
       },
       methods: {
         back: function () {
@@ -529,7 +530,7 @@
         },
         ovactive: function () {
           this.active = [true, false, false, false, false];
-          getDockerStatus();
+          
         },
         cmactive: function () {
           this.active = [false, true, false, false, false];
