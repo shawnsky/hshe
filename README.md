@@ -8,25 +8,25 @@
 
 学生和教师使用同一登录入口，教师登录后会出现后台管理按钮。
 
-![](D:\Projects\JavaProject\hshe\screenshots\test-login.JPG)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/test-login.JPG)
 
 #### 首页
 
 展示系统内作业题目信息。
 
-![](D:\Projects\JavaProject\hshe\screenshots\test-index.png)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/test-index.png)
 
 #### 题目界面
 
 展示题目详情，输入和输出。由于评测服务器目前只安装了C编译器和JDK，暂时不能选择其他语言。
 
-![](D:\Projects\JavaProject\hshe\screenshots\test-problem.png)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/test-problem.png)
 
 #### 提交结果
 
 检查提交结果，同时显示资源占用情况。
 
-![](D:\Projects\JavaProject\hshe\screenshots\test-subs.JPG)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/test-subs.JPG)
 
 #### 管理后台 
 
@@ -34,15 +34,15 @@
 
 **★ 加入了代码相似度分析（仅教师可见），比较并显示同一题目的某同学代码和其他同学代码的最高相似度，并把互相相似的代码作业标记为一组雷同作业。以帮助教师方便判定存在的作业抄袭情况。**
 
-![](D:\Projects\JavaProject\hshe\screenshots\test-anysics.PNG)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/test-anysics.PNG)
 
-![](D:\Projects\JavaProject\hshe\screenshots\test-addp.PNG)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/test-addp.PNG)
 
-![](D:\Projects\JavaProject\hshe\screenshots\test-groups.PNG)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/test-groups.PNG)
 
 ## 简易架构图
 
-![](D:\Projects\JavaProject\hshe\screenshots\arch.png)
+![](https://gitee.com/shawnsky/hshe/blob/master/screenshots/arch.png)
 
 ## 说明
 
