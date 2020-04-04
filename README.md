@@ -16,7 +16,10 @@ docker-compose pull
 ./start-containers.sh
 ```
 
-后续的依赖下载和部署过程大概需要等待10分钟，之后可以通过 `8080` 端口访问测试
+后续的依赖下载和部署过程大概需要等待10分钟，之后可以通过 `8080` 端口访问测试，可以使用如下账号
+
+- Teacher: ID `00079888` Password `123456`
+- Student: ID `180705202` Password `123456`
 
 #### 停止
 
@@ -59,7 +62,7 @@ cd docker/
 
 - 复制 Nginx 配置文件（在这里 `docker/web/nginx.conf`），并修改 `/api` 路由的 `proxy_pass` 为你的部署主机地址。然后复制 `static` 目录到部署环境的 `/hshe/static` 
 
-- 运行 SQL 脚本，导入数据库（在这里 `docker/mysql-dump/hshe-7-12.sql`）
+- 运行 SQL 脚本，导入数据库 Demo 数据（在这里 `docker/mysql-dump/hshe-7-12.sql`）
 
 #### 构建项目
 
