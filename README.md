@@ -2,6 +2,133 @@
 
 主要使用 Spring Boot 开发 Web 前后台，评测模块和查重模块。评测模块内核使用 C++ 开发。使用垂直型的应用架构和分布式集群部署，服务间通过消息中间件通信。使用了前后端分离的开发模式，前端使用 Vue 框架开发 SPA 应用，后端 Web 模块全 RESTful API ，使用 Redis 做缓存，提供了良好的使用体验。部署使用Docker 容器，保证系统的安全性与可靠性。
 
+## 部署
+
+### 通过 Docker Compose 安装
+
+项目已经被构建打包为多个 jar（存储在 `docker` 目录的子文件夹下），并由自动化脚本处理。所以，你可以一行命令运行起整个系统。（前提是部署环境安装了 Docker 和 [Docker Compose](https://docs.docker.com/compose/install/)）
+
+#### 启动
+
+```
+cd docker/
+docker-compose pull
+./start-containers.sh
+```
+
+后续的依赖下载和部署过程大概需要等待10分钟，之后可以通过 `8080` 端口访问测试
+
+#### 停止
+
+```
+cd docker/
+./kill-containers.sh
+```
+
+杀死并删除所有容器
+
+### 手动安装
+
+#### 安装依赖服务
+
+在部署环境安装以下软件：
+
+- Docker
+- MySQL 5.6
+- RabbitMQ 3.6
+- Redis 4.0
+- Nginx
+
+#### 配置
+
+- 部署环境创建数据目录
+
+  ```
+  mkdir -p /data/subs/
+  mkdir -p /data/tests/
+  ```
+
+- 复制 judge_sim.sh（在这里 `docker/sim/judge_sim.sh` ）到部署环境 `/usr/local/bin` 下 
+
+- 复制 sim302 目录（在这里 `docker/sim/sim302` ）到部署环境 `/usr/local` 下
+
+- 在 `core`, `judge`, `sim` 子项目的 `application.properties` 中修改：
+  - 相应服务的 `host`, `user`, `password` 等
+  - 系统数据存储路径
+  - 认证密钥等（建议设置为环境变量）
+
+- 复制 Nginx 配置文件（在这里 `docker/web/nginx.conf`），并修改 `/api` 路由的 `proxy_pass` 为你的部署主机地址。然后复制 `static` 目录到部署环境的 `/hshe/static` 
+
+- 运行 SQL 脚本，导入数据库（在这里 `docker/mysql-dump/hshe-7-12.sql`）
+
+#### 构建项目
+
+**已通过测试的构建环境** CentOS 7
+
+在 `core`, `judge`, `sim` 目录中分别执行：
+
+```
+mvn clean package -DskipTests
+```
+
+#### 构建镜像
+
+使用 Docker Java 8 基础镜像分别构建 3 个嵌入 jar 的镜像。Dockerfile 示例：
+
+- core
+
+  ```
+  FROM java:8
+  COPY . /usr/bin
+  WORKDIR /usr/bin
+  CMD ["java", "-jar", "core-0.0.1-SNAPSHOT.jar"]
+  ```
+
+- judge
+
+  ```
+  FROM java:8
+  COPY . /usr/bin
+  WORKDIR /usr/bin
+  RUN useradd hshe -u 1000 -p "$(openssl passwd -1 hshepasswd)"
+  USER hshe
+  CMD ["java", "-jar", "judge-0.0.1-SNAPSHOT.jar"]
+  ```
+
+- sim
+
+  ```
+  FROM java:8
+  COPY . /usr/bin
+  WORKDIR /usr/bin
+  CMD ["java", "-jar", "sim-0.0.1-SNAPSHOT.jar"]
+  ```
+
+  
+
+在各自的 Dockerfile Context 下分别构建 3 个镜像：
+
+```
+docker build -t image-{core|judge|sim} .
+```
+
+#### 运行
+
+启动容器
+
+```
+docker run -d -p 9000:9000  --name core  image-core
+docker run -d --restart always -v /data/:/data/ --name judger1 image-judge
+docker run -d --restart always -v /data/:/data/ --name judger2 image-judge
+docker run -d -v /data/:/data/ -v /usr/local/sim_judge.sh:/usr/local/sim_judge.sh -v /usr/local/sim302/:/usr/local/sim302/ --name simer1 image-sim
+```
+
+启动 Nginx 服务器
+
+```
+/usr/local/nginx
+```
+
 ## 运行截图
 
 #### 用户登录
