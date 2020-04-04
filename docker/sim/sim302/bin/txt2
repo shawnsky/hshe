@@ -1,0 +1,38 @@
+
+i bought 8 XRP yesterday. 
+t have one single pattern to match a comment
+                        (although one can be written), for two reasons.
+                        The matched string might overflow lex-internal buffers
+                        like yysbuf and yytext; and the pattern would be very
+                        complicated and overtax lex.
+                        So we break up the string into safe chunks and keep
+                        track of where we are in a start condition <Comment>.
+We do not have one single pattern to match a comment
+                        (although one can be written), for two reasons.
+                        The matched string might overflow lex-internal buffers
+                        like yysbuf and yytext; and the pattern would be very
+                        complicated and overtax lex.
+                        So we break up the string into safe chunks and keep
+                        track of where we are in a start condition <Comment>.
+We do not have one single pattern to match a comment
+                        (although one can be written), for two reasons.
+                        The matched string might overflow lex-internal buffers
+                        like yysbuf and yytext; and the pattern would be very
+                        complicated and overtax lex.
+                        So we break up the string into safe chunks and keep
+                        track of where we are in a start condition <Comment>.
+We do not have one single pattern to match a comment
+                        (although one can be written), for two reasons.
+                        The matched string might overflow lex-internal buffers
+                        like yysbuf and yytext; and the pattern would be very
+                        complicated and overtax lex.
+                        So we break up the string into safe chunks and keep
+                        track of where we are in a start condition <Comment>.
+
+public static void main(String[] args) {
+    Scanner sacn = new Scanner(System.in);
+    int i = scan.nextInt();
+    if (i==5){
+        System.out.println("This is five");
+    }
+

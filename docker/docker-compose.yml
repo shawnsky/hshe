@@ -1,0 +1,108 @@
+version: "3"
+services:
+  amqp:
+    image: rabbitmq:3.6.15
+    environment: 
+      RABBITMQ_DEFAULT_USER: hshe
+      RABBITMQ_DEFAULT_PASS: 123456
+    ports: 
+      - "15672:15672"
+
+  rds:
+    image: redis:4.0.4
+    command: redis-server --requirepass 123456
+    volumes:
+      - "./data/redis:/data"
+    
+  db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: q^9%b7Lgv3ZBbZAl
+      MYSQL_DATABASE: hshe
+      MYSQL_USER: guest
+      MYSQL_PASSWORD: 123456
+    volumes:
+       - ./mysql-dump:/docker-entrypoint-initdb.d
+       - ./data/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  
+  core:
+    image: ubuntu:18.04
+    environment:
+      DB_HOST: db
+      DB_USER: guest
+      DB_PASS: 123456
+      TOKEN_SECRET_KEY: LNHm!vU&DqBE77NQ
+      AUTH_EXPIRES_DAY: 7
+    ports: 
+      - "9000:9000"
+    volumes:
+      - "./core/:/opt/core/"
+    depends_on:
+      - amqp
+      - rds
+      - db
+    entrypoint: /opt/core/entrypoint.sh
+    
+  judge:
+    image: ubuntu:18.04
+    environment:
+      DB_HOST: db
+      DB_USER: guest
+      DB_PASS: 123456
+    ports: 
+      - "9001:9001"
+    volumes: 
+      - "./judge/:/opt/judge/"
+      - "./data/subs/:/data/subs/"
+      - "./data/tests/:/data/tests/"
+      - "./data/logs/:/opt/logs/"
+    depends_on:
+      - amqp
+      - rds
+      - db
+    entrypoint: /opt/judge/entrypoint.sh
+
+  sim:
+    image: ubuntu:18.04
+    environment:
+      DB_HOST: db
+      DB_USER: guest
+      DB_PASS: 123456
+    ports: 
+      - "9002:9002"
+    volumes: 
+      - "./sim/:/opt/sim/"
+      - "./data/subs/:/data/subs/"
+      - "./data/tests/:/data/tests/"
+      - "./data/logs/:/opt/logs/"
+    depends_on:
+      - amqp
+      - rds
+      - db
+    entrypoint: /opt/sim/entrypoint.sh
+
+  web:
+    image: nginx
+    ports: 
+      - "8080:80"
+    volumes: 
+      - "./web/nginx.conf:/etc/nginx/nginx.conf"
+      - "../static/:/hshe/static"
+    depends_on: 
+      - core
+  
+  docker-ui:
+    image: portainer/portainer
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    ports:
+      - "9008:9000"
+      - "8008:8000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "portainer_data:/data"
+
+volumes:
+  portainer_data:

@@ -1,0 +1,2 @@
+./sim_java -p txt1 txt2  | egrep -o '[[:digit:]]+[[:space:]]+%' | egrep -o '[[:digit:]]+'
+

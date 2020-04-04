@@ -1,0 +1,27 @@
+\n
+this is a text, and you are watching it.
+asdasdasdasdasdasdasdasd
+asdasdasdasdasdasdasd
+a
+sd
+a
+sdasdasdasdasdasdasdasdasdasdasd
+asdasdasdasdasdasdasdasdasdasdasdasd
+asdasdasdasdasdasdasdasdasd
+public static void main(String[] args) {
+    Scanner sacn = new Scanner(System.in);
+    int i = scan.nextInt();
+    if (i==5){
+        System.out.println("This is five");
+    }
+
+asdasdasdasdasd
+
+as
+d
+asdasdasdasdasdasdasdasd
+asdasdasdasdasdasdasdasdasdasd
+asdasdasdasdasdasdasdasdasdasdasdasd
+asdasdasdasdasdasdasdasdasdasdasdasdasdasd
+
+}
