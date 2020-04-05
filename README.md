@@ -16,7 +16,7 @@ docker-compose pull
 ./start-containers.sh
 ```
 
-后续的依赖下载和部署过程大概需要等待10分钟，之后可以通过 `8080` 端口访问测试，可以使用如下账号
+后续的依赖下载和部署过程大概需要等待3～5分钟，之后可以通过 `8080` 端口访问测试，可以使用如下账号
 
 - Teacher: ID `00079888` Password `123456`
 - Student: ID `180705202` Password `123456`
@@ -66,7 +66,7 @@ cd docker/
 
 #### 构建项目
 
-**已通过测试的构建环境** CentOS 7
+[![Build Status](https://travis-ci.com/shawnsky/hshe.svg?branch=master)](https://travis-ci.com/shawnsky/hshe) **已通过测试的构建环境** CentOS 7、Ubuntu 18.04
 
 在 `core`, `judge`, `sim` 目录中分别执行：
 
