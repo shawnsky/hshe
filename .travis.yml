@@ -1,17 +1,22 @@
-services:
-  - docker
-
-env:
-  - DOCKER_COMPOSE_VERSION=1.25.4
+dist: centos/7
+language: java
+jdk:
+  - openjdk8
 
 before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
+  - sudo yum groupinstall 'Development Tools'
   
 script:
-  - cd docker/
-  - docker-compose pull
-  - ./start-containers.sh
+  - cd core/
+  - mvn clean package -DskipTests
+  - cd ../judge/
+  - mvn clean package -DskipTests
+  - cd ../sim/
+  - mvn clean package -DskipTests
   
+
+after_failure:
+  - id
+  - ls -al $TRAVIS_BUILD_DIR/hshe/core/target
+  - ls -al $TRAVIS_BUILD_DIR/hshe/judge/target
+  - ls -al $TRAVIS_BUILD_DIR/hshe/sim/target
