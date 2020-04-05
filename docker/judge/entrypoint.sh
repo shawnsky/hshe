@@ -17,7 +17,7 @@ deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted 
 # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-proposed main restricted universe multiverse
 EOF
 
-apt-get update && apt-get install -y openjdk-8-jdk mysql-client 
+apt-get update > /dev/null && apt-get install -y openjdk-8-jdk mysql-client > /dev/null
 
 HAS_MYSQL=1
 
