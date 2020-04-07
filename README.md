@@ -12,8 +12,7 @@
 
 ```
 cd docker/
-docker-compose pull
-./start-containers.sh
+docker-compose up
 ```
 
 后续的依赖下载和部署过程大概需要等待3～5分钟，之后可以通过 `8080` 端口访问测试，可以使用如下账号
@@ -25,7 +24,8 @@ docker-compose pull
 
 ```
 cd docker/
-./kill-containers.sh
+docker-compose kill
+docker-compose rm --force
 ```
 
 杀死并删除所有容器
