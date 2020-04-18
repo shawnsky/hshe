@@ -6,7 +6,7 @@
 
 ### 通过 Docker Compose 安装
 
-项目已经被构建打包为多个 jar（存储在 `docker` 目录的子文件夹下），并由自动化脚本处理。所以，你可以一行命令运行起整个系统。（前提是部署环境安装了 Docker 和 [Docker Compose](https://docs.docker.com/compose/install/)）
+本项目实现了从源码构建打包到部署运行自动化。所以，在 `git clone` 本仓库后，可以直接一行命令运行起整个系统。（前提是部署环境安装了 Docker 和 [Docker Compose](https://docs.docker.com/compose/install/)）
 
 #### 启动
 

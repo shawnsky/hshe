@@ -19,6 +19,16 @@ EOF
 
 apt-get update > /dev/null && apt-get install -y openjdk-8-jdk mysql-client > /dev/null
 
+while true
+do
+    echo "waiting for mvn package..."
+	sleep 3
+    if [ -f "/opt/sim/sim.jar" ] ; then
+		echo "sim.jar detected."
+    	break
+    fi
+done    
+
 HAS_MYSQL=1
 
 while [ $HAS_MYSQL != 0 ]

@@ -1,5 +1,9 @@
 data/
 
+maven-repo/
+
+*.jar
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

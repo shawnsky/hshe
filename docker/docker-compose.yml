@@ -26,6 +26,19 @@ services:
        - ./data/mysql:/var/lib/mysql
     ports:
       - "3306:3306"
+
+  package:
+    image: maven:3-jdk-8
+    volumes: 
+      - ../core:/src/core
+      - ../judge:/src/judge
+      - ../sim:/src/sim
+      - ./maven-repo:/root/.m2
+      - ./package:/opt/package
+      - ./core:/opt/core
+      - ./judge:/opt/judge
+      - ./sim:/opt/sim
+    entrypoint: /opt/package/entrypoint.sh
   
   core:
     image: ubuntu:18.04
