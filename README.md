@@ -128,6 +128,8 @@ docker run -d --restart always -v /data/:/data/ --name judger2 image-judge
 docker run -d -v /data/:/data/ -v /usr/local/sim_judge.sh:/usr/local/sim_judge.sh -v /usr/local/sim302/:/usr/local/sim302/ --name simer1 image-sim
 ```
 
+注意 `core`,  `judge` 和  `sim` 之间的方法调用是 MQ 实现的 RPC，所以 `core` 和 `judge`/`sim` 可以运行在不同主机上，且 `judge`和 `sim` 容器可不限数量的启动
+
 启动 Nginx 服务器
 
 ```
@@ -138,7 +140,7 @@ docker run -d -v /data/:/data/ -v /usr/local/sim_judge.sh:/usr/local/sim_judge.s
 
 #### 用户登录
 
-学生和教师使用同一登录入口，教师登录后会出现后台管理按钮。
+学生和教师使用同一登录入口，教师登录后会出现后台管理入口。
 
 ![](screenshots/test-login.JPG)
 
@@ -150,7 +152,7 @@ docker run -d -v /data/:/data/ -v /usr/local/sim_judge.sh:/usr/local/sim_judge.s
 
 #### 题目界面
 
-展示题目详情，输入和输出。由于评测服务器目前只安装了C编译器和JDK，暂时不能选择其他语言。
+展示题目详情，样例输入和样例输出。可选的编程语言由评测环境决定，目前的测试基于 OpenJDK 1.8，可以评测 Java 代码。
 
 ![](screenshots/test-problem.png)
 
@@ -172,10 +174,6 @@ docker run -d -v /data/:/data/ -v /usr/local/sim_judge.sh:/usr/local/sim_judge.s
 
 ![](screenshots/test-groups.PNG)
 
-## 简易架构图
-
-![](screenshots/arch.png)
-
 ## 说明
 
 项目目录中，`core` 是指后端API服务（命名不规范请见谅）；`judge` 是指后端评测服务，收到来自前端的代码提交调用后，通知 `judge` 模块对代码编译、运行、判定结果；`sim` 是指后端查重服务，其实就是对开源查重工具SIM的调用封装，若 `judge` 模块判定代码通过，会通知 `sim` 模块对代码进行查重，并更新结果。`static` 目录是前端项目，需要单独发布。
@@ -183,3 +181,9 @@ docker run -d -v /data/:/data/ -v /usr/local/sim_judge.sh:/usr/local/sim_judge.s
 `judge` 和 `sim` 是内部服务，不提供外部调用入口，总体的调用顺序是 `core` -> `judge` -> `sim` ，但为了避免同步调用，所以才使用了 MQ 来做服务通信，同时启动多个 `judge` 和 `sim` 来消费，很大程度的提升了系统的性能和稳定性。
 
 服务端运行来自用户的代码非常危险，因此服务运行于容器，保证了评测服务的安全。
+
+*本项目的架构大致如下图
+
+![](screenshots/arch.png)
+
+欢迎大家运行体验！
