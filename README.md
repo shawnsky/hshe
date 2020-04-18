@@ -1,5 +1,7 @@
 # HSHE 在线评测系统
 
+[![Build Status](https://travis-ci.com/shawnsky/hshe.svg?branch=master)](https://travis-ci.com/shawnsky/hshe)
+
 主要使用 Spring Boot 开发 Web 前后台，评测模块和查重模块。评测模块内核使用 C++ 开发。使用垂直型的应用架构和分布式集群部署，服务间通过消息中间件通信。使用了前后端分离的开发模式，前端使用 Vue 框架开发 SPA 应用，后端 Web 模块全 RESTful API ，使用 Redis 做缓存，提供了良好的使用体验。部署使用Docker 容器，保证系统的安全性与可靠性。
 
 ## 部署
@@ -66,7 +68,7 @@ docker-compose rm --force
 
 #### 构建项目
 
-[![Build Status](https://travis-ci.com/shawnsky/hshe.svg?branch=master)](https://travis-ci.com/shawnsky/hshe) **已通过测试的构建环境** CentOS 7、Ubuntu 18.04
+**已通过测试的构建环境** CentOS 7、Ubuntu 18.04
 
 在 `core`, `judge`, `sim` 目录中分别执行：
 
