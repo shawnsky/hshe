@@ -6,7 +6,7 @@ services:
       RABBITMQ_DEFAULT_USER: hshe
       RABBITMQ_DEFAULT_PASS: 123456
     ports: 
-      - "15672:15672"
+      - "15672:15672"  # for test use
 
   rds:
     image: redis:4.0.4
@@ -25,76 +25,90 @@ services:
        - ./mysql-dump:/docker-entrypoint-initdb.d
        - ./data/mysql:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "3306:3306"  # for test use
 
-  package:
-    image: maven:3-jdk-8
-    volumes: 
-      - ../core:/src/core
-      - ../judge:/src/judge
-      - ../sim:/src/sim
-      - ./maven-repo:/root/.m2
-      - ./package:/opt/package
-      - ./core:/opt/core
-      - ./judge:/opt/judge
-      - ./sim:/opt/sim
-    entrypoint: /opt/package/entrypoint.sh
+  # package:
+  #   image: maven:3-jdk-8
+  #   volumes: 
+  #     - ../core:/src/core
+  #     - ../judge:/src/judge
+  #     - ../sim:/src/sim
+  #     - ./maven-repo:/root/.m2
+  #     - ./package:/opt/package
+  #     - ./core:/opt/core
+  #     - ./judge:/opt/judge
+  #     - ./sim:/opt/sim
+  #   entrypoint: /opt/package/entrypoint.sh
   
   core:
-    image: ubuntu:18.04
+    image: shawnsky/hshe-core:v1.0
     environment:
       DB_HOST: db
       DB_USER: guest
       DB_PASS: 123456
+      RDS_HOST: rds
+      RDS_PASS: 123456
+      AMQP_HOST: amqp
+      AMQP_USER: hshe
+      AMQP_PASS: 123456
       TOKEN_SECRET_KEY: LNHm!vU&DqBE77NQ
       AUTH_EXPIRES_DAY: 7
     ports: 
-      - "9000:9000"
-    volumes:
-      - "./core/:/opt/core/"
+      - "9000:9000"  # for test use
+    # volumes:
+    #   - "./core/:/opt/core/"
     depends_on:
       - amqp
       - rds
       - db
-    entrypoint: /opt/core/entrypoint.sh
+    # entrypoint: /opt/core/entrypoint.sh
     
   judge:
-    image: ubuntu:18.04
+    image: shawnsky/hshe-judge:v1.0
     environment:
       DB_HOST: db
       DB_USER: guest
       DB_PASS: 123456
+      RDS_HOST: rds
+      RDS_PASS: 123456
+      AMQP_HOST: amqp
+      AMQP_USER: hshe
+      AMQP_PASS: 123456
     ports: 
-      - "9001:9001"
+      - "9001:9001"  # for test use
     volumes: 
-      - "./judge/:/opt/judge/"
+      # - "./judge/:/opt/judge/"
       - "./data/subs/:/data/subs/"
       - "./data/tests/:/data/tests/"
-      - "./data/logs/:/opt/logs/"
+      - "./data/logs/:/app/logs/"
     depends_on:
       - amqp
       - rds
       - db
-    entrypoint: /opt/judge/entrypoint.sh
+    # entrypoint: /opt/judge/entrypoint.sh
 
   sim:
-    image: ubuntu:18.04
+    image: shawnsky/hshe-sim:v1.0
     environment:
       DB_HOST: db
       DB_USER: guest
       DB_PASS: 123456
+      RDS_HOST: rds
+      RDS_PASS: 123456
+      AMQP_HOST: amqp
+      AMQP_USER: hshe
+      AMQP_PASS: 123456
     ports: 
-      - "9002:9002"
+      - "9002:9002"  # for test use
     volumes: 
-      - "./sim/:/opt/sim/"
       - "./data/subs/:/data/subs/"
       - "./data/tests/:/data/tests/"
-      - "./data/logs/:/opt/logs/"
+      - "./data/logs/:/app/logs/"
     depends_on:
       - amqp
       - rds
       - db
-    entrypoint: /opt/sim/entrypoint.sh
+    # entrypoint: /opt/sim/entrypoint.sh
 
   web:
     image: nginx
@@ -107,7 +121,7 @@ services:
       - core
   
   docker-ui:
-    image: portainer/portainer
+    image: portainer/portainer-ce
     command: -H unix:///var/run/docker.sock
     restart: always
     ports:
