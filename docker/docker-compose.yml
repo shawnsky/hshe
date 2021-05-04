@@ -26,22 +26,12 @@ services:
        - ./data/mysql:/var/lib/mysql
     ports:
       - "3306:3306"  # for test use
-
-  # package:
-  #   image: maven:3-jdk-8
-  #   volumes: 
-  #     - ../core:/src/core
-  #     - ../judge:/src/judge
-  #     - ../sim:/src/sim
-  #     - ./maven-repo:/root/.m2
-  #     - ./package:/opt/package
-  #     - ./core:/opt/core
-  #     - ./judge:/opt/judge
-  #     - ./sim:/opt/sim
-  #   entrypoint: /opt/package/entrypoint.sh
   
   core:
     image: shawnsky/hshe-core:v1.0
+    build: 
+      dockerfile: docker/core/Dockerfile
+      context: ..
     environment:
       DB_HOST: db
       DB_USER: guest
@@ -55,16 +45,16 @@ services:
       AUTH_EXPIRES_DAY: 7
     ports: 
       - "9000:9000"  # for test use
-    # volumes:
-    #   - "./core/:/opt/core/"
     depends_on:
       - amqp
       - rds
       - db
-    # entrypoint: /opt/core/entrypoint.sh
     
   judge:
     image: shawnsky/hshe-judge:v1.0
+    build: 
+      dockerfile: docker/judge/Dockerfile
+      context: ..
     environment:
       DB_HOST: db
       DB_USER: guest
@@ -77,7 +67,6 @@ services:
     ports: 
       - "9001:9001"  # for test use
     volumes: 
-      # - "./judge/:/opt/judge/"
       - "./data/subs/:/data/subs/"
       - "./data/tests/:/data/tests/"
       - "./data/logs/:/app/logs/"
@@ -85,10 +74,12 @@ services:
       - amqp
       - rds
       - db
-    # entrypoint: /opt/judge/entrypoint.sh
 
   sim:
     image: shawnsky/hshe-sim:v1.0
+    build: 
+      dockerfile: docker/sim/Dockerfile
+      context: ..
     environment:
       DB_HOST: db
       DB_USER: guest
@@ -108,7 +99,6 @@ services:
       - amqp
       - rds
       - db
-    # entrypoint: /opt/sim/entrypoint.sh
 
   web:
     image: nginx

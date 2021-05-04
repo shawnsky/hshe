@@ -1,7 +1,7 @@
 FROM maven:3-jdk-8 as builder
 LABEL maintainer="https://github.com/shawnsky"
 
-COPY ../core /src
+COPY core /src/core
 WORKDIR /src/core
 
 # optional
@@ -16,9 +16,12 @@ RUN apt-get update \
 FROM openjdk:8-jdk-buster
 LABEL maintainer="https://github.com/shawnsky"
 
-COPY ../wait-for-it.sh /app
-COPY --from=builder /src/core/target/core-0.0.1-SNAPSHOT.jar /app/core.jar
+RUN mkdir /app
 WORKDIR /app
+
+COPY docker/wait-for-it.sh .
+COPY --from=builder /src/core/target/core-0.0.1-SNAPSHOT.jar .
+
 EXPOSE 9000
 
-CMD wait-for-it.sh ${DB_HOST}:3306 -- echo 'MySQL is active.' && java -jar core.jar
+CMD ./wait-for-it.sh ${DB_HOST}:3306 -- echo 'MySQL is active.' && java -jar core-0.0.1-SNAPSHOT.jar

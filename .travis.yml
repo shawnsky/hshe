@@ -1,23 +1,18 @@
-dist: bionic
-language: java
-jdk:
-  - openjdk8
+services:
+  - docker
+
+env:
+  - DOCKER_COMPOSE_VERSION="1.25.4" 
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install build-essential
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+install:
+  - cd docker/
+  - docker-compose build
   
 script:
-  - cd core/
-  - mvn clean package -DskipTests
-  - cd ../judge/
-  - mvn clean package -DskipTests
-  - cd ../sim/
-  - mvn clean package -DskipTests
-  
-
-after_failure:
-  - id
-  - ls -al $TRAVIS_BUILD_DIR/hshe/core/target
-  - ls -al $TRAVIS_BUILD_DIR/hshe/judge/target
-  - ls -al $TRAVIS_BUILD_DIR/hshe/sim/target
+  - echo '1'

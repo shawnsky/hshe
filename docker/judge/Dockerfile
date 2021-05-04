@@ -1,7 +1,7 @@
 FROM maven:3-jdk-8 as builder
 LABEL maintainer="https://github.com/shawnsky"
 
-COPY ../judge /src
+COPY judge /src/judge
 WORKDIR /src/judge
 
 # optional
@@ -32,15 +32,20 @@ LABEL maintainer="https://github.com/shawnsky"
   
 
 RUN useradd hshe -u 1000 -p "$(openssl passwd -1 hshepasswd)" \
+    && mkdir -p \
+        /app \
+        /data/subs \
+        /data/tests \
     && chown -R 1000:1000 /data/subs/ /data/tests/ \
-    && rm -rf /data/subs/* /data/tests/*
-
-COPY ../wait-for-it.sh /app
-COPY --from=builder /src/judge/target/judge-0.0.1-SNAPSHOT.jar /app/judge.jar
+    && rm -rf /data/subs/* /data/tests/* 
 WORKDIR /app
+
+COPY docker/wait-for-it.sh .
+COPY --from=builder /src/judge/target/judge-0.0.1-SNAPSHOT.jar .
+
 EXPOSE 9001
 
-CMD wait-for-it.sh ${DB_HOST}:${DB_PORT} -- echo 'MySQL is active.' && su hshe --command "java -jar judge.jar"
+CMD ./wait-for-it.sh ${DB_HOST}:3306 -- echo 'MySQL is active.' && su hshe --command "java -jar judge-0.0.1-SNAPSHOT.jar"
 
 
 
