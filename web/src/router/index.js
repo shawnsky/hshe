@@ -7,6 +7,8 @@ import Explore from '../views/user/Explore'
 import Contest from '../views/user/Contest'
 import Problem from '../views/user/Problem'
 import SubmitRecord from '../views/user/SubmitRecord'
+import Dashboard from '../views/admin/Dashboard'
+import UserTable from '../views/admin/UserTable'
 
 const routes = [
   {
@@ -49,7 +51,20 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
-    component: AdminLayout
+    component: AdminLayout,
+    redirect: { name: 'Dashboard' },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: Dashboard,
+      },
+      {
+        path: 'users',
+        name: 'UserTable',
+        component: UserTable,
+      }
+    ]
   },
 
   // {
