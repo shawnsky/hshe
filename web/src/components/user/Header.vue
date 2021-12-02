@@ -10,6 +10,7 @@
           <router-link :to="{ name: 'Explore' }">竞赛</router-link>
         </a-menu-item>
         <a-menu-item key="problem"> 题库 </a-menu-item>
+        <a-menu-item key="rank"> 排名 </a-menu-item>
         <a-menu-item key="commit">
           <router-link :to="{ name: 'Submit' }">提交记录</router-link>
         </a-menu-item>
@@ -18,14 +19,27 @@
     <a-col :flex="1"
       ><div class="status_bar">
         <div class="bar_item">
-          <img id="avatar" src="../../assets/default-avatar.png" alt="" />
+          <a-dropdown :trigger="['click']">
+            <a class="ant-dropdown-link" @click.prevent>
+              <a-space>
+                <img id="avatar" src="../../assets/default-avatar.png" alt="" />
+                <div id="user">chen</div>
+              </a-space>
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="0">
+                  <a href="">编辑资料</a>
+                </a-menu-item>
+                <a-menu-item key="1">
+                  <a href="">修改密码</a>
+                </a-menu-item>
+                <a-menu-divider />
+                <a-menu-item key="3">退出登录</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
-
-        <div class="bar_item"><a href="">chen</a></div>
-        <div class="bar_item">
-          <a href="">设置</a>
-        </div>
-        <div class="bar_item"><a href="">退出</a></div>
       </div></a-col
     >
     <a-col :flex="1"></a-col>
@@ -83,7 +97,12 @@ export default defineComponent({
 
 #avatar {
   border-radius: 50%;
-  height: 28px;
-  width: 28px;
+  height: 25px;
+  width: 25px;
+}
+
+#user {
+  height: 25px;
+  line-height: 25px;
 }
 </style>

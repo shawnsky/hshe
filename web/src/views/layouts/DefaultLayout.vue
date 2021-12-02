@@ -37,5 +37,6 @@ export default defineComponent({
 <style scoped>
 .user_layout_container {
   padding: 20px 50px;
+  margin-bottom: 80px;
 }
 </style>
