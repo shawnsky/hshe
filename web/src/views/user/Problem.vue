@@ -5,7 +5,7 @@
       <a-col flex="3">
         <a-row>
           <!-- theme: https://codemirror.net/demo/theme.html#juejin -->
-          <a-col :span="20"> <ProblemDesc /> <CodeMirrorEditor v-model:value="code" scene="edit" theme="juejin"/> </a-col>
+          <a-col :span="20"> <ProblemDesc /> <CodeMirrorEditor scene="edit" theme="juejin"/> </a-col>
           <a-col :span="4"> <ExtraInfo /></a-col> </a-row
       ></a-col>
       <a-col flex="1"></a-col>

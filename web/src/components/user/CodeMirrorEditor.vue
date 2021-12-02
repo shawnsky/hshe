@@ -17,16 +17,15 @@
           ><template #icon><FileOutlined /></template
         ></a-button>
       </a-space>
+      <div class="tip">
+        <a-badge color="#d1d1d1" />
+        <span>代码保存于 2021/11/25 14:26</span>
+      </div>
     </div>
     <div class="in-coder-panel">
       <textarea ref="textarea" v-model="code"></textarea>
     </div>
     <div class="action_bar">
-      <span class="tip"> 
-        <a-badge color="#d1d1d1" />
-        <span>代码保存于 2021/11/25 14:26</span>
-      </span>
-
       <a-space class="btn_group">
         <a-button type="default" shape="round">暂存代码</a-button>
         <a-button type="primary" shape="round">提交</a-button>
@@ -90,6 +89,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
     const language = ref("java");
+    const code = ref("");
     const data = reactive({
       code: props.value, // 内部真实的内容
       // 默认配置
@@ -138,6 +138,7 @@ export default defineComponent({
     return {
       ...toRefs(data),
       language,
+      code,
     };
   },
 });
@@ -153,12 +154,15 @@ export default defineComponent({
 .action_bar {
   margin: 20px 0;
 }
+.edit_bar .tip {
+  float: right;
+  line-height: 32px;
+  height: 32px;
+  color: grey;
+  user-select: none;
+}
 .action_bar .btn_group {
   float: right;
-}
-.action_bar .tip {
-  color:  grey;
-  user-select: none;
 }
 
 .in-coder-panel {
